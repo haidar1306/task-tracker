@@ -19,7 +19,7 @@ class CreateInvoicesTable extends Migration
 
             $table->string('invoice_no')->unique();
 
-            $table->unique('booking_id');
+            $table->unsignedBigInteger('booking_id')->unique();
 
             $table->decimal('room_charge', 10, 2)->default(0);
 

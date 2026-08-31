@@ -11,14 +11,12 @@ class AddInvoiceIdToPaymentsTable extends Migration
         Schema::table('payments', function (Blueprint $table) {
 
             $table->foreignId('invoice_id')
-                ->after('booking_id')
                 ->nullable()
                 ->constrained('invoices')
                 ->cascadeOnDelete();
 
         });
     }
-
 
     public function down()
     {
