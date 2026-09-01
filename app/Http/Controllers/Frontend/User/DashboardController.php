@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Frontend\User;
 
 use App\Domains\Website\Models\GeneralSetting;
-use App\Domains\Website\Models\HeroSection;
+// use App\Domains\Website\Models\HeroSection;
 
 /**
  * Class DashboardController.
@@ -15,7 +15,7 @@ class DashboardController
      */
     public function index()
     {
-        $hero = HeroSection::first();
+        // $hero = HeroSection::first();
 
         $setting = GeneralSetting::first();
 
