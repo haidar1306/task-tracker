@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Domains\Website\Models\GeneralSetting;
+
 use App\Models\Booking1;
 use App\Models\Guest;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +11,7 @@ class HomeController
 {
     public function index()
     {
-        $setting = GeneralSetting::first();
+
 
         $reservations = collect();
 
@@ -25,9 +25,9 @@ class HomeController
                     'room.roomType',
                     'invoice'
                 ])
-                ->where('guest_id', $guest->id)
-                ->latest()
-                ->get();
+                    ->where('guest_id', $guest->id)
+                    ->latest()
+                    ->get();
 
             }
         }
