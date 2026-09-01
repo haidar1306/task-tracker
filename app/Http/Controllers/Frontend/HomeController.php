@@ -33,7 +33,7 @@ class HomeController
         }
 
         return view('frontend.user.dashboard', compact(
-            'setting',
+            
             'reservations'
         ));
     }
