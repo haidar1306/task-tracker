@@ -11,17 +11,21 @@ class AddEnabledToAnnouncementsTable extends Migration
      *
      * @return void
      */
-   public function up(): void
+  public function up(): void
 {
-    Schema::table('announcements', function (Blueprint $table) {
-        $table->boolean('enabled')->default(true);
-    });
+    if (!Schema::hasColumn('announcements', 'enabled')) {
+        Schema::table('announcements', function (Blueprint $table) {
+            $table->boolean('enabled')->default(true);
+        });
+    }
 }
 
 public function down(): void
 {
-    Schema::table('announcements', function (Blueprint $table) {
-        $table->dropColumn('enabled');
-    });
+    if (Schema::hasColumn('announcements', 'enabled')) {
+        Schema::table('announcements', function (Blueprint $table) {
+            $table->dropColumn('enabled');
+        });
+    }
 }
 }
