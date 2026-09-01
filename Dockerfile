@@ -5,7 +5,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libpng-dev \
-    && docker-php-ext-install pdo_mysql zip gd
+    libpq-dev \
+    && docker-php-ext-install pdo_mysql pdo_pgsql zip gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
