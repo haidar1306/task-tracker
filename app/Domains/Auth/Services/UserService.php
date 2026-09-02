@@ -59,35 +59,27 @@ class UserService extends BaseService
 
             $user = $this->createUser($data);
 
-
             // Create Guest Profile
-            \App\Models\Guest::create([
-
-                'first_name' => $data['name'],
-
+            Guest::create([
+                'first_name' => $data['name'] ?? null,
                 'last_name' => '',
-
-                'email' => $data['email'],
-                'phone' => $data['phone'],
-
-                // 'phone' => null,
-
+                'email' => $data['email'] ?? null,
+                'phone' => $data['phone'] ?? null,
                 'status' => 1,
-
             ]);
-
 
         } catch (Exception $e) {
 
             DB::rollBack();
 
-            \Log::error($e);
+            \Log::error('Registration Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
 
             throw new GeneralException(__('There was a problem creating your account.'));
         }
 
         DB::commit();
-
 
         return $user;
     }
