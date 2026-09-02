@@ -20,4 +20,4 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD php artisan db:sync-migrations; php artisan serve --host=0.0.0.0 --port=$PORT
+CMD php artisan migrate --path=database/migrations/2026_09_01_120646_add_enabled_to_announcements_table.php --force; php artisan serve --host=0.0.0.0 --port=$PORT
