@@ -24,7 +24,7 @@ class UserService extends BaseService
     /**
      * UserService constructor.
      *
-     * @param  User  $user
+     * @param User $user
      */
     public function __construct(User $user)
     {
@@ -33,7 +33,7 @@ class UserService extends BaseService
 
     /**
      * @param $type
-     * @param  bool|int  $perPage
+     * @param bool|int $perPage
      * @return mixed
      */
     public function getByType($type, $perPage = false)
@@ -46,8 +46,10 @@ class UserService extends BaseService
     }
 
     /**
-     * @param  array  $data
-     * @return mixed
+     * Register User
+     *
+     * @param array $data
+     * @return User
      *
      * @throws GeneralException
      */
@@ -56,7 +58,7 @@ class UserService extends BaseService
         DB::beginTransaction();
 
         try {
-
+            // Create User
             $user = $this->createUser($data);
 
             // Create Guest Profile
@@ -68,21 +70,29 @@ class UserService extends BaseService
                 'status' => 1,
             ]);
 
-        } catch (\Exception $e) {
+            DB::commit();
+
+            return $user;
+
+        } catch (Exception $e) {
+
             DB::rollBack();
 
-            dd(
-                'ERROR MESSAGE: ' . $e->getMessage(),
-                'ERROR FILE: ' . $e->getFile(),
-                'ERROR LINE: ' . $e->getLine()
+            \Log::error('Registration Error', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            throw new GeneralException(
+                __('There was a problem creating your account.')
             );
         }
-        DB::commit();
-
-        return $user;
     }
 
     /**
+     * Register Provider.
+     *
      * @param $info
      * @param $provider
      * @return mixed
@@ -100,24 +110,38 @@ class UserService extends BaseService
                 $user = $this->createUser([
                     'name' => $info->name,
                     'email' => $info->email,
+                    'lang' => 'en',
                     'provider' => $provider,
                     'provider_id' => $info->id,
                     'email_verified_at' => now(),
                 ]);
+
+                DB::commit();
+
             } catch (Exception $e) {
                 DB::rollBack();
 
-                throw new GeneralException(__('There was a problem connecting to :provider', ['provider' => $provider]));
-            }
+                \Log::error('Provider Registration Error', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]);
 
-            DB::commit();
+                throw new GeneralException(
+                    __('There was a problem connecting to :provider', [
+                        'provider' => $provider
+                    ])
+                );
+            }
         }
 
         return $user;
     }
 
     /**
-     * @param  array  $data
+     * Store User.
+     *
+     * @param array $data
      * @return User
      *
      * @throws GeneralException
@@ -133,8 +157,13 @@ class UserService extends BaseService
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => $data['password'],
-                'email_verified_at' => isset($data['email_verified']) && $data['email_verified'] === '1' ? now() : null,
-                'active' => isset($data['active']) && $data['active'] === '1',
+                'lang' => $data['lang'] ?? 'en',
+                'email_verified_at' => isset($data['email_verified'])
+                    && $data['email_verified'] === '1'
+                    ? now()
+                    : null,
+                'active' => isset($data['active'])
+                    && $data['active'] === '1',
             ]);
 
             $user->syncRoles($data['roles'] ?? []);
@@ -142,18 +171,24 @@ class UserService extends BaseService
             if (!config('boilerplate.access.user.only_roles')) {
                 $user->syncPermissions($data['permissions'] ?? []);
             }
+
         } catch (Exception $e) {
             DB::rollBack();
 
-            throw new GeneralException(__('There was a problem creating this user. Please try again.'));
+            throw new GeneralException(
+                __('There was a problem creating this user. Please try again.')
+            );
         }
 
         event(new UserCreated($user));
 
         DB::commit();
 
-        // They didn't want to auto verify the email, but do they want to send the confirmation email to do so?
-        if (!isset($data['email_verified']) && isset($data['send_confirmation_email']) && $data['send_confirmation_email'] === '1') {
+        if (
+            !isset($data['email_verified']) &&
+            isset($data['send_confirmation_email']) &&
+            $data['send_confirmation_email'] === '1'
+        ) {
             $user->sendEmailVerificationNotification();
         }
 
@@ -161,8 +196,10 @@ class UserService extends BaseService
     }
 
     /**
-     * @param  User  $user
-     * @param  array  $data
+     * Update User.
+     *
+     * @param User $user
+     * @param array $data
      * @return User
      *
      * @throws \Throwable
@@ -173,23 +210,29 @@ class UserService extends BaseService
 
         try {
             $user->update([
-                'type' => $user->isMasterAdmin() ? $this->model::TYPE_ADMIN : $data['type'] ?? $user->type,
+                'type' => $user->isMasterAdmin()
+                    ? $this->model::TYPE_ADMIN
+                    : $data['type'] ?? $user->type,
+
                 'name' => $data['name'],
                 'email' => $data['email'],
             ]);
 
             if (!$user->isMasterAdmin()) {
-                // Replace selected roles/permissions
+
                 $user->syncRoles($data['roles'] ?? []);
 
                 if (!config('boilerplate.access.user.only_roles')) {
                     $user->syncPermissions($data['permissions'] ?? []);
                 }
             }
+
         } catch (Exception $e) {
             DB::rollBack();
 
-            throw new GeneralException(__('There was a problem updating this user. Please try again.'));
+            throw new GeneralException(
+                __('There was a problem updating this user. Please try again.')
+            );
         }
 
         event(new UserUpdated($user));
@@ -200,18 +243,26 @@ class UserService extends BaseService
     }
 
     /**
-     * @param  User  $user
-     * @param  array  $data
+     * Update Profile.
+     *
+     * @param User $user
+     * @param array $data
      * @return User
      */
     public function updateProfile(User $user, array $data = []): User
     {
         $user->name = $data['name'] ?? null;
 
-        if ($user->canChangeEmail() && $user->email !== $data['email']) {
+        if (
+            $user->canChangeEmail() &&
+            isset($data['email']) &&
+            $user->email !== $data['email']
+        ) {
             $user->email = $data['email'];
             $user->email_verified_at = null;
+
             $user->sendEmailVerificationNotification();
+
             session()->flash('resent', true);
         }
 
@@ -219,9 +270,11 @@ class UserService extends BaseService
     }
 
     /**
-     * @param  User  $user
+     * Update Password.
+     *
+     * @param User $user
      * @param $data
-     * @param  bool  $expired
+     * @param bool $expired
      * @return User
      *
      * @throws \Throwable
@@ -235,7 +288,6 @@ class UserService extends BaseService
             );
         }
 
-        // Reset the expiration clock
         if ($expired) {
             $user->password_changed_at = now();
         }
@@ -246,7 +298,9 @@ class UserService extends BaseService
     }
 
     /**
-     * @param  User  $user
+     * Mark User Status.
+     *
+     * @param User $user
      * @param $status
      * @return User
      *
@@ -259,7 +313,9 @@ class UserService extends BaseService
         }
 
         if ($status === 0 && $user->isMasterAdmin()) {
-            throw new GeneralException(__('You can not deactivate the administrator account.'));
+            throw new GeneralException(
+                __('You can not deactivate the administrator account.')
+            );
         }
 
         $user->active = $status;
@@ -270,11 +326,15 @@ class UserService extends BaseService
             return $user;
         }
 
-        throw new GeneralException(__('There was a problem updating this user. Please try again.'));
+        throw new GeneralException(
+            __('There was a problem updating this user. Please try again.')
+        );
     }
 
     /**
-     * @param  User  $user
+     * Delete User.
+     *
+     * @param User $user
      * @return User
      *
      * @throws GeneralException
@@ -291,11 +351,15 @@ class UserService extends BaseService
             return $user;
         }
 
-        throw new GeneralException('There was a problem deleting this user. Please try again.');
+        throw new GeneralException(
+            __('There was a problem deleting this user. Please try again.')
+        );
     }
 
     /**
-     * @param  User  $user
+     * Restore User.
+     *
+     * @param User $user
      * @return User
      *
      * @throws GeneralException
@@ -308,11 +372,15 @@ class UserService extends BaseService
             return $user;
         }
 
-        throw new GeneralException(__('There was a problem restoring this user. Please try again.'));
+        throw new GeneralException(
+            __('There was a problem restoring this user. Please try again.')
+        );
     }
 
     /**
-     * @param  User  $user
+     * Permanently Destroy User.
+     *
+     * @param User $user
      * @return bool
      *
      * @throws GeneralException
@@ -325,23 +393,37 @@ class UserService extends BaseService
             return true;
         }
 
-        throw new GeneralException(__('There was a problem permanently deleting this user. Please try again.'));
+        throw new GeneralException(
+            __('There was a problem permanently deleting this user. Please try again.')
+        );
     }
 
     /**
-     * @param  array  $data
+     * Create User.
+     *
+     * @param array $data
      * @return User
      */
     protected function createUser(array $data = []): User
     {
         return $this->model::create([
             'type' => $data['type'] ?? $this->model::TYPE_USER,
+
             'name' => $data['name'] ?? null,
+
             'email' => $data['email'] ?? null,
+
             'password' => $data['password'] ?? null,
+
+            // REQUIRED on your live PostgreSQL database
+            'lang' => $data['lang'] ?? 'en',
+
             'provider' => $data['provider'] ?? null,
+
             'provider_id' => $data['provider_id'] ?? null,
+
             'email_verified_at' => $data['email_verified_at'] ?? null,
+
             'active' => $data['active'] ?? true,
         ]);
     }
