@@ -59,6 +59,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatable
         'name',
         'email',
         'email_verified_at',
+        'lang',
         'password',
         'password_changed_at',
         'active',
@@ -137,7 +138,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatable
      */
     public function canBeImpersonated(): bool
     {
-        return ! $this->isMasterAdmin();
+        return !$this->isMasterAdmin();
     }
 
     /**
