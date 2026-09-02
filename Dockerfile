@@ -6,7 +6,11 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
     libpq-dev \
+    curl \
     && docker-php-ext-install pdo_mysql pdo_pgsql zip gd
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -15,6 +19,9 @@ WORKDIR /var/www
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
+
+RUN npm install
+RUN npm run production
 
 RUN chmod -R 775 storage bootstrap/cache
 
