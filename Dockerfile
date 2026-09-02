@@ -20,4 +20,4 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD php artisan db:list-tables
+CMD php artisan db:sync-migrations; php artisan serve --host=0.0.0.0 --port=$PORT
