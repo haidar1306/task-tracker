@@ -68,17 +68,15 @@ class UserService extends BaseService
                 'status' => 1,
             ]);
 
-        } catch (Exception $e) {
-
+        } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::error('Registration Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            throw new GeneralException(__('There was a problem creating your account.'));
+            dd(
+                'ERROR MESSAGE: ' . $e->getMessage(),
+                'ERROR FILE: ' . $e->getFile(),
+                'ERROR LINE: ' . $e->getLine()
+            );
         }
-
         DB::commit();
 
         return $user;
