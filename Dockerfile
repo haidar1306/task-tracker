@@ -27,4 +27,4 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "php artisan migrate --path=database/migrations/YOUR_ACTIVE_MIGRATION_FILE.php --force && php artisan serve --host=0.0.0.0 --port=$PORT"]
+CMD ["sh", "-c", "php artisan migrate --path=database/migrations/2026_09_02_104000_add_active_to_users_table.php --force && php artisan serve --host=0.0.0.0 --port=$PORT"]
