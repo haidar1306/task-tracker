@@ -20,4 +20,4 @@ RUN chmod -R 775 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD php artisan tinker --execute="DB::statement('ALTER TABLE announcements ADD COLUMN IF NOT EXISTS enabled boolean DEFAULT true');"; php artisan serve --host=0.0.0.0 --port=$PORT
+CMD php artisan db:fix-enabled-column; php artisan serve --host=0.0.0.0 --port=$PORT
