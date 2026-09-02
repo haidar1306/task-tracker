@@ -21,21 +21,11 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserService extends BaseService
 {
-    /**
-     * UserService constructor.
-     *
-     * @param User $user
-     */
     public function __construct(User $user)
     {
         $this->model = $user;
     }
 
-    /**
-     * @param $type
-     * @param bool|int $perPage
-     * @return mixed
-     */
     public function getByType($type, $perPage = false)
     {
         if (is_numeric($perPage)) {
@@ -46,22 +36,15 @@ class UserService extends BaseService
     }
 
     /**
-     * Register User
-     *
-     * @param array $data
-     * @return User
-     *
-     * @throws GeneralException
+     * Register User.
      */
     public function registerUser(array $data = []): User
     {
         DB::beginTransaction();
 
         try {
-            // Create User
             $user = $this->createUser($data);
 
-            // Create Guest Profile
             Guest::create([
                 'first_name' => $data['name'] ?? null,
                 'last_name' => '',
@@ -87,12 +70,6 @@ class UserService extends BaseService
 
     /**
      * Register Provider.
-     *
-     * @param $info
-     * @param $provider
-     * @return mixed
-     *
-     * @throws GeneralException
      */
     public function registerProvider($info, $provider): User
     {
@@ -106,6 +83,7 @@ class UserService extends BaseService
                     'name' => $info->name,
                     'email' => $info->email,
                     'lang' => 'en',
+                    'created_by' => 'system',
                     'provider' => $provider,
                     'provider_id' => $info->id,
                     'email_verified_at' => now(),
@@ -135,12 +113,6 @@ class UserService extends BaseService
 
     /**
      * Store User.
-     *
-     * @param array $data
-     * @return User
-     *
-     * @throws GeneralException
-     * @throws \Throwable
      */
     public function store(array $data = []): User
     {
@@ -153,7 +125,7 @@ class UserService extends BaseService
                 'email' => $data['email'],
                 'password' => $data['password'],
                 'lang' => $data['lang'] ?? 'en',
-                'created_by' => $data['created_by'] ?? 1,
+                'created_by' => $data['created_by'] ?? 'system',
                 'email_verified_at' => isset($data['email_verified'])
                     && $data['email_verified'] === '1'
                     ? now()
@@ -193,12 +165,6 @@ class UserService extends BaseService
 
     /**
      * Update User.
-     *
-     * @param User $user
-     * @param array $data
-     * @return User
-     *
-     * @throws \Throwable
      */
     public function update(User $user, array $data = []): User
     {
@@ -215,7 +181,6 @@ class UserService extends BaseService
             ]);
 
             if (!$user->isMasterAdmin()) {
-
                 $user->syncRoles($data['roles'] ?? []);
 
                 if (!config('boilerplate.access.user.only_roles')) {
@@ -240,10 +205,6 @@ class UserService extends BaseService
 
     /**
      * Update Profile.
-     *
-     * @param User $user
-     * @param array $data
-     * @return User
      */
     public function updateProfile(User $user, array $data = []): User
     {
@@ -267,13 +228,6 @@ class UserService extends BaseService
 
     /**
      * Update Password.
-     *
-     * @param User $user
-     * @param $data
-     * @param bool $expired
-     * @return User
-     *
-     * @throws \Throwable
      */
     public function updatePassword(User $user, $data, $expired = false): User
     {
@@ -295,12 +249,6 @@ class UserService extends BaseService
 
     /**
      * Mark User Status.
-     *
-     * @param User $user
-     * @param $status
-     * @return User
-     *
-     * @throws GeneralException
      */
     public function mark(User $user, $status): User
     {
@@ -327,14 +275,6 @@ class UserService extends BaseService
         );
     }
 
-    /**
-     * Delete User.
-     *
-     * @param User $user
-     * @return User
-     *
-     * @throws GeneralException
-     */
     public function delete(User $user): User
     {
         if ($user->id === auth()->id()) {
@@ -352,14 +292,6 @@ class UserService extends BaseService
         );
     }
 
-    /**
-     * Restore User.
-     *
-     * @param User $user
-     * @return User
-     *
-     * @throws GeneralException
-     */
     public function restore(User $user): User
     {
         if ($user->restore()) {
@@ -373,14 +305,6 @@ class UserService extends BaseService
         );
     }
 
-    /**
-     * Permanently Destroy User.
-     *
-     * @param User $user
-     * @return bool
-     *
-     * @throws GeneralException
-     */
     public function destroy(User $user): bool
     {
         if ($user->forceDelete()) {
@@ -396,30 +320,23 @@ class UserService extends BaseService
 
     /**
      * Create User.
-     *
-     * @param array $data
-     * @return User
      */
     protected function createUser(array $data = []): User
     {
         return $this->model::create([
             'type' => $data['type'] ?? $this->model::TYPE_USER,
-
             'name' => $data['name'] ?? null,
-
             'email' => $data['email'] ?? null,
-
             'password' => $data['password'] ?? null,
 
-            // REQUIRED on your live PostgreSQL database
+            // REQUIRED by live PostgreSQL users table
             'lang' => $data['lang'] ?? 'en',
+            'created_by' => $data['created_by'] ?? 'system',
 
+            // Optional/default fields
             'provider' => $data['provider'] ?? null,
-
             'provider_id' => $data['provider_id'] ?? null,
-
             'email_verified_at' => $data['email_verified_at'] ?? null,
-
             'active' => $data['active'] ?? true,
         ]);
     }
