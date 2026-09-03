@@ -60,6 +60,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatable
         'email',
         'email_verified_at',
         'lang',
+        'created_by',
         'password',
         'password_changed_at',
         'active',
