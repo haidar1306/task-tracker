@@ -217,13 +217,7 @@
     <div id="collapseWebsite" class="collapse">
         <div class="bg-white py-2 collapse-inner rounded">
 
-            <a class="collapse-item"
-               href="{{ route('admin.website.hero.edit') }}">
-                Hero Section
-            </a>
-              <a class="collapse-item"
-             href="{{ route('admin.website.general.edit') }}">general settings</a>
-            </a>
+            
             
 
         </div>
