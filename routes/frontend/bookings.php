@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Frontend\BookingsController;
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'is_user']], function () {
     
 //booking route...
 

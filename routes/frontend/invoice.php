@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Frontend\InvoiceController;
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'is_user']], function () {
 
    //invoice routes..
    

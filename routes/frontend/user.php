@@ -20,11 +20,14 @@ Route::group(['as' => 'user.', 'middleware' => ['auth', 'password.expires', conf
         });
 
     Route::get('account', [AccountController::class, 'index'])
+        ->middleware('is_user')
         ->name('account')
         ->breadcrumbs(function (Trail $trail) {
             $trail->parent('frontend.index')
                 ->push(__('My Account'), route('frontend.user.account'));
         });
 
-    Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('profile/update', [ProfileController::class, 'update'])
+        ->middleware('is_user')
+        ->name('profile.update');
 });

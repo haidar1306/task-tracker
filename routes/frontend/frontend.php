@@ -40,7 +40,7 @@ Route::get('/hotel-updates', [HotelUpdatesController::class, 'index'])
 Route::get('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])
     ->name('contact');
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'is_user']], function () {
 
     //    room routes......
     Route::prefix('room')

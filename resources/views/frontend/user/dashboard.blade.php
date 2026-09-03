@@ -920,7 +920,7 @@
 
                         <li><a href="#">Payments</a></li>
 
-                        <li><a href="#">Profile</a></li>
+                        <li><a href="{{ route('frontend.user.account') }}">Profile</a></li>
 
                         <li>
 

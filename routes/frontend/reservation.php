@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Frontend\ReservationController;
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'is_user']], function () {
 
   // Reservation Routes
   
