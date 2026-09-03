@@ -187,14 +187,14 @@
                 </li>
 
                 @auth
-
+                    @if (auth()->user()->isUser())
                     <li class="nav-item {{ request()->routeIs('frontend.reservation.*') ? 'active' : '' }}">
                         <a class="nav-link {{ request()->routeIs('frontend.reservation.*') ? 'active' : '' }}"
                             href="{{ route('frontend.reservation.index') }}">
                             My Reservations
                         </a>
                     </li>
-
+                    @endif
                 @endauth
 
                 <li class="nav-item {{ request()->routeIs('frontend.contact') ? 'active' : '' }}">
@@ -217,6 +217,7 @@
 
 
                 @auth
+                    @if (auth()->user()->isUser())
                     <div class="dropdown mr-3">
 
                         @php
@@ -341,9 +342,7 @@
 
 
                     </div>
-
-
-
+                    @endif
 
                 @else
 

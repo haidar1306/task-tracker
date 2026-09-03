@@ -7,7 +7,7 @@
             My Profile
         </h4>
 
-        <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-secondary">
+        <a href="{{ route('frontend.user.dashboard') }}" class="btn btn-sm btn-secondary">
             <i class="fas fa-arrow-left"></i> Dashboard
         </a>
 
