@@ -29,7 +29,11 @@
         <li class="nav-item dropdown no-arrow mx-2">
 
             @php
-                $unreadCount = auth()->user()->unreadNotifications->count();
+                $notifications = auth()->user()->notifications()->where(function ($query) {
+                    $query->where('data->audience', 'admin')
+                        ->orWhereIn('data->type', ['booking', 'payment', 'inquiry']);
+                })->latest();
+                $unreadCount = (clone $notifications)->whereNull('read_at')->count();
             @endphp
 
             <a class="nav-link dropdown-toggle position-relative" href="#" id="alertsDropdown" role="button"
@@ -53,7 +57,7 @@
                 </h6>
                 <div class="notification-scroll">
 
-                    @forelse(auth()->user()->notifications()->latest()->limit(50)->get() as $notification)
+                    @forelse($notifications->limit(50)->get() as $notification)
 
                         <div class="dropdown-item d-flex align-items-center">
 

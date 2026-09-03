@@ -30,6 +30,7 @@ class InquiryNotification extends Notification
             'message' => 'New inquiry received from ' . $this->inquiry->name,
             'inquiry_id' => $this->inquiry->id,
             'type' => 'inquiry',
+            'audience' => 'admin',
             'url' => route('admin.inquiries.index', $this->inquiry->id),
         ];
     }

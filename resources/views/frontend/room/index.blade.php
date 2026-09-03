@@ -108,6 +108,65 @@
 }
 
 }
+
+.room-section {
+    margin-bottom: 48px;
+    padding: 56px 24px 52px;
+    border-radius: 20px;
+}
+
+.room-section > .container {
+    max-width: 980px;
+}
+
+.room-cards {
+    row-gap: 24px;
+}
+
+.room-card {
+    overflow: hidden;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, .10) !important;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 34px rgba(15, 23, 42, .15) !important;
+}
+
+.room-card .card-img-top {
+    display: block;
+    height: 250px;
+    object-fit: cover;
+}
+
+.room-card .card-body {
+    padding: 24px;
+}
+
+.room-card h4 {
+    margin-bottom: 16px;
+    color: #102a43;
+    font-weight: 700;
+}
+
+.room-card p {
+    color: #627d98;
+    line-height: 1.55;
+}
+
+@media (max-width: 768px) {
+    .room-section {
+        margin-bottom: 32px;
+        padding: 42px 18px 38px;
+    }
+
+    .room-card .card-body {
+        padding: 20px;
+    }
+}
 </style>
 
 @section('content')
@@ -154,7 +213,7 @@
 
 
 
-            <div class="row">
+            <div class="row room-cards">
 
 
                 @foreach($rooms as $room)
@@ -163,7 +222,7 @@
                     <div class="col-lg-4 col-md-6 mb-4">
 
 
-                        <div class="card shadow border-0 h-100">
+                        <article class="card room-card h-100">
 
 
                             @if($room->image)
@@ -283,7 +342,7 @@
                             </div>
 
 
-                        </div>
+                        </article>
 
 
                     </div>

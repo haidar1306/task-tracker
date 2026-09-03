@@ -30,6 +30,7 @@ class BookingNotification extends Notification
         'message' => 'New booking received from ' . $this->booking->guest->first_name,
         'booking_id' => $this->booking->id,
         'type' => 'booking',
+        'audience' => 'admin',
         'url' => route('admin.bookings.show', $this->booking->id), // <-- add this
     ];
 }

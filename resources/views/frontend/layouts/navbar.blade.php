@@ -1,6 +1,6 @@
 <style>
     .frontend-content {
-        padding-top: 50px;
+        padding-top: 24px;
         min-height: 100vh;
     }
 
@@ -221,7 +221,11 @@
                     <div class="dropdown mr-3">
 
                         @php
-                            $unreadCount = auth()->user()->unreadNotifications->count();
+                            $notifications = auth()->user()->notifications()->where(function ($query) {
+                                $query->where('data->audience', 'user')
+                                    ->orWhere('data->type', 'inquiry_reply');
+                            })->latest();
+                            $unreadCount = (clone $notifications)->whereNull('read_at')->count();
                         @endphp
 
                         <a href="#" class="text-white position-relative" id="notificationDropdown" data-toggle="dropdown"
@@ -242,7 +246,7 @@
                             <div class="dropdown-header bg-white sticky-top py-3 border-bottom">
                                 <strong>Notifications</strong>
                             </div>
-                            @forelse(auth()->user()->notifications()->latest()->get() as $notification)
+                            @forelse($notifications->get() as $notification)
 
                                 <a class="dropdown-item"
                                     href="{{ route('frontend.frontend.notifications.read', $notification->id) }}">

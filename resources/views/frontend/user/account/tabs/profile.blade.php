@@ -7,8 +7,9 @@
             My Profile
         </h4>
 
-        <a href="{{ route('frontend.user.dashboard') }}" class="btn btn-sm btn-secondary">
-            <i class="fas fa-arrow-left"></i> Dashboard
+        <a href="{{ route('frontend.index') }}" class="btn btn-sm btn-secondary"
+           onclick="if (window.history.length > 1) { window.history.back(); return false; }">
+            <i class="fas fa-arrow-left"></i> Back
         </a>
 
     </div>

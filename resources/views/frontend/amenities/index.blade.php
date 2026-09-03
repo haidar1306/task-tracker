@@ -158,6 +158,102 @@
     color:white;
 
 }
+
+/* Refined amenity cards */
+.amenities-hero {
+    min-height: 420px;
+    height: auto;
+    margin-top: -24px;
+}
+
+.amenities-hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    margin-bottom: 18px;
+}
+
+.amenities-hero p {
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.amenity-card {
+    padding: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(31, 41, 55, .10);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.amenity-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 38px rgba(31, 41, 55, .16);
+}
+
+.amenity-image {
+    position: relative;
+    height: 190px;
+    overflow: hidden;
+    background: #e9eef0;
+}
+
+.amenity-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+
+.amenity-card:hover .amenity-image img {
+    transform: scale(1.05);
+}
+
+.amenity-icon {
+    position: absolute;
+    left: 20px;
+    bottom: 18px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: #c8a96a;
+    font-size: 20px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .16);
+}
+
+.amenity-card-body {
+    min-height: 190px;
+    padding: 22px 22px 24px;
+}
+
+.amenity-card h4 {
+    font-size: 21px;
+    margin: 0 0 10px;
+}
+
+.amenity-card p {
+    line-height: 1.65;
+    margin: 0;
+}
+
+@media (max-width: 767.98px) {
+    .amenities-hero {
+        min-height: 360px;
+        margin-top: -16px;
+    }
+
+    .amenities-hero p {
+        font-size: 16px;
+    }
+
+    .amenity-image {
+        height: 170px;
+    }
+}
     </style>
 
 <!-- Hero --><section class="amenities-hero">
@@ -200,27 +296,27 @@
 
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
 
         @php
 
         $amenities = [
 
-        ['wifi','Free WiFi','High-speed complimentary WiFi throughout the hotel.','Complimentary'],
+        ['wifi','Free WiFi','High-speed complimentary WiFi throughout the hotel.','Complimentary','amenities.jpg'],
 
-        ['swimming-pool','Swimming Pool','Relax and refresh yourself in our outdoor swimming pool.','Premium'],
+        ['swimming-pool','Swimming Pool','Relax and refresh yourself in our outdoor swimming pool.','Premium','hotel.jfif'],
 
-        ['dumbbell','Fitness Gym','Modern gym equipment for your daily workout.','24/7'],
+        ['dumbbell','Fitness Gym','Modern gym equipment for your daily workout.','24/7','gallery.jfif'],
 
-        ['utensils','Restaurant','Multi-cuisine dining prepared by expert chefs.','Fine Dining'],
+        ['utensils','Restaurant','Multi-cuisine dining prepared by expert chefs.','Fine Dining','contact.jfif'],
 
-        ['spa','Luxury Spa','Professional spa treatments for complete relaxation.','Wellness'],
+        ['spa','Luxury Spa','Professional spa treatments for complete relaxation.','Wellness','gallery1.jfif'],
 
-        ['parking','Free Parking','Secure parking facility available for every guest.','Free'],
+        ['parking','Free Parking','Secure parking facility available for every guest.','Free','hotel_bg.jfif'],
 
-        ['concierge-bell','Room Service','24×7 professional room service whenever needed.','24/7'],
+        ['concierge-bell','Room Service','24/7 professional room service whenever needed.','24/7','contact1.jfif'],
 
-        ['cocktail','Bar Lounge','Enjoy handcrafted drinks in a premium lounge.','Premium']
+        ['cocktail','Bar Lounge','Enjoy handcrafted drinks in a premium lounge.','Premium','luxura4.jfif']
 
         ];
 
@@ -228,29 +324,30 @@
 
         @foreach($amenities as $item)
 
-        <div class="col-lg-3 col-md-6 mb-4">
+        <div class="col-xl-3 col-lg-4 col-md-6 mb-4 d-flex">
 
-            <div class="amenity-card">
+            <article class="amenity-card w-100">
 
-                <div class="icon-box">
+                <div class="amenity-image">
+                    <img src="{{ asset('frontend/images/' . $item[4]) }}" alt="{{ $item[1] }}" loading="lazy">
 
-                    <i class="fas fa-{{ $item[0] }}"></i>
+                    <span class="amenity-icon" aria-hidden="true">
+                        <i class="fas fa-{{ $item[0] }}"></i>
+                    </span>
 
                 </div>
 
-                <span class="badge badge-warning px-3 py-2 mb-3">
-                    {{ $item[3] }}
-                </span>
+                <div class="amenity-card-body">
+                    <span class="badge badge-warning px-3 py-2 mb-3">
+                        {{ $item[3] }}
+                    </span>
 
-                <h4>
-                    {{ $item[1] }}
-                </h4>
+                    <h4>{{ $item[1] }}</h4>
 
-                <p>
-                    {{ $item[2] }}
-                </p>
+                    <p>{{ $item[2] }}</p>
+                </div>
 
-            </div>
+            </article>
 
         </div>
 

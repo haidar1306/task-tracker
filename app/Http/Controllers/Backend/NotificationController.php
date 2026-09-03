@@ -12,8 +12,7 @@ class NotificationController extends Controller
      */
         public function read($id)
         {
-            $notification = auth()->user()
-                ->notifications()
+            $notification = $this->adminNotifications()
                 ->where('id', $id)
                 ->firstOrFail();
 
@@ -32,8 +31,7 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
-        $notification = auth()->user()
-            ->notifications()
+        $notification = $this->adminNotifications()
             ->where('id', $id)
             ->firstOrFail();
 
@@ -41,5 +39,13 @@ class NotificationController extends Controller
         $notification->delete();
 
         return back()->with('success', 'Notification deleted successfully.');
+    }
+
+    private function adminNotifications()
+    {
+        return auth()->user()->notifications()->where(function ($query) {
+            $query->where('data->audience', 'admin')
+                ->orWhereIn('data->type', ['booking', 'payment', 'inquiry']);
+        });
     }
 }

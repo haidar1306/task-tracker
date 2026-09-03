@@ -23,10 +23,10 @@ NAVBAR
     max-width: 100%;
 
     background: #061532;
-    padding: 18px 60px;
+    padding: 16px 48px;
 
     border: none;
-    border-radius: 0;
+    border-radius: 0 0 14px 14px;
 
     transform: none;
 
@@ -34,6 +34,10 @@ NAVBAR
 
     box-shadow: 0 5px 20px rgba(0,0,0,.25);
     transition: all .3s ease;
+}
+
+:root{
+    --frontend-navbar-height: 106px;
 }
 
 .hotel-navbar .container,
@@ -99,6 +103,10 @@ NAVBAR
     border: 0;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+.hotel-navbar .dropdown-menu{
+    border: 0;
 }
 
 .hotel-navbar .dropdown-item{
@@ -1024,6 +1032,7 @@ RESPONSIVE
     position:fixed;
     top:0;
     left:0;
+    right:auto;
     width:100%;
     z-index:9999;
 }
@@ -1032,7 +1041,49 @@ RESPONSIVE
 /* content navbar ke niche na chupe */
 
 body{
-    padding-top:90px;
+    padding-top:var(--frontend-navbar-height);
+}
+
+.frontend-content{
+    min-height:calc(100vh - var(--frontend-navbar-height));
+}
+
+@media (max-width: 991.98px){
+    :root{
+        --frontend-navbar-height: 82px;
+    }
+
+    .hotel-navbar{
+        padding: 12px 18px;
+        border-radius: 0;
+    }
+
+    .brand-title{
+        font-size: 22px;
+    }
+
+    .hotel-navbar .navbar-collapse{
+        margin-top: 14px;
+        padding: 12px 0 8px;
+    }
+
+    .hotel-navbar .nav-item{
+        margin: 0;
+    }
+
+    .hotel-navbar .nav-link{
+        padding: 10px 0 !important;
+    }
+}
+
+@media (max-width: 575.98px){
+    :root{
+        --frontend-navbar-height: 74px;
+    }
+
+    .frontend-content{
+        padding-top: 16px;
+    }
 }
 .home-page .hotel-navbar{
     position:absolute;

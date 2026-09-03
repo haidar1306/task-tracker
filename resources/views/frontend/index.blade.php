@@ -86,14 +86,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 25px 0;
+            padding: 16px 24px;
+            background: rgba(6, 21, 50, .97);
+            border-radius: 0 0 14px 14px;
+            box-shadow: 0 10px 24px rgba(6, 21, 50, .24);
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--navy);
+            color: #fff;
             text-decoration: none;
             font-size: 20px;
             font-weight: 700;
@@ -138,7 +141,7 @@
         }
 
         .nav-link {
-            color: var(--navy);
+            color: #f8fafc;
         }
 
         .nav-link:hover {
@@ -429,12 +432,14 @@
             }
 
             .navbar {
-                padding: 18px 0;
+                padding: 14px 12px;
+                border-radius: 0 0 12px 12px;
             }
 
             .brand {
                 font-size: 16px;
             }
+
 
             .brand-mark {
                 width: 36px;
@@ -578,11 +583,11 @@
                     @auth
                         @if ($logged_in_user->isUser())
                             <a class="nav-link" href="{{ url('hotel/dashboard') }}">Dashboard</a>
-                        @endif
 
-                        <a class="button button-primary" href="{{ route('frontend.user.account') }}">
-                            My Account
-                        </a>
+                            <a class="button button-primary" href="{{ route('frontend.user.account') }}">
+                                My Account
+                            </a>
+                        @endif
                     @else
                         <a class="nav-link" href="{{ route('frontend.auth.login') }}">Login</a>
 

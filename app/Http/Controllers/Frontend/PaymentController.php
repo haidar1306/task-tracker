@@ -110,9 +110,6 @@ class PaymentController extends Controller
                 'paid_amount' => $newPaidAmount,
                 'payment_status' => $paymentStatus,
             ]);
-            $admins = User::all();
-
-
             // 5. Update booking payment status
             $invoice->booking->update([
                 'payment_status' => $paymentStatus,
@@ -232,8 +229,6 @@ class PaymentController extends Controller
                         ? 'Confirmed'
                         : 'Pending',
                 ]);
-
-                $admins = User::all();
 
                 foreach ($admins as $admin) {
                     $admin->notify(new PaymentNotification($invoice));
