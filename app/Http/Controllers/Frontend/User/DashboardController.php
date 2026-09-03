@@ -16,6 +16,6 @@ class DashboardController
 
         
 
-        return view('frontend.user.dashboard', compact('hero', 'setting'));
+        return view('frontend.user.dashboard');
     }
 }
