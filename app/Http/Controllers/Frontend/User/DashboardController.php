@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Frontend\User;
 
-use App\Domains\Website\Models\GeneralSetting;
-// use App\Domains\Website\Models\HeroSection;
-
 /**
  * Class DashboardController.
  */
@@ -17,7 +14,7 @@ class DashboardController
     {
         // $hero = HeroSection::first();
 
-        $setting = GeneralSetting::first();
+        
 
         return view('frontend.user.dashboard', compact('hero', 'setting'));
     }
