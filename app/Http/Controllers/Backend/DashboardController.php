@@ -18,7 +18,7 @@ class DashboardController
     public function index()
     {
         $recentBookings = Room::count();
-        
+
         $totalRooms = Room::count();
 
         $availableRooms = Room::where('status', 'available')->count();
@@ -72,11 +72,11 @@ class DashboardController
         $year = now()->year;
 
         $monthlySales = Payment::selectRaw(
-            'MONTH(payment_date) as month, SUM(amount) as total'
+            'EXTRACT(MONTH FROM payment_date) as month, SUM(amount) as total'
         )
             ->where('payment_status', 'Paid')
             ->whereYear('payment_date', $year)
-            ->groupByRaw('MONTH(payment_date)')
+            ->groupByRaw('EXTRACT(MONTH FROM payment_date)')
             ->pluck('total', 'month');
 
         $months = [
