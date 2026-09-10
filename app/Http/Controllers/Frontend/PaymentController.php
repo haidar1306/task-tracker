@@ -223,12 +223,14 @@ class PaymentController extends Controller
                     'payment_status' => $paymentStatus,
                 ]);
 
-                $invoice->booking->update([
+                              $invoice->booking->update([
                     'payment_status' => $paymentStatus,
                     'status' => $paymentStatus == 'Paid'
                         ? 'Confirmed'
                         : 'Pending',
                 ]);
+
+                $admins = User::where('type', User::TYPE_ADMIN)->get();
 
                 foreach ($admins as $admin) {
                     $admin->notify(new PaymentNotification($invoice));
