@@ -41,11 +41,7 @@
 }
 
     </style>
-
-    <!-- ===========================
-                                                                                            Hero Section
-                                                                                            =========================== -->
-
+    <!-- hero section  -->
     <section class="hero-section">
 
       

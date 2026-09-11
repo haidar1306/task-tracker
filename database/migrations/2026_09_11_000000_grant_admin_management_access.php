@@ -14,7 +14,7 @@ return new class extends Migration
             ['type' => User::TYPE_ADMIN]
         );
 
-        $adminRole->syncPermissions(Permission::where('type', User::TYPE_ADMIN)->get());
+        $adminRole->syncPermissions(Permission::query()->get());
 
         User::where('type', User::TYPE_ADMIN)
             ->get()

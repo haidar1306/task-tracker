@@ -12,7 +12,8 @@ class DashboardController
      */
     public function index()
     {
-        // $hero = HeroSection::first();
+       
+    
 
         
 
