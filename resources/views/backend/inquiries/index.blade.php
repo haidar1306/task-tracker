@@ -63,8 +63,8 @@
 
             </table>
 
-            <div class="mt-3">
-                {{ $inquiries->links() }}
+            <div class="inquiry-pagination mt-3">
+                {{ $inquiries->links('pagination::bootstrap-4') }}
             </div>
 
         </div>

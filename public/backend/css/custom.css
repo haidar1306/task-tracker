@@ -300,6 +300,20 @@
     overflow-x: hidden;
 }
 
+.inquiry-pagination {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.inquiry-pagination .pagination {
+    margin-bottom: 0;
+}
+
+.inquiry-pagination .page-link {
+    min-width: 38px;
+    text-align: center;
+}
+
 /* Keep the desktop navigation in the viewport while the page content scrolls. */
 @media (min-width: 768px) {
     #accordionSidebar {
