@@ -95,11 +95,7 @@
 
             <span class="frontend-brand-copy">
                 <span class="brand-title">
-                    HOTEL MANAGEMENT
-                </span>
-
-                <span class="brand-subtitle">
-                    Hotel Luxura
+                    Luxura Palace
                 </span>
             </span>
 
