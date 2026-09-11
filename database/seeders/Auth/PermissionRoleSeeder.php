@@ -23,7 +23,7 @@ class PermissionRoleSeeder extends Seeder
         $this->disableForeignKeys();
 
         // Create Roles
-        Role::create([
+        $adminRole = Role::create([
             'id' => 1,
             'type' => User::TYPE_ADMIN,
             'name' => 'Administrator',
@@ -77,6 +77,8 @@ class PermissionRoleSeeder extends Seeder
                 'sort' => 6,
             ]),
         ]);
+
+        $adminRole->syncPermissions(Permission::where('type', User::TYPE_ADMIN)->get());
 
         // Assign Permissions to other Roles
         //
