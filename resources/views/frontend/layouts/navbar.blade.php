@@ -1,6 +1,6 @@
 <style>
     .frontend-content {
-        padding-top: 24px;
+        padding-top: calc(var(--frontend-navbar-height) + 24px);
         min-height: 100vh;
     }
 
@@ -63,21 +63,22 @@
         background: #c8c8c8;
         border-radius: 20px;
     }
-    .notification-dropdown{
-    width:380px;
-    max-height:500px;
-    overflow-y:auto;
-    overflow-x:hidden;
-}
 
-.notification-dropdown::-webkit-scrollbar{
-    width:6px;
-}
+    .notification-dropdown {
+        width: 380px;
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 
-.notification-dropdown::-webkit-scrollbar-thumb{
-    background:#d6d6d6;
-    border-radius:20px;
-}
+    .notification-dropdown::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .notification-dropdown::-webkit-scrollbar-thumb {
+        background: #d6d6d6;
+        border-radius: 20px;
+    }
 
     .notification-dropdown::-webkit-scrollbar-track {
         background: #f5f5f5;
@@ -192,12 +193,12 @@
 
                 @auth
                     @if (auth()->user()->isUser())
-                    <li class="nav-item {{ request()->routeIs('frontend.reservation.*') ? 'active' : '' }}">
-                        <a class="nav-link {{ request()->routeIs('frontend.reservation.*') ? 'active' : '' }}"
-                            href="{{ route('frontend.reservation.index') }}">
-                            My Reservations
-                        </a>
-                    </li>
+                        <li class="nav-item {{ request()->routeIs('frontend.reservation.*') ? 'active' : '' }}">
+                            <a class="nav-link {{ request()->routeIs('frontend.reservation.*') ? 'active' : '' }}"
+                                href="{{ route('frontend.reservation.index') }}">
+                                My Reservations
+                            </a>
+                        </li>
                     @endif
                 @endauth
 
@@ -222,134 +223,134 @@
 
                 @auth
                     @if (auth()->user()->isUser())
-                    <div class="dropdown mr-3">
+                        <div class="dropdown mr-3">
 
-                        @php
-                            $notifications = auth()->user()->notifications()->where(function ($query) {
-                                $query->where('data->audience', 'user')
-                                    ->orWhere('data->type', 'inquiry_reply');
-                            })->latest();
-                            $unreadCount = (clone $notifications)->whereNull('read_at')->count();
-                        @endphp
+                            @php
+                                $notifications = auth()->user()->notifications()->where(function ($query) {
+                                    $query->where('data->audience', 'user')
+                                        ->orWhere('data->type', 'inquiry_reply');
+                                })->latest();
+                                $unreadCount = (clone $notifications)->whereNull('read_at')->count();
+                            @endphp
 
-                        <a href="#" class="text-white position-relative" id="notificationDropdown" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
+                            <a href="#" class="text-white position-relative" id="notificationDropdown" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
 
-                            <i class="fas fa-bell fa-lg"></i>
+                                <i class="fas fa-bell fa-lg"></i>
 
-                            @if($unreadCount > 0)
-                                <span class="badge badge-danger" style="position:absolute;top:-8px;right:-10px;">
-                                    {{ $unreadCount }}
-                                </span>
-                            @endif
+                                @if($unreadCount > 0)
+                                    <span class="badge badge-danger" style="position:absolute;top:-8px;right:-10px;">
+                                        {{ $unreadCount }}
+                                    </span>
+                                @endif
 
-                        </a>
+                            </a>
 
-                        <div class="dropdown-menu dropdown-menu-right shadow notification-dropdown">
+                            <div class="dropdown-menu dropdown-menu-right shadow notification-dropdown">
 
-                            <div class="dropdown-header bg-white sticky-top py-3 border-bottom">
-                                <strong>Notifications</strong>
-                            </div>
-                            @forelse($notifications->get() as $notification)
+                                <div class="dropdown-header bg-white sticky-top py-3 border-bottom">
+                                    <strong>Notifications</strong>
+                                </div>
+                                @forelse($notifications->get() as $notification)
 
-                                <a class="dropdown-item"
-                                    href="{{ route('frontend.frontend.notifications.read', $notification->id) }}">
+                                    <a class="dropdown-item"
+                                        href="{{ route('frontend.frontend.notifications.read', $notification->id) }}">
 
-                                    <div class="small text-muted">
-                                        {{ $notification->created_at->diffForHumans() }}
+                                        <div class="small text-muted">
+                                            {{ $notification->created_at->diffForHumans() }}
+                                        </div>
+
+                                        <strong>
+                                            {{ $notification->data['title'] ?? 'Notification' }}
+                                        </strong>
+
+                                        <br>
+
+                                        <span>
+                                            {{ $notification->data['message'] ?? '' }}
+                                        </span>
+
+                                    </a>
+
+                                @empty
+
+                                    <div class="dropdown-item text-center">
+                                        No Notifications
                                     </div>
 
-                                    <strong>
-                                        {{ $notification->data['title'] ?? 'Notification' }}
-                                    </strong>
+                                @endforelse
+                                <!-- <div class="border-top text-center p-2">
 
-                                    <br>
+                                        <a href="{{ route('frontend.frontend.notifications.index') }}" class="btn btn-sm btn-primary w-100">
 
-                                    <span>
-                                        {{ $notification->data['message'] ?? '' }}
-                                    </span>
+                                            View All Notifications
 
-                                </a>
+                                        </a>
 
-                            @empty
+                                    </div> -->
 
-                                <div class="dropdown-item text-center">
-                                    No Notifications
-                                </div>
-
-                            @endforelse
-                            <!-- <div class="border-top text-center p-2">
-
-                                <a href="{{ route('frontend.frontend.notifications.index') }}" class="btn btn-sm btn-primary w-100">
-
-                                    View All Notifications
-
-                                </a>
-
-                            </div> -->
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- Account Dropdown -->
-
-                    <div class="dropdown">
-
-                        <a href="#" class="dropdown-toggle text-white" id="accountDropdown" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-
-                            <i class="fas fa-user-circle me-2"></i>
-                            {{ auth()->user()->name }}
-
-                        </a>
-
-
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountDropdown">
-
-
-                            <a class="dropdown-item" href="{{ route('frontend.user.account') }}">
-
-                                <i class="fas fa-user mr-2"></i>
-
-                                My Account
-
-                            </a>
-
-
-
-                            <a class="dropdown-item" href="{{ route('frontend.reservation.index') }}">
-
-                                <i class="fas fa-calendar-check mr-2"></i>
-
-                                My Reservations
-
-                            </a>
-
-
-
-                            <div class="dropdown-divider"></div>
-
-
-
-                            <a class="dropdown-item text-danger" href="{{ route('frontend.auth.logout') }}">
-
-
-                                <i class="fas fa-sign-out-alt mr-2"></i>
-
-                                Logout
-
-
-                            </a>
-
-
+                            </div>
 
                         </div>
 
 
-                    </div>
+
+                        <!-- Account Dropdown -->
+
+                        <div class="dropdown">
+
+                            <a href="#" class="dropdown-toggle text-white" id="accountDropdown" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+
+                                <i class="fas fa-user-circle me-2"></i>
+                                {{ auth()->user()->name }}
+
+                            </a>
+
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountDropdown">
+
+
+                                <a class="dropdown-item" href="{{ route('frontend.user.account') }}">
+
+                                    <i class="fas fa-user mr-2"></i>
+
+                                    My Account
+
+                                </a>
+
+
+
+                                <a class="dropdown-item" href="{{ route('frontend.reservation.index') }}">
+
+                                    <i class="fas fa-calendar-check mr-2"></i>
+
+                                    My Reservations
+
+                                </a>
+
+
+
+                                <div class="dropdown-divider"></div>
+
+
+
+                                <a class="dropdown-item text-danger" href="{{ route('frontend.auth.logout') }}">
+
+
+                                    <i class="fas fa-sign-out-alt mr-2"></i>
+
+                                    Logout
+
+
+                                </a>
+
+
+
+                            </div>
+
+
+                        </div>
                     @endif
 
                 @else

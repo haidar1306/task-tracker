@@ -890,64 +890,68 @@ RESPONSIVE
     .dropdown-item-custom:hover {
         color: #d4af37 !important;
     }
-    .hotel-navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: auto;
-        width: 100%;
-        z-index: 9999;
+}
+
+/* ===== Navbar spacing (applies at ALL screen sizes, not just mobile) ===== */
+
+.hotel-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: auto;
+    width: 100%;
+    z-index: 9999;
+}
+
+/* content navbar ke niche na chupe */
+
+body {
+    padding-top: 0;
+}
+
+.frontend-content {
+    min-height: calc(100vh - var(--frontend-navbar-height));
+}
+
+@media (max-width: 991.98px) {
+    :root {
+        --frontend-navbar-height: 82px;
     }
 
-    /* content navbar ke niche na chupe */
+    .hotel-navbar {
+        padding: 12px 18px;
+        border-radius: 0;
+    }
 
-    body {
-        padding-top: var(--frontend-navbar-height);
+    .brand-title {
+        font-size: 22px;
+    }
+
+    .hotel-navbar .navbar-collapse {
+        margin-top: 14px;
+        padding: 12px 0 8px;
+    }
+
+    .hotel-navbar .nav-item {
+        margin: 0;
+    }
+
+    .hotel-navbar .nav-link {
+        padding: 10px 0 !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    :root {
+        --frontend-navbar-height: 74px;
     }
 
     .frontend-content {
-        min-height: calc(100vh - var(--frontend-navbar-height));
+        padding-top: 16px;
     }
-
-    @media (max-width: 991.98px) {
-        :root {
-            --frontend-navbar-height: 82px;
-        }
-
-        .hotel-navbar {
-            padding: 12px 18px;
-            border-radius: 0;
-        }
-
-        .brand-title {
-            font-size: 22px;
-        }
-
-        .hotel-navbar .navbar-collapse {
-            margin-top: 14px;
-            padding: 12px 0 8px;
-        }
-
-        .hotel-navbar .nav-item {
-            margin: 0;
-        }
-
-        .hotel-navbar .nav-link {
-            padding: 10px 0 !important;
-        }
-    }
-
-    @media (max-width: 575.98px) {
-        :root {
-            --frontend-navbar-height: 74px;
-        }
-
-        .frontend-content {
-            padding-top: 16px;
-        }
-    }
-    .home-page .hotel-navbar {
-        position: absolute;
-    }
-    /* GLOBAL FRONTEND SPACING */
 }
+
+.home-page .hotel-navbar {
+    position: absolute;
+}
+/* GLOBAL FRONTEND SPACING */
