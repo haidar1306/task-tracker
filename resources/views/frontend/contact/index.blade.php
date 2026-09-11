@@ -106,7 +106,7 @@
     }
 </style>
 
-<section class="frontend-content">
+<section class="contact-page-wrap">
     <section class="contact-hero text-center">
         <div class="container">
             <h1>Contact Us</h1>

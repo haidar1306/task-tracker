@@ -1,6 +1,6 @@
 <style>
     .frontend-content {
-        padding-top: calc(var(--frontend-navbar-height) + 24px);
+        padding-top: 0;
         min-height: 100vh;
     }
 
