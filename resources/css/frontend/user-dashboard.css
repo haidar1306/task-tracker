@@ -955,3 +955,83 @@ body {
     position: absolute;
 }
 /* GLOBAL FRONTEND SPACING */
+
+/* Keep the shared navbar compact and in document flow on every frontend module. */
+.hotel-navbar {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: 100%;
+    height: 84px;
+    padding: 0 42px;
+}
+
+:root {
+    --frontend-navbar-height: 84px;
+}
+
+.hotel-navbar .container,
+.hotel-navbar .container-fluid {
+    height: 100%;
+}
+
+.hotel-navbar .navbar-brand {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.hotel-navbar .frontend-brand-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .14);
+}
+
+.brand-title {
+    font-size: 24px;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.brand-subtitle {
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-top: 6px;
+}
+
+.frontend-content {
+    padding-top: 0;
+}
+
+.home-page .hotel-navbar {
+    position: relative;
+}
+
+@media (max-width: 767.98px) {
+    :root {
+        --frontend-navbar-height: 64px;
+    }
+
+    .hotel-navbar {
+        height: 64px;
+        padding: 0 18px;
+    }
+
+    .hotel-navbar .frontend-brand-logo {
+        width: 38px;
+        height: 38px;
+    }
+
+    .brand-title {
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    .brand-subtitle {
+        font-size: 8px;
+        letter-spacing: 2px;
+    }
+}
