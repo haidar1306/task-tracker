@@ -137,7 +137,7 @@
             </div>
 
             <div class="mt-3">
-                {{ $coupons->links() }}
+                {{ $coupons->links('pagination::admin') }}
             </div>
 
         </div>

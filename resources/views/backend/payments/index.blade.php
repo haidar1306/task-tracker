@@ -36,7 +36,8 @@
                 </div>
             </form>
 
-            <table class="table table-bordered">
+            <div class="admin-table-scroll">
+                <table class="table table-bordered">
 
                 <thead>
 
@@ -119,7 +120,8 @@
 
                 </tbody>
 
-            </table>
+                </table>
+            </div>
 
             @if ($payments->hasPages())
                 <div class="d-flex justify-content-between align-items-center mt-3">
@@ -128,7 +130,7 @@
                         of {{ $payments->total() }} results
                     </p>
 
-                    {{ $payments->links() }}
+                    {{ $payments->links('pagination::admin') }}
                 </div>
             @endif
 

@@ -169,7 +169,7 @@
             of {{ $rooms->total() }} results
         </p>
 
-        {{ $rooms->links() }}
+        {{ $rooms->links('pagination::admin') }}
     </div>
 @endif
 

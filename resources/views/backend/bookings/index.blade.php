@@ -213,7 +213,7 @@
             of {{ $bookings->total() }} results
         </p>
 
-        {{ $bookings->links() }}
+        {{ $bookings->links('pagination::admin') }}
     </div>
 @endif
 

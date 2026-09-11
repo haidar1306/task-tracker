@@ -64,7 +64,7 @@
             </table>
 
             <div class="inquiry-pagination mt-3">
-                {{ $inquiries->links('pagination::bootstrap-4') }}
+                {{ $inquiries->links('pagination::admin') }}
             </div>
 
         </div>

@@ -150,7 +150,7 @@
             of {{ $bedTypes->total() }} results
         </p>
 
-        {{ $bedTypes->links() }}
+        {{ $bedTypes->links('pagination::admin') }}
     </div>
 @endif
 

@@ -13,7 +13,8 @@
         </x-slot>
 
         <x-slot name="body">
-            <table class="table table-hover">
+            <div class="admin-table-scroll">
+                <table class="table table-hover">
                 <tr>
                     <th>@lang('Type')</th>
                     <td>@include('backend.auth.user.includes.type')</td>
@@ -92,6 +93,7 @@
                     <td>{!! $user->permissions_label !!}</td>
                 </tr>
             </table>
+            </div>
         </x-slot>
 
         <x-slot name="footer">

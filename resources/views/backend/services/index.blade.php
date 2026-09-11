@@ -144,7 +144,7 @@
             </div>
 
             <div class="mt-3">
-                {{ $services->links() }}
+                {{ $services->links('pagination::admin') }}
             </div>
 
         </div>

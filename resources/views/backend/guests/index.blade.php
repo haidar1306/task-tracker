@@ -150,7 +150,7 @@
             of {{ $guests->total() }} results
         </p>
 
-        {{ $guests->links() }}
+        {{ $guests->links('pagination::admin') }}
     </div>
 @endif
 

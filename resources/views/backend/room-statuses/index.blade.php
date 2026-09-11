@@ -163,7 +163,7 @@
             of {{ $roomStatuses->total() }} results
         </p>
 
-        {{ $roomStatuses->links() }}
+        {{ $roomStatuses->links('pagination::admin') }}
     </div>
 @endif
 

@@ -18,7 +18,8 @@
 
             <div class="card-body">
 
-                <table class="table table-bordered">
+                <div class="admin-table-scroll">
+                    <table class="table table-bordered">
 
                     <tr>
                         <th width="200">Name</th>
@@ -61,7 +62,8 @@
                         <td>{{ $inquiry->created_at->format('d M Y h:i A') }}</td>
                     </tr>
 
-                </table>
+                    </table>
+                </div>
                 <div class="mt-4">
                     <button class="btn btn-primary" data-toggle="modal" data-target="#replyModal">
                         <i class="fas fa-envelope"></i>

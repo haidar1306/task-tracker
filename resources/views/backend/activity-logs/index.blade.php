@@ -118,7 +118,7 @@
 
             </div>
 
-            <div class="card-body p-0">
+            <div class="card-body p-0 table-responsive">
 
                 <table class="table table-hover table-bordered mb-0">
 
@@ -165,7 +165,7 @@
 
                 <div class="card-footer admin-pagination">
 
-                    {{ $activityLogs->links('pagination::bootstrap-4') }}
+                    {{ $activityLogs->links('pagination::admin') }}
 
                 </div>
 

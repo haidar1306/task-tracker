@@ -158,7 +158,7 @@
             of {{ $amenities->total() }} results
         </p>
 
-        {{ $amenities->links() }}
+        {{ $amenities->links('pagination::admin') }}
     </div>
 @endif
 
