@@ -35,25 +35,29 @@ class Coupon extends Model
      */
     public function isValid(): bool
     {
+        return $this->invalidReason() === null;
+    }
+
+    public function invalidReason(): ?string
+    {
         $now = Carbon::now();
 
-        if (!$this->status) {
-            return false;
+        if (! $this->status) {
+            return 'This coupon is inactive.';
         }
 
         if ($this->starts_at && $now->lt($this->starts_at)) {
-            return false;
+            return 'This coupon is not active yet.';
         }
 
         if ($this->expires_at && $now->gt($this->expires_at)) {
-            return false;
+            return 'This coupon has expired.';
         }
 
-        if ($this->usage_limit !== null &&
-            $this->used_count >= $this->usage_limit) {
-            return false;
+        if ($this->usage_limit !== null && $this->used_count >= $this->usage_limit) {
+            return 'This coupon usage limit has been reached.';
         }
 
-        return true;
+        return null;
     }
 }

@@ -24,16 +24,23 @@ class CouponController extends Controller
         ], 422);
     }
 
-    if (!$coupon->isValid()) {
+    if ($reason = $coupon->invalidReason()) {
         return response()->json([
             'status' => false,
-            'message' => 'This coupon is expired or inactive.',
+            'message' => $reason,
         ], 422);
     }
 
     $invoice = \App\Models\Invoice::findOrFail($request->invoice_id);
 
     $remaining = $invoice->total_amount - $invoice->paid_amount;
+
+    if ($coupon->minimum_amount > $remaining) {
+        return response()->json([
+            'status' => false,
+            'message' => 'This coupon requires a minimum payment of ₹'.number_format($coupon->minimum_amount, 2).'.',
+        ], 422);
+    }
 
     // Calculate discount
     if ($coupon->discount_type === 'percentage') {

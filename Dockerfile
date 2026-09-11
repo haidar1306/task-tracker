@@ -18,6 +18,9 @@ WORKDIR /var/www
 
 COPY . .
 
+# Remove local/dev package discovery caches before installing production dependencies.
+RUN rm -f bootstrap/cache/config.php bootstrap/cache/packages.php bootstrap/cache/services.php
+
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install

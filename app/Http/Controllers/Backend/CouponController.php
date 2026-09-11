@@ -46,9 +46,9 @@ class CouponController extends Controller
 
         $validated['code'] = strtoupper($validated['code']);
         $validated['status'] = $request->boolean('status');
+        $validated['name'] = $validated['code'];
 
         Coupon::create($validated);
-
         return redirect()
             ->route('admin.coupons.index')
             ->with('flash_success', 'Coupon created successfully.');
@@ -82,9 +82,9 @@ class CouponController extends Controller
 
         $validated['code'] = strtoupper($validated['code']);
         $validated['status'] = $request->boolean('status');
+        $validated['name'] = $validated['code'];
 
         $coupon->update($validated);
-
         return redirect()
             ->route('admin.coupons.index')
             ->with('flash_success', 'Coupon updated successfully.');
