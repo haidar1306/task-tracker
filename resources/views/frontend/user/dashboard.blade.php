@@ -40,6 +40,99 @@
     overflow:hidden;
 }
 
+.image-amenity-card {
+    overflow: hidden;
+    padding: 0;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(31, 41, 55, .10);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.image-amenity-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 38px rgba(31, 41, 55, .16);
+}
+
+.image-amenity-media {
+    position: relative;
+    height: 170px;
+    overflow: hidden;
+    background: #e9eef0;
+}
+
+.image-amenity-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+
+.image-amenity-card:hover .image-amenity-media img {
+    transform: scale(1.05);
+}
+
+.image-amenity-icon {
+    position: absolute;
+    left: 18px;
+    bottom: 16px;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    color: #c8a96a;
+    font-size: 19px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .16);
+}
+
+.image-amenity-body {
+    min-height: 154px;
+    padding: 18px 18px 20px;
+    text-align: center;
+}
+
+.image-amenity-badge {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    background: #c8a96a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.image-amenity-body h5 {
+    margin: 0 0 8px;
+    color: #1f2937;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.image-amenity-body p {
+    margin: 0;
+    color: #777;
+    line-height: 1.55;
+}
+
+@media (max-width: 767.98px) {
+    .image-amenity-media {
+        height: 145px;
+    }
+
+    .image-amenity-body {
+        min-height: 142px;
+        padding: 15px 12px 17px;
+    }
+
+    .image-amenity-body h5 {
+        font-size: 16px;
+    }
+}
+
     </style>
     <!-- hero section  -->
     <section class="hero-section">
@@ -353,174 +446,37 @@
 
 
 
+            @php
+                $dashboardAmenities = [
+                    ['wifi', 'Free WiFi', 'High-speed internet', 'Complimentary', 'amenities.jpg'],
+                    ['swimming-pool', 'Swimming Pool', 'Outdoor pool', 'Premium', 'hotel.jfif'],
+                    ['dumbbell', 'Fitness Gym', 'Modern equipment', '24/7', 'gallery.jfif'],
+                    ['utensils', 'Restaurant', 'Multi-cuisine dining', 'Fine Dining', 'contact.jfif'],
+                    ['spa', 'Spa & Wellness', 'Luxury relaxation', 'Wellness', 'gallery1.jfif'],
+                    ['car', 'Parking', 'Secure parking', 'Free', 'hotel_bg.jfif'],
+                    ['concierge-bell', 'Room Service', 'Available 24/7', '24/7', 'contact1.jfif'],
+                    ['cocktail', 'Bar Lounge', 'Premium drinks', 'Premium', 'luxura4.jfif'],
+                ];
+            @endphp
+
             <div class="row gx-4 gy-4">
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-wifi"></i>
-                        </div>
-
-                        <h5>Free WiFi</h5>
-
-                        <p>
-                            High Speed Internet
-                        </p>
-
+                @foreach ($dashboardAmenities as $amenity)
+                    <div class="col-lg-3 col-md-4 col-6 mb-4 d-flex">
+                        <article class="luxury-amenity-card image-amenity-card w-100">
+                            <div class="image-amenity-media">
+                                <img src="{{ asset('frontend/images/' . $amenity[4]) }}" alt="{{ $amenity[1] }}" loading="lazy">
+                                <span class="image-amenity-icon" aria-hidden="true">
+                                    <i class="fas fa-{{ $amenity[0] }}"></i>
+                                </span>
+                            </div>
+                            <div class="image-amenity-body">
+                                <span class="image-amenity-badge">{{ $amenity[3] }}</span>
+                                <h5>{{ $amenity[1] }}</h5>
+                                <p>{{ $amenity[2] }}</p>
+                            </div>
+                        </article>
                     </div>
-
-                </div>
-
-
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-swimming-pool"></i>
-                        </div>
-
-                        <h5>Swimming Pool</h5>
-
-                        <p>
-                            Outdoor Pool
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-dumbbell"></i>
-                        </div>
-
-                        <h5>Fitness Gym</h5>
-
-                        <p>
-                            Modern Equipment
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-utensils"></i>
-                        </div>
-
-                        <h5>Restaurant</h5>
-
-                        <p>
-                            Multi Cuisine
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-spa"></i>
-                        </div>
-
-                        <h5>Spa & Wellness</h5>
-
-                        <p>
-                            Luxury Relaxation
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-car"></i>
-                        </div>
-
-                        <h5>Parking</h5>
-
-                        <p>
-                            Secure Parking
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-concierge-bell"></i>
-                        </div>
-
-                        <h5>Room Service</h5>
-
-                        <p>
-                            24×7 Available
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-
-                <div class="col-lg-3 col-md-4 col-6 mb-4">
-
-                    <div class="luxury-amenity-card">
-
-                        <div class="amenity-icon">
-                            <i class="fas fa-cocktail"></i>
-                        </div>
-
-                        <h5>Bar Lounge</h5>
-
-                        <p>
-                            Premium Drinks
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
+                @endforeach
             </div>
 
 
@@ -786,68 +742,156 @@
                                                                                             Contact Us
                                                                                             ========================================== -->
 
-    <section class="container py-5">
+    <style>
+        .dashboard-contact-section {
+            margin: 0 auto;
+            padding: 78px 0 82px;
+            background: #eef4f2;
+        }
 
-        <h2 class="section-title">
-            Need Any Help?
-        </h2>
+        .dashboard-contact-heading {
+            max-width: 620px;
+            margin: 0 auto 34px;
+            text-align: center;
+        }
 
-        <div class="row">
+        .dashboard-contact-kicker {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #b18a43;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
 
-            <div class="col-lg-4 mb-4">
+        .dashboard-contact-heading h2 {
+            margin-bottom: 10px;
+            color: #111827;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+        }
 
-                <div class="contact-card">
+        .dashboard-contact-heading p {
+            margin: 0;
+            color: #64748b;
+        }
 
-                    <i class="fas fa-phone"></i>
+        .dashboard-contact-card {
+            height: 100%;
+            padding: 30px 24px;
+            border: 1px solid rgba(15, 23, 42, .06);
+            border-radius: 18px;
+            background: #fff;
+            text-align: center;
+            box-shadow: 0 16px 32px rgba(15, 23, 42, .08);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
 
-                    <h4 class="mt-3">
-                        Call Us
-                    </h4>
+        .dashboard-contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 22px 42px rgba(15, 23, 42, .13);
+        }
 
-                    <p>
-                        +91 9316449257
-                    </p>
+        .dashboard-contact-icon {
+            display: grid;
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 18px;
+            place-items: center;
+            border-radius: 50%;
+            background: #fff7e5;
+            color: #c8a96a;
+            font-size: 22px;
+        }
+
+        .dashboard-contact-card h4 {
+            margin-bottom: 8px;
+            color: #111827;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .dashboard-contact-card p,
+        .dashboard-contact-card a {
+            margin: 0;
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.6;
+            text-decoration: none;
+        }
+
+        .dashboard-contact-card a:hover {
+            color: #b18a43;
+        }
+
+        @media (max-width: 767.98px) {
+            .dashboard-contact-section {
+                padding: 56px 0 62px;
+            }
+        }
+    </style>
+
+    <section class="dashboard-contact-section">
+
+        <div class="dashboard-contact-heading">
+            <span class="dashboard-contact-kicker">Guest Support</span>
+            <h2>Need Any Help?</h2>
+            <p>Our team is ready to help make your stay comfortable and effortless.</p>
+        </div>
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-4 mb-4">
+
+                    <div class="dashboard-contact-card">
+
+                        <div class="dashboard-contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+
+                        <h4>Call Us</h4>
+
+                        <a href="tel:+919316449257">+91 9316449257</a>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4 mb-4">
+
+                    <div class="dashboard-contact-card">
+
+                        <div class="dashboard-contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+
+                        <h4>Email</h4>
+
+                        <a href="mailto:haidarmaknojiya1306@gmail.com">haidarmaknojiya1306@gmail.com</a>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4 mb-4">
+
+                    <div class="dashboard-contact-card">
+
+                        <div class="dashboard-contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+
+                        <h4>Address</h4>
+
+                        <p>Palanpur, Gujarat, India</p>
+
+                    </div>
 
                 </div>
 
             </div>
-
-            <div class="col-lg-4 mb-4">
-
-                <div class="contact-card">
-
-                    <i class="fas fa-envelope"></i>
-
-                    <h4 class="mt-3">
-                        Email
-                    </h4>
-
-                    <p>
-                        admin@hotelmanagement.com
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-4 mb-4">
-
-                <div class="contact-card">
-
-                    <i class="fas fa-map-marker-alt"></i>
-
-                    <h4 class="mt-3">
-                        Address
-                    </h4>
-
-                    <p>
-                        Palanpur, Gujarat, India
-                    </p>
-
-                </div>
-
-            </div>
-
         </div>
 
     </section>

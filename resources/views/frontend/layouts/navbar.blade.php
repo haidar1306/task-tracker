@@ -88,15 +88,19 @@
     <div class="container">
 
         <!-- Logo -->
-        <a class="navbar-brand">
+        <a class="navbar-brand frontend-brand" href="{{ route('frontend.index') }}">
 
-            <div class="brand-title">
-                HOTEL BOOKING
-            </div>
+            <img class="frontend-brand-logo" src="{{ asset('backend/img/7.jfif') }}" alt="Hotel Luxura">
 
-            <div class="brand-subtitle">
-                Hotel Luxura
-            </div>
+            <span class="frontend-brand-copy">
+                <span class="brand-title">
+                    HOTEL MANAGEMENT
+                </span>
+
+                <span class="brand-subtitle">
+                    Hotel Luxura
+                </span>
+            </span>
 
         </a>
 
