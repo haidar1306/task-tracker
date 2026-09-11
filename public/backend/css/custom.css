@@ -300,3 +300,17 @@
     overflow-x: hidden;
 }
 
+/* Keep the desktop navigation in the viewport while the page content scrolls. */
+@media (min-width: 768px) {
+    #accordionSidebar {
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        height: 100vh;
+        max-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+    }
+}
+
