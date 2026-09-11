@@ -163,9 +163,9 @@
 
             @if($activityLogs->hasPages())
 
-                <div class="card-footer">
+                <div class="card-footer admin-pagination">
 
-                    {{ $activityLogs->links() }}
+                    {{ $activityLogs->links('pagination::bootstrap-4') }}
 
                 </div>
 

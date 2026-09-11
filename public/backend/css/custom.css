@@ -314,6 +314,16 @@
     text-align: center;
 }
 
+.admin-pagination .pagination {
+    justify-content: flex-end;
+    margin-bottom: 0;
+}
+
+.admin-pagination .page-link {
+    min-width: 38px;
+    text-align: center;
+}
+
 /* Keep the desktop navigation in the viewport while the page content scrolls. */
 @media (min-width: 768px) {
     #accordionSidebar {
