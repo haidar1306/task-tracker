@@ -11,6 +11,7 @@ class Coupon extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'code',
         'discount_type',
         'discount_value',

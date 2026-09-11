@@ -49,6 +49,7 @@ class CouponController extends Controller
         $validated['name'] = $validated['code'];
 
         Coupon::create($validated);
+        
         return redirect()
             ->route('admin.coupons.index')
             ->with('flash_success', 'Coupon created successfully.');
