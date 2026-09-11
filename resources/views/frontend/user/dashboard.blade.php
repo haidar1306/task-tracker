@@ -137,9 +137,6 @@
     <!-- hero section  -->
     <section class="hero-section">
 
-      
-       @include('frontend.layouts.navbar')
-
         <div class="container">
 
 
