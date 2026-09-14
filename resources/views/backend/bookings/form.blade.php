@@ -26,13 +26,15 @@
 
         <label>Room</label>
 
-        <select name="room_id" class="form-control" required>
+        <select name="room_id" id="room_id" class="form-control" required>
 
             <option value="">Select Room</option>
 
             @foreach($rooms as $room)
 
-                <option value="{{ $room->id }}" {{ old('room_id', $booking->room_id ?? '') == $room->id ? 'selected' : '' }}>
+                <option value="{{ $room->id }}"
+                    data-price="{{ $room->roomType->price ?? 0 }}"
+                    {{ old('room_id', $booking->room_id ?? '') == $room->id ? 'selected' : '' }}>
 
                     {{ $room->room_number }}
 
@@ -48,7 +50,7 @@
 
         <label>Check In</label>
 
-        <input type="date" name="check_in" class="form-control"
+        <input type="date" name="check_in" id="check_in" class="form-control"
             value="{{ old('check_in', isset($booking) ? $booking->check_in->format('Y-m-d') : '') }}" required>
 
     </div>
@@ -57,7 +59,7 @@
 
         <label>Check Out</label>
 
-        <input type="date" name="check_out" class="form-control"
+        <input type="date" name="check_out" id="check_out" class="form-control"
             value="{{ old('check_out', isset($booking) ? $booking->check_out->format('Y-m-d') : '') }}" required>
 
     </div>
@@ -82,7 +84,7 @@
 
         <label>Total Amount</label>
 
-        <input type="number" step="0.01" name="total_amount" class="form-control"
+        <input type="number" step="0.01" name="total_amount" id="total_amount" class="form-control"
             value="{{ old('total_amount', $booking->total_amount ?? '') }}">
 
     </div>
@@ -166,3 +168,31 @@
     Cancel
 
 </a>
+
+<script>
+    function calculateTotalAmount() {
+        const roomSelect = document.getElementById('room_id');
+        const checkIn = document.getElementById('check_in').value;
+        const checkOut = document.getElementById('check_out').value;
+        const totalAmountField = document.getElementById('total_amount');
+
+        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+        const pricePerNight = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+
+        if (!checkIn || !checkOut || pricePerNight <= 0) {
+            return;
+        }
+
+        const startDate = new Date(checkIn);
+        const endDate = new Date(checkOut);
+        const nights = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
+        if (nights > 0) {
+            totalAmountField.value = (pricePerNight * nights).toFixed(2);
+        }
+    }
+
+    document.getElementById('room_id').addEventListener('change', calculateTotalAmount);
+    document.getElementById('check_in').addEventListener('change', calculateTotalAmount);
+    document.getElementById('check_out').addEventListener('change', calculateTotalAmount);
+</script>
