@@ -9,9 +9,10 @@
     ],
     "license": "MIT",
     "require": {
-         "php": "^8.2",
-         "ext-pdo_mysql": "*",
+        "php": "^8.2",
+        "ext-pdo_mysql": "*",
         "arcanedev/log-viewer": "8.x",
+        "cloudinary-labs/cloudinary-laravel": "*",
         "darkghosthunter/laraguard": "^3.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
