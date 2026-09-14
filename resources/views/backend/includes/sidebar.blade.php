@@ -6,21 +6,21 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-hotel"></i>
         </div>
-        
+
 
         <div class="sidebar-brand-text mx-3">
             Hotel Management
         </div>
     </a>
-    
+
     <hr class="sidebar-divider my-0">
     <!-- Dashboard -->
-<li class="nav-item {{ Route::is('admin.dashboard') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('admin.dashboard') }}">
-        <i class="fas fa-tachometer-alt"></i>
-        <span>Dashboard</span>
-    </a>
-</li>
+    <li class="nav-item {{ Route::is('admin.dashboard') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
 
     <hr class="sidebar-divider my-0">
 
@@ -139,7 +139,7 @@
                     href="{{ route('admin.bookings.checkOutIndex') }}">
                     Check Out
                 </a>
-                
+
 
             </div>
         </div>
@@ -158,8 +158,8 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link"  href="{{ route('admin.invoices.index') }}">
-                   <i class="fas fa-file-invoice-dollar"></i>
+        <a class="nav-link" href="{{ route('admin.invoices.index') }}">
+            <i class="fas fa-file-invoice-dollar"></i>
             <span>invoices</span>
         </a>
     </li>
@@ -169,13 +169,12 @@
     <div class="sidebar-heading">
         Reports
     </div>
-<li class="nav-item {{ request()->routeIs('admin.admin.inquiries.*') ? 'active' : '' }}">
-    <a class="nav-link"
-       href="{{ route('admin.inquiries.index') }}">
-        <i class="fas fa-comments"></i>
-        <span> Inquiries</span>
-    </a>
-</li>
+    <li class="nav-item {{ request()->routeIs('admin.admin.inquiries.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.inquiries.index') }}">
+            <i class="fas fa-comments"></i>
+            <span> Inquiries</span>
+        </a>
+    </li>
     <!-- <li class="nav-item">
         <a class="nav-link" href="#">
             <i class="fas fa-bed"></i>
@@ -184,46 +183,52 @@
     </li> -->
 
     <li class="nav-item">
-    <a class="nav-link {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}"
-        href="{{ route('admin.admin.activity-logs.index') }}">
+        <a class="nav-link {{ request()->routeIs('admin.activity-logs.*') ? 'active' : '' }}"
+            href="{{ route('admin.admin.activity-logs.index') }}">
 
-        <i class="nav-icon fas fa-history"></i>
+            <i class="nav-icon fas fa-history"></i>
 
-        <span>Activity Logs</span>
+            <span>Activity Logs</span>
 
-    </a>
-</li>
-    
-     <hr class="sidebar-divider">
+        </a>
+    </li>
 
-     <div class="sidebar-heading">
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading">
         services
     </div>
     <li class="nav-item {{ request()->routeIs('services.*') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('admin.services.index') }}">
-        <i class="fas fa-concierge-bell"></i>
-        <span>Services</span>
-    </a>
-</li>
+        <a class="nav-link" href="{{ route('admin.services.index') }}">
+            <i class="fas fa-concierge-bell"></i>
+            <span>Services</span>
+        </a>
+    </li>
+         <li class="nav-item {{ request()->routeIs('services.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.coupons.index') }}">
+            <i class="fas fa-ticket-alt"></i>
+            <span>COUPONS</span>
+        </a>
+    </li>
 
-    
-     <hr class="sidebar-divider">
+
+    <hr class="sidebar-divider">
     <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseWebsite">
-        <i class="fas fa-globe"></i>
-        <span>Website Management</span>
-    </a>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseWebsite">
+            <i class="fas fa-globe"></i>
+            <span>Website Management</span>
+        </a>
 
-    <div id="collapseWebsite" class="collapse">
-        <div class="bg-white py-2 collapse-inner rounded">
+        <div id="collapseWebsite" class="collapse">
+            <div class="bg-white py-2 collapse-inner rounded">
 
-            
-            
 
+
+
+            </div>
         </div>
-    </div>
 
-</li>
+    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
 

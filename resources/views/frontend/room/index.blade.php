@@ -284,13 +284,11 @@
 
 
 
-                                <p>
-                                    <i class="fas fa-building"></i>
-
-                                    Floor :
-                                    {{ $room->floor->name ?? 'N/A' }}
-
-                                </p>
+                              <p>
+    <i class="fas fa-building"></i>
+    Floor :
+    {{ $room->floor ?? 'N/A' }}
+</p>
 
 
 
