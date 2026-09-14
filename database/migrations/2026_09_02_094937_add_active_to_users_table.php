@@ -11,12 +11,14 @@ class AddActiveToUsersTable extends Migration
      *
      * @return void
      */
-    public function up(): void
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('active')->default(true);
-        });
-    }
+   public function up()
+{
+    Schema::table('users', function (Blueprint $table) {
+        if (!Schema::hasColumn('users', 'active')) {
+            $table->boolean('active')->default(1);
+        }
+    });
+}
 
     public function down(): void
     {

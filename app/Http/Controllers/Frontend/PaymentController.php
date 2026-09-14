@@ -25,7 +25,7 @@ class PaymentController extends Controller
 
     public function create(Invoice $invoice)
     {
-        $remaining = $invoice->total_amount - $invoice->paid_amount;
+        $remaining = ($invoice->total_amount - $invoice->discount) - $invoice->paid_amount;
 
         if ($remaining <= 0) {
             return redirect()
@@ -48,7 +48,7 @@ class PaymentController extends Controller
     }
     public function store(Request $request, Invoice $invoice)
     {
-        $remaining = $invoice->total_amount - $invoice->paid_amount;
+        $remaining = ($invoice->total_amount - $invoice->discount) - $invoice->paid_amount;
 
         $request->validate([
             'amount' => [
@@ -65,7 +65,7 @@ class PaymentController extends Controller
 
 
 
-        $remaining = round($invoice->total_amount - $invoice->paid_amount, 2);
+        $remaining = round(($invoice->total_amount - $invoice->discount) - $invoice->paid_amount, 2);
 
         if ($request->amount > $remaining) {
             return back()
@@ -95,7 +95,7 @@ class PaymentController extends Controller
 
                 $paymentStatus = 'Pending';
 
-            } elseif ($newPaidAmount < $invoice->total_amount) {
+            } elseif ($newPaidAmount < ($invoice->total_amount - $invoice->discount)) {
 
                 $paymentStatus = 'Partial';
 
@@ -160,7 +160,7 @@ class PaymentController extends Controller
                     'redirect' => route('frontend.invoice.show', $invoice->id),
                 ]);
             }
-            $remaining = $invoice->total_amount - $invoice->paid_amount;
+            $remaining = ($invoice->total_amount - $invoice->discount) - $invoice->paid_amount;
 
             if ($remaining <= 0) {
 
@@ -186,7 +186,7 @@ class PaymentController extends Controller
 
                 $amount = round($request->amount, 2);
 
-                $remaining = round($invoice->total_amount - $invoice->paid_amount, 2);
+                $remaining = round(($invoice->total_amount - $invoice->discount) - $invoice->paid_amount, 2);
 
                 if ($amount <= 0) {
                     throw new \Exception('Invalid payment amount.');
@@ -210,7 +210,7 @@ class PaymentController extends Controller
                 // Add payment instead of marking full paid
                 $newPaidAmount = $invoice->paid_amount + $amount;
 
-                if ($newPaidAmount >= $invoice->total_amount) {
+                if ($newPaidAmount >= ($invoice->total_amount - $invoice->discount)) {
                     $paymentStatus = 'Paid';
                 } elseif ($newPaidAmount > 0) {
                     $paymentStatus = 'Partial';
@@ -223,7 +223,7 @@ class PaymentController extends Controller
                     'payment_status' => $paymentStatus,
                 ]);
 
-                              $invoice->booking->update([
+                $invoice->booking->update([
                     'payment_status' => $paymentStatus,
                     'status' => $paymentStatus == 'Paid'
                         ? 'Confirmed'
@@ -318,7 +318,7 @@ class PaymentController extends Controller
 
         $invoice = Invoice::findOrFail($request->invoice_id);
 
-        $remaining = $invoice->total_amount - $invoice->paid_amount;
+        $remaining = ($invoice->total_amount - $invoice->discount) - $invoice->paid_amount;
 
         if ($request->amount > $remaining) {
             return response()->json([
@@ -348,12 +348,3 @@ class PaymentController extends Controller
         ]);
     }
 }
-
-
-
-
-
-
-
-
-

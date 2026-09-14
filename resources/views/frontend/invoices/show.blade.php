@@ -35,7 +35,8 @@
                 </div>
 
                 <div class="payment-popup-actions">
-                    <a href="{{ route('frontend.invoice.show', $invoice->id) }}" class="btn btn-primary btn-continue">View Invoice</a>
+                    <a href="{{ route('frontend.invoice.show', $invoice->id) }}" class="btn btn-primary btn-continue">View
+                        Invoice</a>
                     <a href="{{ route('frontend.index') }}" class="btn btn-secondary btn-home">Go Home</a>
                 </div>
             </div>
@@ -60,7 +61,8 @@
                     <div class="col-lg-6">
                         <div class="p-4 rounded bg-light border h-100">
                             <h4 class="mb-3">Payment Summary</h4>
-                            <p class="mb-3"><strong>Total:</strong> ₹{{ $invoice->total_amount }}</p>
+                            <p class="mb-3"><strong>Total:</strong> ₹{{ number_format($invoice->total_amount, 2) }}</p>
+                            <p class="mb-3"><strong>Discount:</strong> ₹{{ number_format($invoice->discount, 2) }}</p>
                             <p class="mb-3">
                                 <strong>Payment Status:</strong>
                                 @if($invoice->payment_status == 'Paid')
@@ -72,7 +74,9 @@
                                 @endif
                             </p>
                             <p class="mb-3"><strong>Paid Amount:</strong> ₹{{ number_format($invoice->paid_amount, 2) }}</p>
-                            <p class="mb-0"><strong>Remaining Amount:</strong> ₹{{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }}</p>
+                            <p class="mb-0"><strong>Remaining Amount:</strong>
+                                ₹{{ number_format(($invoice->total_amount - $invoice->discount) - $invoice->paid_amount, 2) }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -84,24 +88,24 @@
                 <div class="table-responsive">
                     <table class="table mb-0 align-middle">
                         <thead>
-                        <tr>
-                            <th>Date & Time</th>
-                            <th>Method</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Method</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach($invoice->payments as $payment)
-                            <tr>
-                                <td>{{ $payment->created_at->format('d M Y, h:i A') }}</td>
-                                <td>{{ $payment->payment_method }}</td>
-                                <td>₹{{ $payment->amount }}</td>
-                                <td>
-                                    <span class="badge badge-success">{{ $payment->payment_status }}</span>
-                                </td>
-                            </tr>
-                        @endforeach
+                            @foreach($invoice->payments as $payment)
+                                <tr>
+                                    <td>{{ $payment->created_at->format('d M Y, h:i A') }}</td>
+                                    <td>{{ $payment->payment_method }}</td>
+                                    <td>₹{{ $payment->amount }}</td>
+                                    <td>
+                                        <span class="badge badge-success">{{ $payment->payment_status }}</span>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

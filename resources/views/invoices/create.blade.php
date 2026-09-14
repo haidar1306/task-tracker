@@ -1,159 +1,144 @@
 @extends('backend.layouts.app')
 
-@section('title','Create Invoice')
+@section('title', 'Create Invoice')
 
 @section('content')
 
 
-<div class="card shadow">
+    <div class="card shadow">
 
-<div class="card-header">
+        <div class="card-header">
 
-<h6 class="font-weight-bold text-primary">
-Create Invoice
-</h6>
+            <h6 class="font-weight-bold text-primary">
+                Create Invoice
+            </h6>
 
-</div>
+        </div>
 
 
-<div class="card-body">
-    <!-- @if(session('error'))
+        <div class="card-body">
+            <!-- @if(session('error'))
 
-<div class="alert alert-danger">
-    {{ session('error') }}
-</div>
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
 
-@endif -->
+    @endif -->
 
 
-<form method="POST"
-action="{{ route('admin.invoices.store') }}">
+            <form method="POST" action="{{ route('admin.invoices.store') }}">
 
-@csrf
+                @csrf
 
 
-<div class="form-group">
+                <div class="form-group">
 
 
-<label>
-Booking
-</label>
+                    <label>
+                        Booking
+                    </label>
 
 
-<select name="booking_id"
-class="form-control">
+                    <select name="booking_id" class="form-control">
 
 
-<option value="">
-Select Booking
-</option>
+                        <option value="">
+                            Select Booking
+                        </option>
 
 
-@foreach($bookings as $booking)
+                        @foreach($bookings as $booking)
 
-<option value="{{ $booking->id }}">
+                            <option value="{{ $booking->id }}">
 
-{{ $booking->booking_no }}
+                                {{ $booking->booking_no }}
 
-</option>
+                            </option>
 
 
-@endforeach
+                        @endforeach
 
 
-</select>
+                    </select>
 
 
-</div>
+                </div>
 
 
 
-<div class="form-group">
+                <div class="form-group">
 
-<label>
-Room Charge
-</label>
+                    <label>
+                        Room Charge
+                    </label>
 
-<input type="number"
-name="room_charge"
-class="form-control">
+                    <input type="number" name="room_charge" class="form-control">
 
-</div>
+                </div>
 
 
 
-<div class="form-group">
+                <div class="form-group">
 
-<label>
-Extra Charge
-</label>
+                    <label>
+                        Extra Charge
+                    </label>
 
-<input type="number"
-name="extra_charge"
-class="form-control"
-value="0">
+                    <input type="number" name="extra_charge" class="form-control" value="0">
 
-</div>
+                </div>
 
 
 
-<div class="form-group">
+                <div class="form-group">
 
-<label>
-Tax
-</label>
+                    <label>
+                        Tax
+                    </label>
 
-<input type="number"
-name="tax"
-class="form-control"
-value="0">
+                    <input type="number" name="tax" class="form-control" value="0">
 
-</div>
+                </div>
 
 
 
-<div class="form-group">
+                <div class="form-group">
 
-<label>
-Discount
-</label>
+                    <label>
+                        Discount
+                    </label>
 
-<input type="number"
-name="discount"
-class="form-control"
-value="0">
+                    <input type="number" name="discount" class="form-control" value="0">
 
-</div>
+                </div>
 
 
 
-<div class="form-group">
+                <div class="form-group">
 
-<label>
-Total Amount
-</label>
+                    <label>
+                        Total Amount
+                    </label>
 
-<input type="number"
-name="total_amount"
-class="form-control">
+                    <input type="number" name="total_amount" class="form-control">
 
-</div>
+                </div>
 
 
 
-<button class="btn btn-success">
+                <button class="btn btn-success">
 
-Generate Invoice
+                    Generate Invoice
 
-</button>
+                </button>
 
 
-</form>
+            </form>
 
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 
 @endsection

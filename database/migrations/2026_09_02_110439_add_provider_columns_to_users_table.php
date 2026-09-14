@@ -11,11 +11,16 @@ class AddProviderColumnsToUsersTable extends Migration
      *
      * @return void
      */
-  public function up(): void
+  public function up()
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->string('provider')->nullable();
-        $table->string('provider_id')->nullable();
+        if (!Schema::hasColumn('users', 'provider')) {
+            $table->string('provider')->nullable();
+        }
+        if (!Schema::hasColumn('users', 'provider_id')) {
+            $table->string('provider_id')->nullable();
+        }
+        // agar aur columns bhi is migration mein hain, unhe bhi isi tarah wrap karo
     });
 }
 
