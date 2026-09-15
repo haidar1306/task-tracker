@@ -3,170 +3,175 @@
 @section('title', 'Rooms')
 @push('after-styles')
 <style>
-/* ===========================
+    /* ===========================
    ROOM SECTION
 =========================== */
 
-.room-section{
-     background: #c2e9ee;;
-    padding:50px 0 10px;
-}
-
-/* Small Badge */
-
-.room-subtitle{
-    display:inline-block;
-    padding:10px 28px;
-    background:#d4af37;
-    color:#fff;
-    border-radius:50px;
-    text-transform:uppercase;
-    letter-spacing:3px;
-    font-size:13px;
-    font-weight:700;
-    margin-bottom:30px;
-    box-shadow:0 10px 30px rgba(212,175,55,.25);
-}
-
-/* Main Title */
-
-.room-title{
-    font-size:58px;
-    font-weight:800;
-    color:#1f2937;
-    line-height:1.15;
-    margin-bottom:20px;
-    letter-spacing:-1px;
-    font-family:Georgia, serif;
-}
-
-/* Gold Divider */
-
-.room-divider{
-    width:90px;
-    height:4px;
-    background:#d4af37;
-    margin:0 auto 30px;
-    border-radius:20px;
-}
-
-/* Description */
-
-.room-desc{
-    max-width:1000px;
-    margin:auto;
-    font-size:19px;
-    line-height:1.9;
-    color:#6b7280;
-}
-
-/* Decorative Text */
-
-.room-watermark{
-    position:absolute;
-    top:30px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:130px;
-    font-weight:900;
-    color:#000;
-    opacity:.03;
-    text-transform:uppercase;
-    pointer-events:none;
-    user-select:none;
-    white-space:nowrap;
-}
-
-/* Responsive */
-
-@media(max-width:768px){
-
-.room-title{
-    font-size:38px;
-}
-
-.room-desc{
-    font-size:16px;
-}
-
-.room-watermark{
-    display:none;
-}
-.room-section{
-    background:#fff;
-    padding:90px 0 40px;
-}
-.room-cards{
-    margin-top:40px;
-}
-.room-watermark{
-  font-size:100px;
-    opacity:.02;
-}
-.room-title{
-    font-size:52px;
-}
-
-}
-
-.room-section {
-    margin-bottom: 48px;
-    padding: 56px 24px 52px;
-    border-radius: 20px;
-}
-
-.room-section > .container {
-    max-width: 980px;
-}
-
-.room-cards {
-    row-gap: 24px;
-}
-
-.room-card {
-    overflow: hidden;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 16px;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, .10) !important;
-    transition: transform .25s ease, box-shadow .25s ease;
-}
-
-.room-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 18px 34px rgba(15, 23, 42, .15) !important;
-}
-
-.room-card .card-img-top {
-    display: block;
-    height: 250px;
-    object-fit: cover;
-}
-
-.room-card .card-body {
-    padding: 24px;
-}
-
-.room-card h4 {
-    margin-bottom: 16px;
-    color: #102a43;
-    font-weight: 700;
-}
-
-.room-card p {
-    color: #627d98;
-    line-height: 1.55;
-}
-
-@media (max-width: 768px) {
     .room-section {
-        margin-bottom: 32px;
-        padding: 42px 18px 38px;
+        background: #c2e9ee;
+        ;
+        padding: 50px 0 10px;
+    }
+
+    /* Small Badge */
+
+    .room-subtitle {
+        display: inline-block;
+        padding: 10px 28px;
+        background: #d4af37;
+        color: #fff;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(212, 175, 55, .25);
+    }
+
+    /* Main Title */
+
+    .room-title {
+        font-size: 58px;
+        font-weight: 800;
+        color: #1f2937;
+        line-height: 1.15;
+        margin-bottom: 20px;
+        letter-spacing: -1px;
+        font-family: Georgia, serif;
+    }
+
+    /* Gold Divider */
+
+    .room-divider {
+        width: 90px;
+        height: 4px;
+        background: #d4af37;
+        margin: 0 auto 30px;
+        border-radius: 20px;
+    }
+
+    /* Description */
+
+    .room-desc {
+        max-width: 1000px;
+        margin: auto;
+        font-size: 19px;
+        line-height: 1.9;
+        color: #6b7280;
+    }
+
+    /* Decorative Text */
+
+    .room-watermark {
+        position: absolute;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 130px;
+        font-weight: 900;
+        color: #000;
+        opacity: .03;
+        text-transform: uppercase;
+        pointer-events: none;
+        user-select: none;
+        white-space: nowrap;
+    }
+
+    /* Responsive */
+
+    @media(max-width:768px) {
+
+        .room-title {
+            font-size: 38px;
+        }
+
+        .room-desc {
+            font-size: 16px;
+        }
+
+        .room-watermark {
+            display: none;
+        }
+
+        .room-section {
+            background: #fff;
+            padding: 90px 0 40px;
+        }
+
+        .room-cards {
+            margin-top: 40px;
+        }
+
+        .room-watermark {
+            font-size: 100px;
+            opacity: .02;
+        }
+
+        .room-title {
+            font-size: 52px;
+        }
+
+    }
+
+    .room-section {
+        margin-bottom: 48px;
+        padding: 56px 24px 52px;
+        border-radius: 20px;
+    }
+
+    .room-section>.container {
+        max-width: 980px;
+    }
+
+    .room-cards {
+        row-gap: 24px;
+    }
+
+    .room-card {
+        overflow: hidden;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 16px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, .10) !important;
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .room-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 34px rgba(15, 23, 42, .15) !important;
+    }
+
+    .room-card .card-img-top {
+        display: block;
+        height: 250px;
+        object-fit: cover;
     }
 
     .room-card .card-body {
-        padding: 20px;
+        padding: 24px;
     }
-}
+
+    .room-card h4 {
+        margin-bottom: 16px;
+        color: #102a43;
+        font-weight: 700;
+    }
+
+    .room-card p {
+        color: #627d98;
+        line-height: 1.55;
+    }
+
+    @media (max-width: 768px) {
+        .room-section {
+            margin-bottom: 32px;
+            padding: 42px 18px 38px;
+        }
+
+        .room-card .card-body {
+            padding: 20px;
+        }
+    }
 </style>
 
 @section('content')
@@ -227,14 +232,13 @@
 
                             @if($room->image)
 
-                                <img src="{{ asset('storage/' . $room->image) }}" class="card-img-top"
-                                    style="height:250px;object-fit:cover;">
+                                <img src="{{ $room->image }}" class="card-img-top" style="height:250px;object-fit:cover;">
 
                             @else
 
                                 @if($room->roomType->image)
 
-                                    <img src="{{ asset('storage/' . $room->roomType->image) }}" class="card-img-top"
+                                    <img src="{{ $room->roomType->image }}" class="card-img-top"
                                         style="height:250px; object-fit:cover;">
 
                                 @else
@@ -245,7 +249,6 @@
                                 @endif
 
                             @endif
-
 
 
                             <div class="card-body">
@@ -266,29 +269,29 @@
                                 </p>
                                 <p>
 
-@if($room->status)
+                                    @if($room->status)
 
-    <span class="badge badge-success">
-        Available
-    </span>
+                                        <span class="badge badge-success">
+                                            Available
+                                        </span>
 
-@else
+                                    @else
 
-    <span class="badge badge-danger">
-        Not Available
-    </span>
+                                        <span class="badge badge-danger">
+                                            Not Available
+                                        </span>
 
-@endif
+                                    @endif
 
-</p>
+                                </p>
 
 
 
-                              <p>
-    <i class="fas fa-building"></i>
-    Floor :
-    {{ $room->floor ?? 'N/A' }}
-</p>
+                                <p>
+                                    <i class="fas fa-building"></i>
+                                    Floor :
+                                    {{ $room->floor ?? 'N/A' }}
+                                </p>
 
 
 
@@ -314,19 +317,19 @@
                                     </small>
 
                                 </h5>
-                               <div class="mb-3">
+                                <div class="mb-3">
 
-    @foreach($room->amenities->take(5) as $amenity)
+                                    @foreach($room->amenities->take(5) as $amenity)
 
-        <span class="badge badge-light mr-1">
-            <i class="fas fa-check text-success"></i>
-            {{ $amenity->name }}
-        </span>
+                                        <span class="badge badge-light mr-1">
+                                            <i class="fas fa-check text-success"></i>
+                                            {{ $amenity->name }}
+                                        </span>
 
-    @endforeach
+                                    @endforeach
 
-</div>
-                                
+                                </div>
+
 
 
 
