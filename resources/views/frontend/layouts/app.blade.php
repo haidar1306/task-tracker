@@ -13,7 +13,7 @@
 
     <!-- Frontend CSS -->
     <link href="{{ asset('css/frontend.css') }}" rel="stylesheet">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Jost:wght@300;400;500;600&display=swap"
@@ -140,7 +140,7 @@
     @stack('after-styles')
 </head>
 
-<body>
+<body class="{{ request()->routeIs('frontend.index') ? 'home-page' : '' }}">
 
     @include('includes.partials.read-only')
     @include('includes.partials.logged-in-as')
