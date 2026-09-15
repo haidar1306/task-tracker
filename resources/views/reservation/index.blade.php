@@ -5,26 +5,51 @@
 @section('content')
 
 <style>
-    .reservation-page {
-        padding: 70px 0 90px;
-        background: linear-gradient(180deg, #f8f5f2 0%, #f3f6f8 100%);
+    .reservation-hero {
+        position: relative;
+        width: 100%;
+        min-height: 42vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+            linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.78) 100%),
+            url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1600') center/cover no-repeat;
+        text-align: center;
+        margin-bottom: 48px;
     }
 
-    .reservation-header {
-        margin-bottom: 28px;
+    .reservation-hero span.kicker {
+        display: inline-block;
+        padding: 8px 24px;
+        border: 1px solid #d9c4a5;
+        color: #f0e6d4;
+        border-radius: 30px;
+        letter-spacing: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 18px;
     }
 
-    .reservation-header h2 {
+    .reservation-hero h2 {
+        font-family: 'Playfair Display', serif;
         font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 800;
-        color: #23489f;
-        margin: 0;
+        font-weight: 700;
+        color: #fffdfa;
+        margin: 0 0 12px;
     }
 
-    .reservation-subtitle {
-        color: #607083;
-        font-size: 1rem;
-        margin-top: 8px;
+    .reservation-hero p {
+        color: #e8dcc8;
+        font-size: 16px;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    .reservation-page {
+        padding: 0 0 90px;
+        background: #f7f2ea;
     }
 
     .reservation-summary {
@@ -35,11 +60,10 @@
     }
 
     .summary-box {
-        background: #fff;
-        border: 1px solid rgba(19, 33, 52, 0.06);
-        border-radius: 18px;
+        background: #fffdfa;
+        border: 1px solid #e5dccb;
+        border-radius: 14px;
         padding: 22px 20px;
-        box-shadow: 0 16px 36px rgba(16, 24, 40, 0.06);
     }
 
     .summary-label {
@@ -47,21 +71,21 @@
         font-size: 0.78rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: #6c7a89;
+        color: #8a7f6f;
         margin-bottom: 10px;
     }
 
     .summary-value {
+        font-family: 'Playfair Display', serif;
         font-size: 1.8rem;
-        font-weight: 800;
-        color: #162534;
+        font-weight: 700;
+        color: #2b2621;
     }
 
     .reservation-card {
-        background: #fff;
-        border: 1px solid rgba(19, 33, 52, 0.06);
-        border-radius: 22px;
-        box-shadow: 0 22px 55px rgba(15, 23, 42, 0.07);
+        background: #fffdfa;
+        border: 1px solid #e5dccb;
+        border-radius: 16px;
         overflow: hidden;
     }
 
@@ -80,8 +104,8 @@
     }
 
     .reservation-table thead th {
-        background:     #080807;
-        color: #fff;
+        background: #4a4034;
+        color: #f0e6d4;
         font-weight: 700;
         font-size: 0.8rem;
         letter-spacing: 0.08em;
@@ -92,19 +116,19 @@
 
     .reservation-table tbody td {
         padding: 20px 18px;
-        border-bottom: 1px solid rgba(15, 23, 42, 0.06);
-        color: #243244;
+        border-bottom: 1px solid #eee2d0;
+        color: #3a352e;
         vertical-align: middle;
-        background: #fff;
+        background: #fffdfa;
     }
 
     .reservation-table tbody tr:hover td {
-        background: #fafbfc;
+        background: #f7f2ea;
     }
 
     .booking-no {
         font-weight: 700;
-        color: #1a2433;
+        color: #2b2621;
     }
 
     .reservation-status {
@@ -121,23 +145,23 @@
     }
 
     .status-pending {
-        background: rgba(245, 158, 11, 0.12);
-        color: #b45309;
+        background: rgba(169, 130, 92, 0.14);
+        color: #8a6844;
     }
 
     .status-confirmed {
-        background: rgba(16, 185, 129, 0.12);
-        color: #047857;
+        background: rgba(79, 122, 74, 0.12);
+        color: #4f7a4a;
     }
 
     .status-cancelled {
-        background: rgba(239, 68, 68, 0.12);
-        color: #b91c1c;
+        background: rgba(179, 83, 43, 0.12);
+        color: #b3532b;
     }
 
     .status-default {
-        background: rgba(148, 163, 184, 0.14);
-        color: #475569;
+        background: rgba(138, 127, 111, 0.14);
+        color: #8a7f6f;
     }
 
     .reservation-action {
@@ -145,16 +169,17 @@
         align-items: center;
         justify-content: center;
         padding: 10px 16px;
-        border-radius: 12px;
-        background: #0d1241;
+        border-radius: 8px;
+        background: #a9825c;
         color: #fff;
-        font-weight: 700;
+        font-weight: 600;
+        font-size: 13px;
         text-decoration: none;
         transition: all 0.2s ease;
     }
 
     .reservation-action:hover {
-        background: #c99445;
+        background: #8a6844;
         color: #fff;
         text-decoration: none;
     }
@@ -162,13 +187,14 @@
     .empty-state {
         padding: 46px 24px;
         text-align: center;
-        color: #46576c;
+        color: #8a7f6f;
     }
 
     .empty-state h5 {
         margin: 0;
+        font-family: 'Playfair Display', serif;
         font-size: 1.25rem;
-        color: #1e293b;
+        color: #2b2621;
     }
 
     @media (max-width: 768px) {
@@ -184,12 +210,16 @@
     }
 </style>
 
+<section class="reservation-hero page-hero">
+    <div class="container">
+        <span class="kicker">Your Stays</span>
+        <h2>My Reservations</h2>
+        <p>Track your bookings, payment progress, and stay details in one place.</p>
+    </div>
+</section>
+
 <div class="reservation-page">
     <div class="container">
-        <div class="reservation-header">
-            <h2>My Reservations</h2>
-            <div class="reservation-subtitle">Track your bookings, payment progress, and stay details in one place.</div>
-        </div>
 
         <div class="reservation-summary">
             <div class="summary-box">
@@ -274,6 +304,7 @@
                 @endif
             </div>
         </div>
+
     </div>
 </div>
 

@@ -4,15 +4,19 @@
 @push('after-styles')
 <style>
     /* ===========================
-   ROOM SECTION
+   ROOM SECTION (full hero banner)
 =========================== */
 
     .room-section {
         position: relative;
+        width: 100%;
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background:
-            linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.75) 100%),
-            url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600') center/cover no-repeat;
-        padding: 90px 0;
+            linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.78) 100%),
+             url('{{ asset("frontend/images/see.jfif") }}') center/cover no-repeat;
         margin-bottom: 48px;
     }
 
@@ -63,7 +67,7 @@
         }
 
         .room-section {
-            padding: 60px 0;
+            min-height: 46vh;
             margin-bottom: 32px;
         }
     }
@@ -216,38 +220,38 @@
 
 @section('content')
 
-    <section class="py-5">
+    <section class="room-section page-hero">
 
         <div class="container">
 
-            <div class="room-section">
+            <div class="text-center position-relative">
 
-                <div class="container">
+                <span class="room-subtitle">
+                    Luxury Collection
+                </span>
 
-                    <div class="text-center position-relative">
+                <h2 class="room-title">
+                    Discover Exceptional <br>
+                    Luxury Rooms
+                </h2>
 
-                        <span class="room-subtitle">
-                            Luxury Collection
-                        </span>
+                <div class="room-divider"></div>
 
-                        <h2 class="room-title">
-                            Discover Exceptional <br>
-                            Luxury Rooms
-                        </h2>
-
-                        <div class="room-divider"></div>
-
-                        <p class="room-desc">
-                            Every room is thoughtfully crafted with elegant interiors,
-                            premium comfort and modern hospitality to deliver a memorable
-                            stay for every guest.
-                        </p>
-
-                    </div>
-
-                </div>
+                <p class="room-desc">
+                    Every room is thoughtfully crafted with elegant interiors,
+                    premium comfort and modern hospitality to deliver a memorable
+                    stay for every guest.
+                </p>
 
             </div>
+
+        </div>
+
+    </section>
+
+    <section class="py-5">
+
+        <div class="container">
 
             <div class="row room-cards">
 

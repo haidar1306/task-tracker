@@ -5,15 +5,15 @@
 @push('after-styles')
     <style>
         :root {
-            --hotel-navy: #102a43;
-            --hotel-navy-dark: #071d32;
-            --hotel-gold: #d69e2e;
-            --hotel-text: #334e68;
-            --hotel-muted: #627d98;
+            --hotel-navy: #4a4034;
+            --hotel-navy-dark: #2b2621;
+            --hotel-gold: #a9825c;
+            --hotel-text: #3a352e;
+            --hotel-muted: #8a7f6f;
         }
 
         body {
-            background: #f4f7fb;
+            background: #f7f2ea;
         }
 
         .login-page {
@@ -22,8 +22,8 @@
             min-height: 100vh;
             padding: 35px 15px;
             background:
-                radial-gradient(circle at top right, rgba(214, 158, 46, 0.18), transparent 32%),
-                linear-gradient(135deg, #eef4f9 0%, #f8fafc 100%);
+                radial-gradient(circle at top right, rgba(169, 130, 92, 0.14), transparent 32%),
+                linear-gradient(135deg, #f7f2ea 0%, #fdfaf4 100%);
         }
 
         .login-shell {
@@ -32,9 +32,9 @@
             width: min(100%, 1060px);
             margin: auto;
             overflow: hidden;
-            background: #fff;
-            border-radius: 22px;
-            box-shadow: 0 24px 70px rgba(16, 42, 67, 0.16);
+            background: #fffdfa;
+            border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(43, 38, 33, 0.14);
         }
 
         .login-showcase {
@@ -44,15 +44,17 @@
             justify-content: space-between;
             min-height: 620px;
             padding: 55px 48px;
-            color: #fff;
-            background: linear-gradient(145deg, var(--hotel-navy), #1b527e);
+            color: #fffdfa;
+            background:
+                linear-gradient(180deg, rgba(43,38,33,.65) 0%, rgba(43,38,33,.88) 100%),
+                url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900') center/cover no-repeat;
             overflow: hidden;
         }
 
         .login-showcase::before,
         .login-showcase::after {
             position: absolute;
-            border: 1px solid rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 50%;
             content: "";
         }
@@ -84,6 +86,7 @@
             gap: 11px;
             font-size: 18px;
             font-weight: 700;
+            font-family: 'Playfair Display', serif;
         }
 
         .hotel-brand-icon {
@@ -92,23 +95,23 @@
             height: 42px;
             place-items: center;
             color: var(--hotel-navy);
-            background: #fff;
+            background: #fffdfa;
             border-radius: 12px;
         }
 
         .showcase-content h1 {
             max-width: 330px;
             margin: 0 0 18px;
-            font-family: Georgia, serif;
-            font-size: 42px;
+            font-family: 'Playfair Display', serif;
+            font-size: 40px;
             font-weight: 700;
-            line-height: 1.15;
+            line-height: 1.2;
         }
 
         .showcase-content p {
             max-width: 340px;
             margin: 0;
-            color: #d5e4f1;
+            color: #e8dcc8;
             font-size: 16px;
             line-height: 1.7;
         }
@@ -117,7 +120,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            color: #f6e6b8;
+            color: #d9c4a5;
             font-size: 13px;
             font-weight: 600;
         }
@@ -136,18 +139,19 @@
 
         .form-eyebrow {
             margin-bottom: 12px;
-            color: #a26f09;
+            color: var(--hotel-gold);
             font-size: 12px;
             font-weight: 700;
-            letter-spacing: 1.3px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
         }
 
         .login-form h2 {
             margin: 0;
-            color: var(--hotel-navy);
+            color: var(--hotel-navy-dark);
             font-size: 30px;
             font-weight: 700;
+            font-family: 'Playfair Display', serif;
         }
 
         .login-form .form-intro {
@@ -172,7 +176,7 @@
             position: absolute;
             top: 50%;
             left: 16px;
-            color: #829ab1;
+            color: #a89b87;
             transform: translateY(-50%);
         }
 
@@ -180,14 +184,14 @@
             height: 52px;
             padding-left: 45px;
             color: var(--hotel-text);
-            border: 1px solid #d9e2ec;
+            border: 1px solid #e5dccb;
             border-radius: 9px;
             box-shadow: none;
         }
 
         .login-form .form-control:focus {
             border-color: var(--hotel-gold);
-            box-shadow: 0 0 0 3px rgba(214, 158, 46, 0.15);
+            box-shadow: 0 0 0 3px rgba(169, 130, 92, 0.15);
         }
 
         .login-form .custom-control-label {
@@ -210,17 +214,19 @@
             color: #fff;
             font-size: 15px;
             font-weight: 600;
-            background: var(--hotel-navy);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            background: var(--hotel-gold);
             border: 0;
             border-radius: 9px;
-            box-shadow: 0 9px 18px rgba(16, 42, 67, 0.17);
+            box-shadow: 0 9px 18px rgba(169, 130, 92, 0.25);
             transition: all 0.2s ease;
         }
 
         .login-button:hover,
         .login-button:focus {
             color: #fff;
-            background: var(--hotel-navy-dark);
+            background: #8a6844;
             transform: translateY(-2px);
         }
 
@@ -238,7 +244,7 @@
             flex: 1;
             height: 1px;
             content: "";
-            background: #e6edf3;
+            background: #eee2d0;
         }
 
         .login-links {
@@ -249,13 +255,13 @@
         }
 
         .login-links a {
-            color: #a26f09;
+            color: var(--hotel-gold);
             font-weight: 600;
             text-decoration: none;
         }
 
         .login-links a:hover {
-            color: var(--hotel-navy);
+            color: var(--hotel-navy-dark);
             text-decoration: underline;
         }
 

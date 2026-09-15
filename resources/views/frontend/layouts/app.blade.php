@@ -140,9 +140,7 @@
     @stack('after-styles')
 </head>
 
-<body class="{{ request()->routeIs('frontend.index') ? 'home-page' : '' }}">
-
-    @include('includes.partials.read-only')
+<body class="{{ request()->routeIs('frontend.index', 'frontend.room.index', 'frontend.amenities.index', 'frontend.about', 'frontend.reservation.index', 'frontend.contact', 'frontend.services.index') ? 'home-page' : '' }}">    @include('includes.partials.read-only')
     @include('includes.partials.logged-in-as')
 
     <div id="app">

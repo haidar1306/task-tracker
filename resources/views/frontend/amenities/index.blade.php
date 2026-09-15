@@ -16,7 +16,7 @@
         margin-top: -24px;
         background:
             linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.78) 100%),
-            url('{{ asset("frontend/images/amenities.jpg") }}') center/cover no-repeat;
+            url('{{ asset("frontend/images/images (7).jfif") }}') center/cover no-repeat;
         display: flex;
         align-items: center;
         justify-content: center;

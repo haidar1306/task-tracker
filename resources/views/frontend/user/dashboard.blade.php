@@ -22,7 +22,7 @@
             rgba(7,15,26,.35) 45%,
             rgba(7,15,26,.80) 100%
         ),
-    url('{{ asset("frontend/images/images (13).jfif") }}');
+    url('{{ asset("frontend/images/home.png") }}');
                     
 
     background-size:cover;

@@ -5,110 +5,141 @@
 @section('content')
 <style>
     .contact-hero {
-        padding: 120px 0 70px;
+        position: relative;
+        width: 100%;
+        min-height: 46vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background:
-            linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.72)),
+            linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.78) 100%),
             url('{{ asset("frontend/images/contact1.jfif") }}') center/cover no-repeat;
+        text-align: center;
     }
 
-    .contact-hero h1 {
-        font-size: clamp(2.4rem, 5vw, 5rem);
-        font-weight: 800;
-        color: #fff;
+    .contact-hero span.kicker {
+        display: inline-block;
+        padding: 8px 24px;
+        border: 1px solid #d9c4a5;
+        color: #f0e6d4;
+        border-radius: 30px;
+        letter-spacing: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
         margin-bottom: 18px;
     }
 
+    .contact-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.4rem, 5vw, 4.2rem);
+        font-weight: 700;
+        color: #fffdfa;
+        margin-bottom: 16px;
+    }
+
     .contact-hero p {
-        max-width: 700px;
+        max-width: 640px;
         margin: 0 auto;
-        color: rgba(219, 219, 64, 0.8);
-        font-size: 1.08rem;
+        color: #e8dcc8;
+        font-size: 1.05rem;
         line-height: 1.8;
     }
 
     .contact-section {
         padding: 90px 0;
-        background: #f5f7f8;
+        background: #f7f2ea;
     }
 
     .contact-card {
-        background: #fff;
-        border-radius: 22px;
+        background: #fffdfa;
+        border: 1px solid #e5dccb;
+        border-radius: 16px;
         padding: 32px 28px;
-        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
         height: 100%;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .contact-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 28px 55px rgba(15, 23, 42, 0.12);
+        box-shadow: 0 18px 36px rgba(43, 38, 33, .10);
     }
 
     .contact-card i {
-        font-size: 2.5rem;
-        color: #d4af37;
+        font-size: 2.2rem;
+        color: #a9825c;
         margin-bottom: 18px;
     }
 
     .contact-card h4 {
+        font-family: 'Playfair Display', serif;
         font-weight: 700;
         margin-bottom: 10px;
-        color: #111827;
+        color: #2b2621;
     }
 
     .contact-card p,
     .contact-card a {
         margin: 0;
-        color: #4b5563;
+        color: #8a7f6f;
         line-height: 1.7;
         text-decoration: none;
     }
 
+    .contact-card a:hover {
+        color: #a9825c;
+    }
+
     .contact-form-wrap {
-        background: #fff;
+        background: #fffdfa;
+        border: 1px solid #e5dccb;
         padding: 36px 30px;
-        border-radius: 20px;
-        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+        border-radius: 16px;
     }
 
     .contact-form-wrap h3 {
-        font-weight: 800;
-        margin-bottom: 26px;
-        color: #111827;
-    }
-
-    .form-control {
-        border-radius: 12px;
-        padding: 14px 16px;
-        border: 1px solid #dbe2ea;
-        background: #f8fafc;
-    }
-
-    .form-control:focus {
-        border-color: #d4af37;
-        box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
-    }
-
-    .btn-gold {
-        background: #d4af37;
-        color: #fff;
+        font-family: 'Playfair Display', serif;
         font-weight: 700;
+        margin-bottom: 26px;
+        color: #2b2621;
+    }
+
+    .contact-form-wrap .form-control {
+        border-radius: 8px;
+        padding: 14px 16px;
+        border: 1px solid #e5dccb;
+        background: #f7f2ea;
+    }
+
+    .contact-form-wrap .form-control:focus {
+        border-color: #a9825c;
+        box-shadow: 0 0 0 0.2rem rgba(169, 130, 92, 0.15);
+    }
+
+    .contact-form-wrap .btn-gold {
+        background: #a9825c;
+        color: #fff;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        font-size: 14px;
         padding: 12px 28px;
         border: none;
-        border-radius: 12px;
+        border-radius: 8px;
         transition: 0.3s ease;
     }
 
-    .btn-gold:hover {
-        background: #b8921f;
+    .contact-form-wrap .btn-gold:hover {
+        background: #8a6844;
         color: #fff;
     }
 </style>
 
 <section class="contact-page-wrap">
-    <section class="contact-hero text-center">
+
+    <section class="contact-hero page-hero">
         <div class="container">
+            <span class="kicker">Get In Touch</span>
             <h1>Contact Us</h1>
             <p>
                 We are here to help you plan your perfect stay. Reach out for reservations, special requests,
@@ -148,49 +179,50 @@
 
             <div class="contact-form-wrap">
                 <h3>Send us a message</h3>
-              <form action="{{ route('frontend.frontend.inquiry.store') }}" method="POST">
-    @csrf
+                <form action="{{ route('frontend.frontend.inquiry.store') }}" method="POST">
+                    @csrf
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <input type="text"
-                   name="name"
-                   class="form-control"
-                   placeholder="Your Name"
-                   required>
-        </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <input type="text"
+                                   name="name"
+                                   class="form-control"
+                                   placeholder="Your Name"
+                                   required>
+                        </div>
 
-        <div class="col-md-6 mb-3">
-            <input type="email"
-                   name="email"
-                   class="form-control"
-                   placeholder="Your Email"
-                   required>
-        </div>
-    </div>
+                        <div class="col-md-6 mb-3">
+                            <input type="email"
+                                   name="email"
+                                   class="form-control"
+                                   placeholder="Your Email"
+                                   required>
+                        </div>
+                    </div>
 
-    <div class="mb-3">
-        <input type="text"
-               name="subject"
-               class="form-control"
-               placeholder="Subject"
-               required>
-    </div>
+                    <div class="mb-3">
+                        <input type="text"
+                               name="subject"
+                               class="form-control"
+                               placeholder="Subject"
+                               required>
+                    </div>
 
-    <div class="mb-3">
-        <textarea name="message"
-                  class="form-control"
-                  rows="5"
-                  placeholder="Your Message"
-                  required></textarea>
-    </div>
+                    <div class="mb-3">
+                        <textarea name="message"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Your Message"
+                                  required></textarea>
+                    </div>
 
-    <button type="submit" class="btn btn-gold">
-        Send Message
-    </button>
-</form>
+                    <button type="submit" class="btn btn-gold">
+                        Send Message
+                    </button>
+                </form>
             </div>
         </div>
     </section>
+
 </section>
 @endsection
