@@ -1053,3 +1053,428 @@ RESPONSIVE
 .hotel-navbar.scrolled .brand-title {
     font-size: 20px;
 }
+/* ============================================
+   SOFT LUXURY THEME OVERRIDE
+   ============================================ */
+
+.hotel-navbar {
+    background: #4a4034 !important;
+}
+
+.brand-title,
+.frontend-brand-copy .brand-title {
+    font-family: "Playfair Display", Georgia, serif !important;
+    color: #e8dcc8 !important;
+}
+
+.brand-subtitle {
+    color: #a9825c !important;
+}
+
+.hotel-navbar .nav-link {
+    color: #d9d0c3 !important;
+    font-family: "Jost", sans-serif;
+}
+
+.hotel-navbar .nav-link:hover,
+.hotel-navbar .active .nav-link,
+.hotel-navbar .nav-link.active {
+    color: #f3ead9 !important;
+}
+
+.hotel-navbar .active .nav-link::after,
+.hotel-navbar .nav-link.active::after,
+.nav-item.active > .nav-link::after,
+.nav-item.dropdown.active > .nav-link::after {
+    background: #a9825c !important;
+}
+
+.nav-item.active > .nav-link,
+.nav-item.dropdown.active > .nav-link,
+.dropdown-item.active {
+    color: #a9825c !important;
+}
+
+.hotel-navbar .dropdown-item:hover,
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background: rgba(169, 130, 92, 0.1) !important;
+    color: #a9825c !important;
+}
+
+.dropdown-menu .dropdown-item.active {
+    background: rgba(169, 130, 92, 0.12) !important;
+    color: #a9825c !important;
+}
+
+.btn-gold {
+    background: #a9825c !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+}
+
+.btn-gold:hover {
+    background: #8a6844 !important;
+    transform: none !important;
+}
+
+.btn-outline-light {
+    border-color: #d9d0c3 !important;
+    color: #d9d0c3 !important;
+}
+
+.btn-outline-light:hover {
+    background: #d9d0c3 !important;
+    color: #2b2621 !important;
+}
+
+.booking-search {
+    background: #fffdfa;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 20px 45px rgba(43, 38, 33, 0.15);
+    margin-top: 40px;
+}
+
+.booking-search label {
+    color: #3a352e;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.booking-search .form-control {
+    height: 48px;
+    border: 1px solid #e5dccb;
+    border-radius: 8px;
+}
+
+.booking-search .btn-gold {
+    height: 48px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 13px;
+}
+
+.section-subtitle {
+    color: #a9825c !important;
+}
+
+.section-title {
+    font-family: "Playfair Display", serif !important;
+    color: #2b2621 !important;
+}
+
+.section-description {
+    color: #8a7f6f !important;
+}
+
+.luxury-room-card {
+    background: #fffdfa !important;
+}
+
+.room-badge {
+    background: #a9825c !important;
+}
+
+.room-rating {
+    color: #a9825c !important;
+}
+
+.room-content h3 {
+    font-family: "Playfair Display", serif !important;
+    color: #2b2621 !important;
+}
+
+.room-content p {
+    color: #8a7f6f !important;
+}
+
+.room-footer h4 {
+    color: #a9825c !important;
+}
+
+.room-btn {
+    background: #a9825c !important;
+}
+
+.room-btn:hover {
+    background: #8a6844 !important;
+}
+
+.amenities-section {
+    background: #f7f2ea !important;
+}
+
+.amenity-icon,
+.image-amenity-icon {
+    background: #f0e6d4 !important;
+    color: #a9825c !important;
+}
+
+.amenity-icon i {
+    color: #a9825c !important;
+}
+
+.image-amenity-badge {
+    background: #a9825c !important;
+}
+
+.feature-icon i {
+    color: #a9825c !important;
+}
+
+.feature-icon {
+    background: #f0e6d4 !important;
+}
+
+.feature-card:hover {
+    border-top-color: #a9825c !important;
+}
+
+.why-choose-section h4,
+.dashboard-contact-card h4 {
+    font-family: "Playfair Display", serif !important;
+}
+
+.dashboard-contact-icon {
+    background: #f0e6d4 !important;
+    color: #a9825c !important;
+}
+
+.dashboard-contact-kicker {
+    color: #a9825c !important;
+}
+
+.feature-card {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-top: none !important;
+    padding: 30px 25px !important;
+    position: relative;
+}
+
+.feature-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.feature-icon {
+    width: 64px !important;
+    height: 64px !important;
+    background: transparent !important;
+    border: 1px solid #a9825c !important;
+}
+
+.feature-icon i {
+    font-size: 24px !important;
+}
+
+.feature-card h4 {
+    font-family: "Playfair Display", serif !important;
+    font-size: 22px !important;
+}
+
+@media (min-width: 992px) {
+    .why-choose-section .col-lg-4:not(:last-child) .feature-card::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 20%;
+        height: 60%;
+        width: 1px;
+        background: #e5dccb;
+    }
+}
+
+.dashboard-contact-section {
+    background: #f7f2ea !important;
+}
+
+.dashboard-contact-kicker {
+    color: #a9825c !important;
+}
+
+.dashboard-contact-heading h2 {
+    font-family: "Playfair Display", serif !important;
+    color: #2b2621 !important;
+    font-weight: 700 !important;
+}
+
+.dashboard-contact-heading p {
+    color: #8a7f6f !important;
+}
+
+.dashboard-contact-card {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 20px !important;
+}
+
+.dashboard-contact-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.dashboard-contact-icon {
+    width: 64px !important;
+    height: 64px !important;
+    background: transparent !important;
+    border: 1px solid #a9825c !important;
+    color: #a9825c !important;
+}
+
+.dashboard-contact-card h4 {
+    font-family: "Playfair Display", serif !important;
+    color: #2b2621 !important;
+}
+
+.dashboard-contact-card p,
+.dashboard-contact-card a {
+    color: #8a7f6f !important;
+}
+
+.dashboard-contact-card a:hover {
+    color: #a9825c !important;
+}
+
+.footer {
+    background: #2b2621 !important;
+    padding: 90px 0 35px !important;
+}
+
+.footer h4 {
+    font-family: "Playfair Display", serif !important;
+    color: #a9825c !important;
+    font-size: 22px !important;
+    margin-bottom: 22px !important;
+}
+
+.footer p {
+    color: #c9bfae !important;
+    line-height: 1.8;
+}
+
+.footer ul li {
+    margin-bottom: 12px;
+}
+
+.footer a {
+    color: #d9d0c3 !important;
+}
+
+.footer a:hover {
+    color: #a9825c !important;
+}
+
+.footer-social {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+.footer-social a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #4a4238;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.footer-social a:hover {
+    background: #a9825c;
+    border-color: #a9825c;
+    color: #2b2621 !important;
+}
+
+.footer-contact li {
+    color: #d9d0c3;
+}
+
+.footer-contact i {
+    color: #a9825c;
+    width: 20px;
+    margin-right: 8px;
+}
+
+.footer-bottom {
+    border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.footer-bottom p {
+    color: #d9d0c3 !important;
+}
+
+.footer-bottom small {
+    color: #8a7f6f !important;
+}
+
+.amenity-zigzag-image img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.amenity-zigzag-content {
+    padding: 30px 40px;
+}
+
+.amenity-zigzag-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #a9825c;
+    border-radius: 50%;
+    color: #a9825c;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.amenity-zigzag-content h3 {
+    font-family: "Playfair Display", serif;
+    color: #2b2621;
+    font-size: 28px;
+    margin-bottom: 14px;
+}
+
+.amenity-zigzag-content p {
+    color: #8a7f6f;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+@media (max-width: 991.98px) {
+    .amenity-zigzag-content {
+        padding: 25px 15px;
+    }
+
+    .amenity-zigzag-image img {
+        height: 260px;
+    }
+}
+
+.home-page .hotel-navbar {
+    position: absolute !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transition: background 0.35s ease, box-shadow 0.35s ease;
+}
+
+.home-page .hotel-navbar.scrolled {
+    position: fixed !important;
+    background: #4a4034 !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.home-page .frontend-content {
+    padding-top: 0 !important;
+}
