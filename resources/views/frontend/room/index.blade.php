@@ -8,171 +8,211 @@
 =========================== */
 
     .room-section {
-        background: #c2e9ee;
-        ;
-        padding: 50px 0 10px;
+        position: relative;
+        background:
+            linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.75) 100%),
+            url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600') center/cover no-repeat;
+        padding: 90px 0;
+        margin-bottom: 48px;
     }
-
-    /* Small Badge */
 
     .room-subtitle {
         display: inline-block;
         padding: 10px 28px;
-        background: #d4af37;
-        color: #fff;
+        background: transparent;
+        border: 1px solid #d9c4a5;
+        color: #f0e6d4;
         border-radius: 50px;
         text-transform: uppercase;
         letter-spacing: 3px;
         font-size: 13px;
         font-weight: 700;
         margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(212, 175, 55, .25);
     }
-
-    /* Main Title */
 
     .room-title {
-        font-size: 58px;
-        font-weight: 800;
-        color: #1f2937;
-        line-height: 1.15;
+        font-size: 52px;
+        font-weight: 700;
+        color: #fffdfa;
+        line-height: 1.2;
         margin-bottom: 20px;
-        letter-spacing: -1px;
-        font-family: Georgia, serif;
+        letter-spacing: -0.02em;
+        font-family: 'Playfair Display', serif;
     }
-
-    /* Gold Divider */
 
     .room-divider {
         width: 90px;
-        height: 4px;
-        background: #d4af37;
+        height: 2px;
+        background: #d9c4a5;
         margin: 0 auto 30px;
         border-radius: 20px;
     }
 
-    /* Description */
-
     .room-desc {
-        max-width: 1000px;
+        max-width: 700px;
         margin: auto;
-        font-size: 19px;
+        font-size: 17px;
         line-height: 1.9;
-        color: #6b7280;
+        color: #e8dcc8;
+        font-family: 'Jost', sans-serif;
     }
 
-    /* Decorative Text */
-
-    .room-watermark {
-        position: absolute;
-        top: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 130px;
-        font-weight: 900;
-        color: #000;
-        opacity: .03;
-        text-transform: uppercase;
-        pointer-events: none;
-        user-select: none;
-        white-space: nowrap;
-    }
-
-    /* Responsive */
-
-    @media(max-width:768px) {
-
+    @media (max-width: 768px) {
         .room-title {
-            font-size: 38px;
-        }
-
-        .room-desc {
-            font-size: 16px;
-        }
-
-        .room-watermark {
-            display: none;
+            font-size: 36px;
         }
 
         .room-section {
-            background: #fff;
-            padding: 90px 0 40px;
+            padding: 60px 0;
+            margin-bottom: 32px;
         }
-
-        .room-cards {
-            margin-top: 40px;
-        }
-
-        .room-watermark {
-            font-size: 100px;
-            opacity: .02;
-        }
-
-        .room-title {
-            font-size: 52px;
-        }
-
     }
 
-    .room-section {
-        margin-bottom: 48px;
-        padding: 56px 24px 52px;
-        border-radius: 20px;
-    }
-
-    .room-section>.container {
-        max-width: 980px;
-    }
+    /* ===========================
+       ROOM CARDS (grid, reference style)
+    =========================== */
 
     .room-cards {
-        row-gap: 24px;
+        row-gap: 30px;
     }
 
     .room-card {
         overflow: hidden;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 16px;
-        box-shadow: 0 12px 28px rgba(15, 23, 42, .10) !important;
-        transition: transform .25s ease, box-shadow .25s ease;
+        border: 1px solid #e5dccb !important;
+        border-radius: 14px;
+        box-shadow: 0 10px 26px rgba(43, 38, 33, .06) !important;
+        background: #fffdfa;
+        transition: transform .3s ease, box-shadow .3s ease;
     }
 
     .room-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 18px 34px rgba(15, 23, 42, .15) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 18px 36px rgba(43, 38, 33, .12) !important;
+    }
+
+    .room-card-header {
+        padding: 14px 20px;
+        border-bottom: 1px solid #eee2d0;
+        background: #f7f2ea;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 17px;
+        color: #2b2621;
     }
 
     .room-card .card-img-top {
         display: block;
-        height: 250px;
+        height: 220px;
+        width: 100%;
         object-fit: cover;
     }
 
     .room-card .card-body {
-        padding: 24px;
+        padding: 22px 20px;
     }
 
-    .room-card h4 {
+    .room-card-roomno {
+        color: #8a7f6f;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .room-card-desc {
+        color: #8a7f6f;
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 18px;
+    }
+
+    .room-card-meta {
+        display: flex;
+        gap: 18px;
         margin-bottom: 16px;
-        color: #102a43;
+    }
+
+    .room-card-meta span {
+        color: #8a7f6f;
+        font-size: 13px;
+    }
+
+    .room-card-meta i {
+        color: #a9825c;
+        margin-right: 5px;
+    }
+
+    .room-amenity-badge {
+        display: inline-block;
+        background: #f0e6d4;
+        color: #6b5a3e;
+        padding: 4px 11px;
+        border-radius: 30px;
+        font-size: 11px;
+        margin: 0 6px 6px 0;
+    }
+
+    .room-status-badge {
+        display: inline-block;
+        padding: 4px 13px;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 14px;
+    }
+
+    .room-status-badge.available {
+        background: #eaf2e6;
+        color: #4f7a4a;
+    }
+
+    .room-status-badge.unavailable {
+        background: #f7e6df;
+        color: #b3532b;
+    }
+
+    .room-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #eee2d0;
+        padding-top: 16px;
+        margin-top: 6px;
+    }
+
+    .room-book-btn {
+        display: inline-block;
+        padding: 9px 22px;
+        border: 1px solid #a9825c;
+        color: #a9825c;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        transition: 0.3s;
+    }
+
+    .room-book-btn:hover {
+        background: #a9825c;
+        color: #fff;
+    }
+
+    .room-card-price {
+        font-family: 'Playfair Display', serif;
+        color: #2b2621;
+        font-size: 17px;
         font-weight: 700;
     }
 
-    .room-card p {
-        color: #627d98;
-        line-height: 1.55;
-    }
-
-    @media (max-width: 768px) {
-        .room-section {
-            margin-bottom: 32px;
-            padding: 42px 18px 38px;
-        }
-
-        .room-card .card-body {
-            padding: 20px;
-        }
+    .room-card-price small {
+        font-family: 'Jost', sans-serif;
+        color: #8a7f6f;
+        font-size: 12px;
+        font-weight: 400;
     }
 </style>
+@endpush
 
 @section('content')
 
@@ -180,16 +220,11 @@
 
         <div class="container">
 
-
             <div class="room-section">
 
                 <div class="container">
 
-                    <div class="text-center position-relative mb-5">
-
-                        <div class="room-watermark">
-                            HOTEL
-                        </div>
+                    <div class="text-center position-relative">
 
                         <span class="room-subtitle">
                             Luxury Collection
@@ -210,155 +245,82 @@
 
                     </div>
 
-                    {{-- Room Cards --}}
-
                 </div>
 
             </div>
 
-
-
             <div class="row room-cards">
-
 
                 @foreach($rooms as $room)
 
-
                     <div class="col-lg-4 col-md-6 mb-4">
-
 
                         <article class="card room-card h-100">
 
+                            <div class="room-card-header">
+                                {{ $room->roomType->name ?? 'Room' }}
+                            </div>
 
                             @if($room->image)
-
-                                <img src="{{ $room->image }}" class="card-img-top" style="height:250px;object-fit:cover;">
-
+                                <img src="{{ $room->image }}" class="card-img-top">
+                            @elseif($room->roomType->image)
+                                <img src="{{ $room->roomType->image }}" class="card-img-top">
                             @else
-
-                                @if($room->roomType->image)
-
-                                    <img src="{{ $room->roomType->image }}" class="card-img-top"
-                                        style="height:250px; object-fit:cover;">
-
-                                @else
-
-                                    <img src="{{ asset('images/default-room.jpg') }}" class="card-img-top"
-                                        style="height:250px; object-fit:cover;">
-
-                                @endif
-
+                                <img src="{{ asset('images/default-room.jpg') }}" class="card-img-top">
                             @endif
-
 
                             <div class="card-body">
 
+                                <p class="room-card-roomno">Room No: {{ $room->room_number }}</p>
 
-                                <h4>
-                                    {{ $room->roomType->name ?? 'Room' }}
-                                </h4>
+                                @if($room->status)
+                                    <span class="room-status-badge available">Available</span>
+                                @else
+                                    <span class="room-status-badge unavailable">Booked</span>
+                                @endif
 
+                                <div class="room-card-meta">
+                                    <span><i class="fas fa-building"></i> Floor {{ $room->floor ?? 'N/A' }}</span>
+                                    <span><i class="fas fa-users"></i> {{ $room->roomType->capacity ?? '-' }} Guests</span>
+                                </div>
 
-
-                                <p>
-                                    <i class="fas fa-door-open"></i>
-
-                                    Room No :
-                                    {{ $room->room_number }}
-
+                                <p class="room-card-desc">
+                                    {{ $room->roomType->description ?? 'A thoughtfully designed room offering comfort, elegance and a memorable stay experience.' }}
                                 </p>
-                                <p>
 
-                                    @if($room->status)
-
-                                        <span class="badge badge-success">
-                                            Available
+                                <div class="mb-2">
+                                    @foreach($room->amenities->take(4) as $amenity)
+                                        <span class="room-amenity-badge">
+                                            <i class="fas fa-check"></i> {{ $amenity->name }}
                                         </span>
-
-                                    @else
-
-                                        <span class="badge badge-danger">
-                                            Not Available
-                                        </span>
-
-                                    @endif
-
-                                </p>
-
-
-
-                                <p>
-                                    <i class="fas fa-building"></i>
-                                    Floor :
-                                    {{ $room->floor ?? 'N/A' }}
-                                </p>
-
-
-
-                                <p>
-
-                                    <i class="fas fa-users"></i>
-
-                                    Capacity :
-                                    {{ $room->roomType->capacity ?? '-' }}
-
-                                    Guests
-
-                                </p>
-
-
-
-                                <h5 class="text-primary">
-
-                                    ₹{{ number_format($room->roomType->price, 2) }}
-
-                                    <small>
-                                        / Night
-                                    </small>
-
-                                </h5>
-                                <div class="mb-3">
-
-                                    @foreach($room->amenities->take(5) as $amenity)
-
-                                        <span class="badge badge-light mr-1">
-                                            <i class="fas fa-check text-success"></i>
-                                            {{ $amenity->name }}
-                                        </span>
-
                                     @endforeach
+                                </div>
+
+                                <div class="room-card-footer">
+
+                                    <a href="{{ route('frontend.room.show', $room->id) }}" class="room-book-btn">
+                                        Book
+                                    </a>
+
+                                    <span class="room-card-price">
+                                        ₹{{ number_format($room->roomType->price, 0) }}
+                                        <small>/ night</small>
+                                    </span>
 
                                 </div>
 
-
-
-
-                                <a href="{{ route('frontend.room.show', $room->id) }}" class="btn btn-primary mt-3">
-
-                                    View Details
-
-                                </a>
-
-
                             </div>
-
 
                         </article>
 
-
                     </div>
-
 
                 @endforeach
 
-
             </div>
-
 
         </div>
 
-
     </section>
-
 
 @endsection

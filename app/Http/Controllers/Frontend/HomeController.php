@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\Frontend;
 
-
 use App\Models\Booking1;
 use App\Models\Guest;
+use App\Models\RoomType;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController
 {
     public function index()
     {
-
-
         $reservations = collect();
 
         if (Auth::check()) {
@@ -32,9 +30,14 @@ class HomeController
             }
         }
 
+        $featuredRoomTypes = RoomType::where('status', 1)
+            ->latest()
+            ->take(3)
+            ->get();
+
         return view('frontend.user.dashboard', compact(
-            
-            'reservations'
+            'reservations',
+            'featuredRoomTypes'
         ));
     }
 }

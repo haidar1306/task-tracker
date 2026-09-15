@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Frontend\User;
 
+use App\Models\RoomType;
+
 /**
  * Class DashboardController.
  */
@@ -12,11 +14,11 @@ class DashboardController
      */
     public function index()
     {
-       
-    
+        $featuredRoomTypes = RoomType::where('status', 1)
+            ->latest()
+            ->take(3)
+            ->get();
 
-        
-
-        return view('frontend.user.dashboard');
+        return view('frontend.user.dashboard', compact('featuredRoomTypes'));
     }
 }

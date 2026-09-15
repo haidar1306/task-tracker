@@ -134,352 +134,228 @@
 }
 
     </style>
-    <!-- hero section  -->
-    <section class="hero-section">
+   <section class="hero-section">
 
-        <div class="container">
+    <div class="container">
 
+        <div class="hero-content text-center">
 
-            <div class="hero-content text-center">
+            <span class="hero-subtitle">
+                LUXURY HOTEL EXPERIENCE
+            </span>
 
-                <span class="hero-subtitle">
-                    LUXURY HOTEL EXPERIENCE
-                </span>
+            <h1>
+                Enjoy A Luxury <br>
+                Experience
+            </h1>
 
-                <h1>
-                    Enjoy A Luxury <br>
-                    Experience
-                </h1>
+            <p>
+                Experience premium hospitality, luxury rooms and unforgettable memories.
+                Book your perfect stay with comfort, elegance and world-class service.
+            </p>
 
-                <p>
-                    Experience premium hospitality, luxury rooms and unforgettable memories.
-                    Book your perfect stay with comfort, elegance and world-class service.
-                </p>
+        </div>
 
-                <div class="mt-5">
-                    <a href="{{ route('frontend.room.index') }}" class="btn btn-gold mr-3">
-                        <i class="fas fa-bed"></i>
-                        Book Room
-                    </a>
+        <div class="booking-search">
 
-                    <a href="{{ route('frontend.reservation.index') }}" class="btn btn-white">
-                        <i class="fas fa-calendar-check"></i>
-                        My Reservations
-                    </a>
+            <form action="{{ route('frontend.room.index') }}" method="GET" class="row align-items-end g-3">
+
+                <div class="col-md-3">
+                    <label>Check In</label>
+                    <input type="date" name="check_in" class="form-control" min="{{ date('Y-m-d') }}">
                 </div>
 
+                <div class="col-md-3">
+                    <label>Check Out</label>
+                    <input type="date" name="check_out" class="form-control" min="{{ date('Y-m-d') }}">
+                </div>
+
+                <div class="col-md-3">
+                    <label>Guests</label>
+                    <select name="guests" class="form-control">
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4+ Guests</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-gold w-100">
+                        <i class="fas fa-search"></i>
+                        Search Rooms
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+   <section class="featured-room-section">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="section-subtitle">
+                OUR ACCOMMODATION
+            </span>
+
+            <h2 class="section-title">
+                Featured Rooms
+            </h2>
+
+            <p class="section-description">
+                Experience luxury and comfort with our premium rooms designed for unforgettable stays.
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-lg-4 col-md-6">
+                <div class="luxury-room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800">
+                        <span class="room-badge">Popular</span>
+                    </div>
+                    <div class="room-content">
+                        <div class="room-rating">★★★★★</div>
+                        <h3>Deluxe Room</h3>
+                        <p>Elegant room with king size bed, city view, WiFi, AC and a complimentary breakfast every morning.</p>
+                        <div class="room-footer">
+                            <h4>₹3,500 <small>/ Night</small></h4>
+                            <a href="{{ route('frontend.room.index') }}" class="room-btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="luxury-room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800">
+                        <span class="room-badge">Business Choice</span>
+                    </div>
+                    <div class="room-content">
+                        <div class="room-rating">★★★★★</div>
+                        <h3>Executive Room</h3>
+                        <p>Premium business room with a private balcony, work desk, modern interiors and lounge access.</p>
+                        <div class="room-footer">
+                            <h4>₹4,800 <small>/ Night</small></h4>
+                            <a href="{{ route('frontend.room.index') }}" class="room-btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="luxury-room-card">
+                    <div class="room-image">
+                        <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?w=800">
+                        <span class="room-badge">Luxury</span>
+                    </div>
+                    <div class="room-content">
+                        <div class="room-rating">★★★★★</div>
+                        <h3>Royal Suite</h3>
+                        <p>Ultimate luxury suite featuring a private jacuzzi, spacious lounge and panoramic city views.</p>
+                        <div class="room-footer">
+                            <h4>₹7,500 <small>/ Night</small></h4>
+                            <a href="{{ route('frontend.room.index') }}" class="room-btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
 
-    </section>
-    <!-- ===========================
-                                                                                            Featured Rooms
-                                                                                            =========================== -->
+    </div>
 
-    <section class="featured-room-section">
+</section>
 
-        <div class="container">
+ <section class="amenities-section">
 
+    <div class="container">
 
-            <div class="text-center mb-5">
+        <div class="text-center mb-5">
 
-                <span class="section-subtitle">
-                    OUR ACCOMMODATION
-                </span>
+            <span class="section-subtitle">
+                HOTEL FACILITIES
+            </span>
 
-                <h2 class="section-title">
-                    Featured Rooms
-                </h2>
+            <h2 class="section-title">
+                Hotel Amenities
+            </h2>
 
-                <p class="section-description">
-                    Experience luxury and comfort with our premium rooms designed for unforgettable stays.
-                </p>
-
-            </div>
-
-
-
-            <div class="row g-4">
-
-
-                <!-- Deluxe Room -->
-
-                <div class="col-lg-4 col-md-6">
-
-                    <div class="luxury-room-card">
-
-
-                        <div class="room-image">
-
-                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800">
-
-                            <span class="room-badge">
-                                Popular
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="room-content">
-
-
-                            <div class="room-rating">
-                                ★★★★★
-                            </div>
-
-
-                            <h3>
-                                Deluxe Room
-                            </h3>
-
-
-                            <p>
-                                Elegant room with king size bed,
-                                WiFi, AC and complimentary breakfast.
-                            </p>
-
-
-                            <div class="room-footer">
-
-                                <h4>
-                                    ₹3,500
-                                    <small>/ Night</small>
-                                </h4>
-
-
-                                <a href="#" class="room-btn">
-                                    Book Now
-                                </a>
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-
-
-
-                <!-- Executive Room -->
-
-
-                <div class="col-lg-4 col-md-6">
-
-
-                    <div class="luxury-room-card">
-
-
-                        <div class="room-image">
-
-                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800">
-
-
-                            <span class="room-badge">
-                                Business Choice
-                            </span>
-
-
-                        </div>
-
-
-
-                        <div class="room-content">
-
-
-                            <div class="room-rating">
-                                ★★★★★
-                            </div>
-
-
-                            <h3>
-                                Executive Room
-                            </h3>
-
-
-                            <p>
-                                Premium business room with luxury facilities,
-                                balcony and modern interiors.
-                            </p>
-
-
-                            <div class="room-footer">
-
-
-                                <h4>
-                                    ₹4,800
-                                    <small>/ Night</small>
-                                </h4>
-
-
-                                <a href="#" class="room-btn">
-                                    Book Now
-                                </a>
-
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-
-
-                <!-- Royal Suite -->
-
-
-                <div class="col-lg-4 col-md-6">
-
-
-                    <div class="luxury-room-card">
-
-
-                        <div class="room-image">
-
-
-                            <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800">
-
-
-                            <span class="room-badge">
-                                Luxury
-                            </span>
-
-
-                        </div>
-
-
-
-                        <div class="room-content">
-
-
-                            <div class="room-rating">
-                                ★★★★★
-                            </div>
-
-
-                            <h3>
-                                Royal Suite
-                            </h3>
-
-
-                            <p>
-                                Ultimate luxury suite with jacuzzi,
-                                lounge and beautiful city view.
-                            </p>
-
-
-
-                            <div class="room-footer">
-
-
-                                <h4>
-                                    ₹7,500
-                                    <small>/ Night</small>
-                                </h4>
-
-
-                                <a href="#" class="room-btn">
-                                    Book Now
-                                </a>
-
-
-                            </div>
-
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-            </div>
-
+            <p class="section-description">
+                Enjoy world-class facilities designed to make your stay comfortable and memorable.
+            </p>
 
         </div>
 
-    </section>
+        @php
+            $zigzagAmenities = [
+                [
+                    'icon' => 'swimming-pool',
+                    'title' => 'Swimming Pool',
+                    'text' => 'Unwind at our outdoor infinity pool, surrounded by loungers and scenic views. Open through the day for a refreshing escape.',
+                    'image' => 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900',
+                ],
+                [
+                    'icon' => 'utensils',
+                    'title' => 'Restaurant',
+                    'text' => 'Savour multi-cuisine fine dining crafted by our expert chefs, from local delicacies to international favourites, served all day.',
+                    'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900',
+                ],
+                [
+                    'icon' => 'spa',
+                    'title' => 'Spa & Wellness',
+                    'text' => 'Rejuvenate your senses with our luxury spa treatments, designed to melt away stress and restore complete balance.',
+                    'image' => 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=900',
+                ],
+                [
+                    'icon' => 'cocktail',
+                    'title' => 'Bar Lounge',
+                    'text' => 'End your day with handcrafted cocktails and premium drinks in an intimate lounge setting, perfect for relaxed evenings.',
+                    'image' => 'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900',
+                ],
+            ];
+        @endphp
 
-    <!-- ===========================
-                                                                                            Amenities
-                                                                                            =========================== -->
+        @foreach ($zigzagAmenities as $index => $item)
+            <div class="row align-items-center amenity-zigzag-row {{ $index % 2 == 1 ? 'flex-row-reverse' : '' }} mb-5">
 
-    <section class="amenities-section">
-
-        <div class="container">
-
-
-            <div class="text-center mb-5">
-
-                <span class="section-subtitle">
-                    HOTEL FACILITIES
-                </span>
-
-                <h2 class="section-title">
-                    Hotel Amenities
-                </h2>
-
-                <p class="section-description">
-                    Enjoy world-class facilities designed to make your stay comfortable and memorable.
-                </p>
-
-            </div>
-
-
-
-            @php
-                $dashboardAmenities = [
-                    ['wifi', 'Free WiFi', 'High-speed internet', 'Complimentary', 'amenities.jpg'],
-                    ['swimming-pool', 'Swimming Pool', 'Outdoor pool', 'Premium', 'hotel.jfif'],
-                    ['dumbbell', 'Fitness Gym', 'Modern equipment', '24/7', 'gallery.jfif'],
-                    ['utensils', 'Restaurant', 'Multi-cuisine dining', 'Fine Dining', 'contact.jfif'],
-                    ['spa', 'Spa & Wellness', 'Luxury relaxation', 'Wellness', 'gallery1.jfif'],
-                    ['car', 'Parking', 'Secure parking', 'Free', 'hotel_bg.jfif'],
-                    ['concierge-bell', 'Room Service', 'Available 24/7', '24/7', 'contact1.jfif'],
-                    ['cocktail', 'Bar Lounge', 'Premium drinks', 'Premium', 'luxura4.jfif'],
-                ];
-            @endphp
-
-            <div class="row gx-4 gy-4">
-                @foreach ($dashboardAmenities as $amenity)
-                    <div class="col-lg-3 col-md-4 col-6 mb-4 d-flex">
-                        <article class="luxury-amenity-card image-amenity-card w-100">
-                            <div class="image-amenity-media">
-                                <img src="{{ asset('frontend/images/' . $amenity[4]) }}" alt="{{ $amenity[1] }}" loading="lazy">
-                                <span class="image-amenity-icon" aria-hidden="true">
-                                    <i class="fas fa-{{ $amenity[0] }}"></i>
-                                </span>
-                            </div>
-                            <div class="image-amenity-body">
-                                <span class="image-amenity-badge">{{ $amenity[3] }}</span>
-                                <h5>{{ $amenity[1] }}</h5>
-                                <p>{{ $amenity[2] }}</p>
-                            </div>
-                        </article>
+                <div class="col-lg-6">
+                    <div class="amenity-zigzag-image">
+                        <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}">
                     </div>
-                @endforeach
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="amenity-zigzag-content">
+                        <div class="amenity-zigzag-icon">
+                            <i class="fas fa-{{ $item['icon'] }}"></i>
+                        </div>
+                        <h3>{{ $item['title'] }}</h3>
+                        <p>{{ $item['text'] }}</p>
+                    </div>
+                </div>
+
             </div>
+        @endforeach
 
-
+        <div class="text-center mt-4">
+            <a href="{{ route('frontend.amenities.index') }}" class="btn btn-gold">
+                View All Amenities
+            </a>
         </div>
 
-    </section>
+    </div>
+
+</section>
 
     <!-- ===========================
                                                                                             Why Choose Us

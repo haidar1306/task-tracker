@@ -13,6 +13,11 @@
 
     <!-- Frontend CSS -->
     <link href="{{ asset('css/frontend.css') }}" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Jost:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- User Dashboard CSS -->
     <link href="{{ asset('css/frontend/user-dashboard.css') }}" rel="stylesheet">
@@ -124,6 +129,7 @@
                 opacity: 0;
                 transform: translateX(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -140,12 +146,12 @@
     @include('includes.partials.logged-in-as')
 
     <div id="app">
-        
+
         @include('frontend.layouts.navbar')
-            <main class="frontend-content">
-        
-         @include('includes.partials.messages')
-         @include('frontend.components.alerts')
+        <main class="frontend-content">
+
+            @include('includes.partials.messages')
+            @include('frontend.components.alerts')
             @yield('content')
         </main>
 
@@ -164,42 +170,42 @@
     @stack('after-scripts')
     <script>
 
-function closeAlert(button) {
-    const alert = button ? button.closest('.custom-alert') : document.querySelector('.custom-alert');
+        function closeAlert(button) {
+            const alert = button ? button.closest('.custom-alert') : document.querySelector('.custom-alert');
 
-    if (alert) {
-        alert.remove();
-    }
-}
+            if (alert) {
+                alert.remove();
+            }
+        }
 
-document.addEventListener('click', function (event) {
-    const closeButton = event.target.closest('.toast-close');
+        document.addEventListener('click', function (event) {
+            const closeButton = event.target.closest('.toast-close');
 
-    if (!closeButton) {
-        return;
-    }
+            if (!closeButton) {
+                return;
+            }
 
-    const toast = closeButton.closest('.global-toast');
+            const toast = closeButton.closest('.global-toast');
 
-    if (toast) {
-        toast.remove();
-    }
-});
+            if (toast) {
+                toast.remove();
+            }
+        });
 
-setTimeout(function () {
-    document.querySelectorAll('.custom-alert').forEach(function (alert) {
-        alert.remove();
-    });
-}, 5000);
+        setTimeout(function () {
+            document.querySelectorAll('.custom-alert').forEach(function (alert) {
+                alert.remove();
+            });
+        }, 5000);
 
-setTimeout(function () {
-    document.querySelectorAll('.global-toast').forEach(function (toast) {
-        toast.remove();
-    });
-}, 5000);
+        setTimeout(function () {
+            document.querySelectorAll('.global-toast').forEach(function (toast) {
+                toast.remove();
+            });
+        }, 5000);
 
-</script>
- <script>
+    </script>
+    <script>
         window.addEventListener('scroll', function () {
             const navbar = document.querySelector('.hotel-navbar');
             if (navbar) {
