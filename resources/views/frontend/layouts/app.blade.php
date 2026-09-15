@@ -142,12 +142,14 @@
     <div id="app">
         
         @include('frontend.layouts.navbar')
-       <main class="frontend-content">
+            <main class="frontend-content">
         
          @include('includes.partials.messages')
          @include('frontend.components.alerts')
             @yield('content')
         </main>
+
+        @include('frontend.layouts.footer')
     </div>
 
     @stack('before-scripts')
