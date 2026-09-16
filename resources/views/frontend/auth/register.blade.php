@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app')
+@extends('frontend.layouts.minimal')
 
 @section('title', __('Register'))
 
@@ -16,14 +16,48 @@
             background: #f7f2ea;
         }
 
+        .minimal-auth-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 26px 44px;
+        }
+
+        .minimal-auth-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--hotel-navy-dark);
+            text-decoration: none;
+        }
+
+        .minimal-auth-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid #e5dccb;
+            color: var(--hotel-text);
+            font-size: 16px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .minimal-auth-close:hover {
+            background: var(--hotel-navy-dark);
+            border-color: var(--hotel-navy-dark);
+            color: #fff;
+        }
+
         .register-page {
             display: flex;
             align-items: center;
-            min-height: 100vh;
-            padding: 35px 15px;
-            background:
-                radial-gradient(circle at top left, rgba(169, 130, 92, 0.14), transparent 30%),
-                linear-gradient(135deg, #f7f2ea 0%, #fdfaf4 100%);
+            justify-content: center;
+            padding: 20px 15px 60px;
         }
 
         .register-shell {
@@ -33,8 +67,8 @@
             margin: auto;
             overflow: hidden;
             background: #fffdfa;
-            border-radius: 18px;
-            box-shadow: 0 24px 70px rgba(43, 38, 33, 0.14);
+            border-radius: 22px;
+            box-shadow: 0 30px 70px rgba(43, 38, 33, 0.14);
         }
 
         .register-showcase {
@@ -42,11 +76,11 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 710px;
-            padding: 55px 48px;
+            min-height: 700px;
+            padding: 50px 46px;
             color: #fffdfa;
             background:
-                linear-gradient(180deg, rgba(43,38,33,.65) 0%, rgba(43,38,33,.88) 100%),
+                linear-gradient(180deg, rgba(43,38,33,.65) 0%, rgba(43,38,33,.90) 100%),
                 url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=900') center/cover no-repeat;
             overflow: hidden;
         }
@@ -73,46 +107,40 @@
             left: -135px;
         }
 
-        .hotel-brand,
         .showcase-content,
-        .showcase-footer {
+        .showcase-footer,
+        .trust-bar {
             position: relative;
             z-index: 1;
         }
 
-        .hotel-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 11px;
-            font-size: 18px;
+        .showcase-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            color: #f0e6d4;
+            font-size: 11px;
             font-weight: 700;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .hotel-brand-icon {
-            display: grid;
-            width: 42px;
-            height: 42px;
-            place-items: center;
-            color: var(--hotel-navy);
-            background: #fffdfa;
-            border-radius: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 22px;
         }
 
         .showcase-content h1 {
             max-width: 340px;
             margin: 0 0 18px;
             font-family: 'Playfair Display', serif;
-            font-size: 39px;
+            font-size: 38px;
             font-weight: 700;
             line-height: 1.2;
         }
 
         .showcase-content > p {
             max-width: 340px;
-            margin: 0 0 28px;
+            margin: 0 0 26px;
             color: #e8dcc8;
-            font-size: 16px;
+            font-size: 15.5px;
             line-height: 1.7;
         }
 
@@ -138,6 +166,27 @@
             font-size: 12px;
             background: rgba(255, 255, 255, 0.12);
             border-radius: 50%;
+        }
+
+        .trust-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 22px;
+            margin-top: 22px;
+            border-top: 1px solid rgba(255,255,255,0.14);
+        }
+
+        .trust-bar .stars {
+            color: #d9c4a5;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        .trust-bar .trust-text {
+            color: #e8dcc8;
+            font-size: 13px;
+            font-weight: 500;
         }
 
         .showcase-footer {
@@ -284,7 +333,7 @@
             text-decoration: underline;
         }
 
-        @media (max-width: 820px) {
+        @media (max-width: 900px) {
             .register-shell {
                 grid-template-columns: 1fr;
                 max-width: 540px;
@@ -295,20 +344,25 @@
                 padding: 34px;
             }
 
-            .showcase-content {
-                margin: 50px 0 15px;
+            .showcase-content h1 {
+                font-size: 30px;
+                max-width: 100%;
             }
 
-            .showcase-content h1 {
-                font-size: 32px;
+            .showcase-content > p {
+                max-width: 100%;
             }
 
             .register-form-area {
-                padding: 42px 34px;
+                padding: 40px 32px;
             }
         }
 
         @media (max-width: 420px) {
+            .minimal-auth-topbar {
+                padding: 18px 20px;
+            }
+
             .register-page {
                 padding: 0;
             }
@@ -318,56 +372,75 @@
             }
 
             .register-showcase {
-                padding: 25px;
+                padding: 26px;
+            }
+
+            .benefit-list {
+                display: none;
             }
 
             .register-form-area {
-                padding: 35px 25px;
+                padding: 30px 22px;
+            }
+
+            .register-form .form-control {
+                font-size: 16px;
             }
         }
     </style>
 @endpush
 
 @section('content')
+    <div class="minimal-auth-topbar">
+        <a href="{{ route('frontend.index') }}" class="minimal-auth-brand">Hotel Luxura</a>
+        <a href="{{ route('frontend.index') }}" class="minimal-auth-close" aria-label="Close">
+            <i class="fa fa-times"></i>
+        </a>
+    </div>
+
     <div class="register-page">
         <div class="register-shell">
             <aside class="register-showcase">
-                <div class="hotel-brand">
-                    <span class="hotel-brand-icon">
-                        <i class="fa fa-building"></i>
-                    </span>
-                    <span>{{ appName() }}</span>
-                </div>
 
                 <div class="showcase-content">
+                    <span class="showcase-badge">Join Hotel Luxura</span>
+
                     <h1>Build better stays, from day one.</h1>
 
                     <p>
-                        Create your account and bring your hotel operations into one simple, secure workspace.
+                        Create your account and unlock a world of premium hospitality, tailored just for you.
                     </p>
 
                     <div class="benefit-list">
                         <div class="benefit-item">
                             <i class="fa fa-check"></i>
-                            Manage reservations with confidence
+                            Manage your reservations with ease
                         </div>
 
                         <div class="benefit-item">
                             <i class="fa fa-check"></i>
-                            Keep guest information organised
+                            Exclusive member rates and offers
                         </div>
 
                         <div class="benefit-item">
                             <i class="fa fa-check"></i>
-                            Coordinate rooms and daily operations
+                            Priority access to rooms and amenities
                         </div>
                     </div>
                 </div>
 
-                <div class="showcase-footer">
-                    <i class="fa fa-shield"></i>
-                    Your information is protected and secure
+                <div>
+                    <div class="trust-bar">
+                        <span class="stars">★★★★★</span>
+                        <span class="trust-text">Trusted by thousands of happy guests</span>
+                    </div>
+
+                    <div class="showcase-footer" style="margin-top: 18px;">
+                        <i class="fa fa-shield"></i>
+                        Your information is protected and secure
+                    </div>
                 </div>
+
             </aside>
 
             <section class="register-form-area">
@@ -375,7 +448,7 @@
                     <div class="form-eyebrow">Get started</div>
                     <h2>Create your account</h2>
                     <p class="form-intro">
-                        Fill in your details below to join {{ appName() }}.
+                        Fill in your details below to join Hotel Luxura.
                     </p>
 
                     <x-forms.post :action="route('frontend.auth.register')">

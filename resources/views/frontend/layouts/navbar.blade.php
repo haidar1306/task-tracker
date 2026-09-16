@@ -83,6 +83,29 @@
     .notification-dropdown::-webkit-scrollbar-track {
         background: #f5f5f5;
     }
+
+    .btn-login-join {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 22px;
+        border: 1px solid #d9d0c3;
+        border-radius: 30px;
+        color: #f0e6d4;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: 0.25s;
+    }
+
+    .btn-login-join:hover {
+        background: #a9825c;
+        border-color: #a9825c;
+        color: #fff;
+        text-decoration: none;
+    }
 </style>
 <nav class="navbar navbar-expand-lg hotel-navbar">
 
@@ -277,13 +300,13 @@
                                 @endforelse
                                 <!-- <div class="border-top text-center p-2">
 
-                                        <a href="{{ route('frontend.frontend.notifications.index') }}" class="btn btn-sm btn-primary w-100">
+                                                        <a href="{{ route('frontend.frontend.notifications.index') }}" class="btn btn-sm btn-primary w-100">
 
-                                            View All Notifications
+                                                            View All Notifications
 
-                                        </a>
+                                                        </a>
 
-                                    </div> -->
+                                                    </div> -->
 
                             </div>
 
@@ -353,21 +376,11 @@
 
 
 
-                    <a href="{{ route('frontend.auth.login') }}" class="btn btn-gold mr-3">
 
-
-                        Login
-
+                    <a href="{{ route('frontend.auth.login') }}" class="btn-login-join">
+                        Login / Join
                     </a>
 
-
-
-                    <a href="{{ route('frontend.auth.register') }}" class="btn btn-outline-light">
-
-
-                        Register
-
-                    </a>
 
 
                 @endauth
