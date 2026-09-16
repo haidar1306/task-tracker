@@ -13,7 +13,7 @@
         justify-content: center;
         background:
             linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.78) 100%),
-            url('{{ asset("frontend/images/contact1.jfif") }}') center/cover no-repeat;
+            url('{{ asset("frontend/images/images (13).jfif") }}') center/cover no-repeat;
         text-align: center;
     }
 

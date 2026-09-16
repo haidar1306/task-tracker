@@ -140,10 +140,8 @@
     @stack('after-styles')
 </head>
 
-<body class="{{ request()->routeIs('frontend.index', 'frontend.user.dashboard', 'frontend.room.index', 'frontend.amenities.index', 'frontend.about', 'frontend.reservation.index', 'frontend.contact', 'frontend.auth.login', 'frontend.auth.register', 'frontend.services') ? 'home-page' : '' }}">
-    <div id="app">
-
-        @include('frontend.layouts.navbar')
+<body class="{{ request()->routeIs('frontend.index', 'frontend.user.dashboard', 'frontend.room.index', 'frontend.amenities.index', 'frontend.about', 'frontend.reservation.index', 'frontend.contact', 'frontend.auth.login', 'frontend.auth.register', 'frontend.services', 'frontend.gallery', 'frontend.offers', 'frontend.hotel-updates', 'frontend.services.show') ? 'home-page' : '' }}">     
+         @include('frontend.layouts.navbar')
         <main class="frontend-content">
 
             @include('includes.partials.messages')

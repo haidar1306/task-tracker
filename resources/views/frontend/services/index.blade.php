@@ -17,7 +17,7 @@
         justify-content: center;
         background:
             linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.78) 100%),
-            url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1600') center/cover no-repeat;
+             url('{{ asset("frontend/images/images (22).jfif") }}') center/cover no-repeat;
         text-align: center;
         margin-bottom: 70px;
     }
