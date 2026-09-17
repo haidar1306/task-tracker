@@ -4,219 +4,634 @@
 
 @push('after-styles')
 <style>
-    /* ===========================
-       SERVICES HERO
-    =========================== */
+    /* =========================================================
+       HOTEL LUXURA — SERVICES EXPERIENCE
+       Full-bleed background + cascading editorial cards
+    ========================================================= */
 
-    .services-hero {
+    .luxura-services {
         position: relative;
-        width: 100%;
-        min-height: 46vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        min-height: calc(100vh - 84px);
+        margin-top: -24px;
+        padding: 130px 0 110px;
+        overflow: hidden;
+
         background:
-            linear-gradient(180deg, rgba(43,38,33,.55) 0%, rgba(43,38,33,.78) 100%),
-             url('{{ asset("frontend/images/images (22).jfif") }}') center/cover no-repeat;
-        text-align: center;
-        margin-bottom: 70px;
+            linear-gradient(
+                180deg,
+                rgba(14, 20, 22, 0.35) 0%,
+                rgba(14, 20, 22, 0.15) 30%,
+                rgba(14, 20, 22, 0.55) 100%
+            ),
+            url('{{ asset("frontend/images/bg.png") }}')
+            center center / cover no-repeat;
     }
 
-    .services-hero span.kicker {
-        display: inline-block;
-        padding: 8px 24px;
-        border: 1px solid #d9c4a5;
-        color: #f0e6d4;
-        border-radius: 30px;
-        letter-spacing: 3px;
-        font-size: 12px;
+    /* subtle cinematic vignette */
+    .luxura-services::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(
+                ellipse 90% 70% at 15% 50%,
+                rgba(10, 15, 17, .55),
+                transparent 60%
+            );
+        pointer-events: none;
+    }
+
+    .luxura-services .container-fluid {
+        position: relative;
+        z-index: 2;
+        max-width: 1580px;
+        padding: 0 60px;
+    }
+
+    /* =========================================================
+       PAGE LAYOUT — intro left / cascade right
+    ========================================================= */
+
+    .services-layout {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    /* =========================================================
+       INTRO COLUMN
+    ========================================================= */
+
+    .services-intro {
+        position: sticky;
+        top: 140px;
+        color: #fff;
+        padding-top: 60px;
+    }
+
+    .services-kicker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Jost", sans-serif;
+        font-size: 11px;
         font-weight: 600;
+        letter-spacing: 3px;
         text-transform: uppercase;
+        color: #e7dcc4;
         margin-bottom: 18px;
     }
 
-    .services-hero h1 {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(2.2rem, 5vw, 3.6rem);
-        font-weight: 700;
-        color: #fffdfa;
-        margin: 0 0 14px;
+    .services-kicker::after {
+        content: "";
+        width: 32px;
+        height: 1px;
+        background: #e7dcc4;
     }
 
-    .services-hero p {
-        max-width: 560px;
-        margin: 0 auto;
-        color: #e8dcc8;
-        font-size: 16px;
-        line-height: 1.8;
+    .services-intro h1 {
+        font-family: "Playfair Display", Georgia, serif;
+        font-style: italic;
+        font-size: clamp(38px, 3.6vw, 54px);
+        font-weight: 500;
+        line-height: 1.12;
+        margin: 0;
+        color: #fffdf8;
+        text-shadow: 0 5px 25px rgba(0,0,0,.25);
     }
 
-    /* ===========================
-       SERVICE CARDS
-    =========================== */
-
-    .services-section {
-        padding: 0 0 90px;
-        background: #f7f2ea;
+    .services-intro p {
+        max-width: 320px;
+        margin: 22px 0 0;
+        color: rgba(255,255,255,.78);
+        font-family: "Jost", sans-serif;
+        font-size: 14.5px;
+        line-height: 1.85;
     }
 
-    .service-card {
-        background: #fffdfa;
-        border: 1px solid #e5dccb;
-        border-radius: 16px;
-        overflow: hidden;
-        height: 100%;
-        transition: transform .3s ease, box-shadow .3s ease;
+    .services-explore {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 34px;
+        text-decoration: none;
     }
 
-    .service-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 18px 36px rgba(43, 38, 33, .12);
-    }
-
-    .service-card-image {
-        position: relative;
-        height: 220px;
-        overflow: hidden;
-        background: #eee2d0;
-    }
-
-    .service-card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform .4s ease;
-    }
-
-    .service-card:hover .service-card-image img {
-        transform: scale(1.06);
-    }
-
-    .service-card-icon {
-        position: absolute;
-        left: 20px;
-        bottom: -26px;
-        width: 56px;
-        height: 56px;
+    .services-explore .dot {
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
-        background: #fffdfa;
-        color: #a9825c;
-        font-size: 22px;
-        box-shadow: 0 10px 22px rgba(43, 38, 33, .16);
+        border: 1px solid rgba(255,255,255,.45);
+        color: #fff;
+        flex-shrink: 0;
+        transition: .3s ease;
     }
 
-    .service-card-body {
-        padding: 42px 26px 28px;
-        text-align: center;
+    .services-explore .dot i {
+        font-size: 12px;
+        margin-left: 2px;
     }
 
-    .service-card-body h4 {
-        font-family: 'Playfair Display', serif;
-        color: #2b2621;
-        font-size: 21px;
-        font-weight: 700;
-        margin-bottom: 12px;
-    }
-
-    .service-card-body p {
-        color: #8a7f6f;
-        font-size: 14.5px;
-        line-height: 1.7;
-        margin-bottom: 22px;
-    }
-
-    .service-view-btn {
-        display: inline-block;
-        padding: 10px 26px;
-        border: 1px solid #a9825c;
-        color: #a9825c;
-        border-radius: 30px;
-        text-decoration: none;
+    .services-explore span:last-child {
+        font-family: "Jost", sans-serif;
+        font-size: 11px;
         font-weight: 600;
-        font-size: 13px;
-        letter-spacing: 0.03em;
-        transition: 0.3s;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,.85);
     }
 
-    .service-view-btn:hover {
+    .services-explore:hover .dot {
         background: #a9825c;
+        border-color: #a9825c;
+    }
+
+    .services-bottom-note {
+        margin-top: 70px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: rgba(255,255,255,.6);
+        font-family: "Jost", sans-serif;
+        font-size: 10.5px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .services-bottom-note span.rule {
+        width: 40px;
+        height: 1px;
+        background: rgba(255,255,255,.4);
+    }
+
+    /* =========================================================
+       CASCADE — card track
+    ========================================================= */
+
+    .services-cascade-wrap {
+        position: relative;
+    }
+
+    .floating-services {
+        display: flex;
+        align-items: flex-start;
+        gap: 0;
+        padding: 40px 10px 70px 0;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+    }
+
+    .floating-services::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* =========================================================
+       SERVICE CARD
+    ========================================================= */
+
+    .floating-service {
+        position: relative;
+        flex: 0 0 250px;
+        min-height: 430px;
+        margin-left: -58px;
+        scroll-snap-align: start;
+
+        background: rgba(20, 22, 22, .92);
+        border: 1px solid rgba(255,255,255,.14);
+        box-shadow:
+            0 25px 55px rgba(0,0,0,.35),
+            0 5px 15px rgba(0,0,0,.15);
+
+        overflow: hidden;
+
+        transform:
+            translateY(var(--float-y, 0))
+            rotate(var(--rotate, 0deg));
+
+        transition:
+            transform .5s cubic-bezier(.2,.8,.2,1),
+            box-shadow .4s ease,
+            border-color .4s ease,
+            z-index 0s;
+    }
+
+    .floating-service:first-child {
+        margin-left: 0;
+    }
+
+    /* stagger + depth so later cards sit above earlier ones */
+    .floating-services article:nth-child(1) { --float-y: 0px;   --rotate: -1deg;   z-index: 5; }
+    .floating-services article:nth-child(2) { --float-y: 55px;  --rotate: .6deg;   z-index: 6; }
+    .floating-services article:nth-child(3) { --float-y: -18px; --rotate: -.8deg;  z-index: 7; }
+    .floating-services article:nth-child(4) { --float-y: 32px;  --rotate: .9deg;   z-index: 8; }
+    .floating-services article:nth-child(5) { --float-y: 60px;  --rotate: -.5deg;  z-index: 9; }
+    .floating-services article:nth-child(n+6) { --float-y: 10px; --rotate: .5deg; }
+
+    /* alternate light card for rhythm, mirrors the reference's cream panel */
+    .floating-service.is-alt {
+        background: #f4f0e6;
+        border-color: rgba(0,0,0,.06);
+    }
+
+    .floating-service.is-alt .floating-service-body h3,
+    .floating-service.is-alt .service-number {
+        color: #1c1a16;
+    }
+
+    .floating-service.is-alt .floating-service-body p {
+        color: rgba(28,26,22,.62);
+    }
+
+    .floating-service.is-alt .service-link {
+        color: #a9825c;
+    }
+
+    .floating-service.is-alt .floating-service-icon {
+        color: #a9825c;
+        border-color: rgba(0,0,0,.15);
+        background: rgba(255,255,255,.5);
+    }
+
+    /* =========================================================
+       HOVER / FOCUS
+    ========================================================= */
+
+    .floating-service:hover,
+    .floating-service:focus-within {
+        transform:
+            translateY(calc(var(--float-y) - 14px))
+            rotate(0deg);
+        z-index: 20;
+        border-color: rgba(224, 199, 154, .55);
+        box-shadow:
+            0 40px 80px rgba(0,0,0,.45),
+            0 8px 25px rgba(0,0,0,.2);
+    }
+
+    /* =========================================================
+       IMAGE
+    ========================================================= */
+
+    .floating-service-image {
+        position: relative;
+        height: 260px;
+        overflow: hidden;
+        background: #262626;
+    }
+
+    .floating-service-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.7) 100%);
+        pointer-events: none;
+    }
+
+    .floating-service-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+    }
+
+    .floating-service:hover .floating-service-image img {
+        transform: scale(1.06);
+        filter: brightness(1.04);
+    }
+
+    /* =========================================================
+       NUMBER + ICON
+    ========================================================= */
+
+    .service-number {
+        position: absolute;
+        top: 18px;
+        left: 20px;
+        z-index: 3;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 15px;
+        color: rgba(255,255,255,.9);
+    }
+
+    .floating-service-icon {
+        position: absolute;
+        right: 18px;
+        top: 16px;
+        z-index: 3;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255,255,255,.35);
+        border-radius: 50%;
+        color: #eee1c8;
+        background: rgba(20,20,20,.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        font-size: 13px;
+        transition: .35s ease;
+    }
+
+    .floating-service:hover .floating-service-icon {
+        background: #a9825c;
+        border-color: #a9825c;
         color: #fff;
     }
 
-    @media (max-width: 767.98px) {
-        .services-hero {
-            min-height: 36vh;
-            margin-bottom: 50px;
+    /* =========================================================
+       BODY
+    ========================================================= */
+
+    .floating-service-body {
+        padding: 24px 22px 26px;
+        color: white;
+    }
+
+    .floating-service-body h3 {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 22px;
+        font-weight: 500;
+        color: #fffdf8;
+        margin: 0 0 9px;
+    }
+
+    .floating-service-body p {
+        font-family: "Jost", sans-serif;
+        color: rgba(255,255,255,.65);
+        font-size: 12.5px;
+        line-height: 1.7;
+        margin: 0 0 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .service-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: #d9c29a;
+        font-family: "Jost", sans-serif;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: .3s ease;
+    }
+
+    .service-link i {
+        font-size: 9px;
+        transition: transform .3s ease;
+    }
+
+    .service-link:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .service-link:hover i {
+        transform: translateX(5px);
+    }
+
+    /* =========================================================
+       TRACK NAV ARROWS
+    ========================================================= */
+
+    .services-track-nav {
+        position: absolute;
+        bottom: 10px;
+        right: 4px;
+        display: flex;
+        gap: 10px;
+        z-index: 15;
+    }
+
+    .services-track-nav button {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,.4);
+        background: rgba(20,20,20,.3);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(6px);
+        transition: .3s ease;
+    }
+
+    .services-track-nav button:hover {
+        background: #a9825c;
+        border-color: #a9825c;
+    }
+
+    /* =========================================================
+       TABLET
+    ========================================================= */
+
+    @media (max-width: 991.98px) {
+
+        .luxura-services {
+            padding: 100px 0 80px;
         }
 
-        .service-card-body {
-            padding: 38px 20px 24px;
+        .luxura-services .container-fluid {
+            padding: 0 24px;
+        }
+
+        .services-layout {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .services-intro {
+            position: static;
+            padding-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .services-intro p {
+            max-width: 480px;
+        }
+
+        .floating-service {
+            flex: 0 0 240px;
+            min-height: 400px;
+            margin-left: -30px;
+        }
+
+        .floating-services article:nth-child(n) {
+            --float-y: 0px;
+            --rotate: 0deg;
+        }
+    }
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 575.98px) {
+
+        .luxura-services .container-fluid {
+            padding: 0 16px;
+        }
+
+        .services-intro h1 {
+            font-size: 36px;
+        }
+
+        .floating-services {
+            padding-bottom: 50px;
+        }
+
+        .floating-service {
+            flex: 0 0 78vw;
+            min-height: 380px;
+            margin-left: -14px;
+        }
+
+        .floating-service-image {
+            height: 210px;
+        }
+
+        .services-track-nav {
+            bottom: -6px;
         }
     }
 </style>
 @endpush
 
+
 @section('content')
 
-    <section class="services-hero page-hero">
-        <div class="container">
-            <span class="kicker">What We Offer</span>
-            <h1>Our Services</h1>
-            <p>Experience premium hospitality services designed to make every stay effortless and memorable.</p>
-        </div>
-    </section>
+<section class="luxura-services">
 
-    <section class="services-section">
-        <div class="container">
+    <div class="container-fluid">
 
-            <div class="row g-4">
+        <div class="services-layout">
 
-                @foreach($services as $service)
+            {{-- INTRO --}}
+            <div class="services-intro">
 
-                    <div class="col-lg-4 col-md-6">
+                <span class="services-kicker">Our Services</span>
 
-                        <div class="service-card">
+                <h1>More Than<br>Just a Stay</h1>
 
-                            <div class="service-card-image">
+                <p>
+                    From personalized experiences to world-class amenities, our
+                    services are designed to make your stay effortless,
+                    comfortable and memorable.
+                </p>
 
-                                @if($service->image)
-                                    <img src="{{ str_starts_with($service->image, 'http') ? $service->image : asset('uploads/services/' . $service->image) }}" alt="{{ $service->title }}">
-                                @else
-                                    <img src="{{ asset('images/default-service.jpg') }}" alt="{{ $service->title }}">
-                                @endif
+                <a href="#service-cascade" class="services-explore">
+                    <span class="dot"><i class="fas fa-play"></i></span>
+                    <span>Explore Luxury</span>
+                </a>
+
+                <div class="services-bottom-note">
+                    <span class="rule"></span>
+                    Luxury Hospitality
+                </div>
+
+            </div>
+
+            {{-- CASCADING SERVICE CARDS --}}
+            <div class="services-cascade-wrap">
+
+                <div class="floating-services" id="service-cascade">
+
+                    @foreach($services as $index => $service)
+
+                        <article class="floating-service @if($index === 1) is-alt @endif">
+
+                            <div class="floating-service-image">
+
+                                <span class="service-number">
+                                    {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                                </span>
 
                                 @if($service->icon)
-                                    <span class="service-card-icon">
+                                    <span class="floating-service-icon">
                                         <i class="{{ $service->icon }}"></i>
                                     </span>
                                 @endif
 
+                                <img
+                                    src="{{ $service->image
+                                        ? (str_starts_with($service->image, 'http')
+                                            ? $service->image
+                                            : asset('uploads/services/' . $service->image))
+                                        : asset('images/default-service.jpg') }}"
+                                    alt="{{ $service->title }}"
+                                    loading="lazy"
+                                >
+
                             </div>
 
-                            <div class="service-card-body">
+                            <div class="floating-service-body">
 
-                                <h4>{{ $service->title }}</h4>
+                                <h3>{{ $service->title }}</h3>
 
                                 <p>{{ $service->short_description }}</p>
 
-                                <a href="{{ route('frontend.services.show', $service->id) }}" class="service-view-btn">
+                                <a href="{{ route('frontend.services.show', $service->id) }}" class="service-link">
                                     View Details
+                                    <i class="fas fa-arrow-right"></i>
                                 </a>
 
                             </div>
 
-                        </div>
+                        </article>
 
-                    </div>
+                    @endforeach
 
-                @endforeach
+                </div>
+
+                <div class="services-track-nav">
+                    <button type="button" id="servicesPrev" aria-label="Previous service">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button type="button" id="servicesNext" aria-label="Next service">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
 
             </div>
 
         </div>
-    </section>
+
+    </div>
+
+</section>
 
 @endsection
+
+@push('after-scripts')
+<script>
+    (function () {
+        var track = document.getElementById('service-cascade');
+        var prev = document.getElementById('servicesPrev');
+        var next = document.getElementById('servicesNext');
+        if (!track || !prev || !next) return;
+
+        var step = 250;
+
+        prev.addEventListener('click', function () {
+            track.scrollBy({ left: -step, behavior: 'smooth' });
+        });
+
+        next.addEventListener('click', function () {
+            track.scrollBy({ left: step, behavior: 'smooth' });
+        });
+    })();
+</script>
+@endpush
