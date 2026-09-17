@@ -25,7 +25,7 @@
     .nav-item.active>.nav-link,
     .nav-item.dropdown.active>.nav-link,
     .dropdown-item.active {
-        color: #c9d269 !important;
+        color: #c9d269 !important;  
         font-weight: 600;
     }
 

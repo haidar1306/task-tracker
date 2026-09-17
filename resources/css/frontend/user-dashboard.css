@@ -1500,3 +1500,26 @@ RESPONSIVE
         padding-bottom: 40px !important;
     }
 }
+/* ============================================
+   FINAL NAVBAR ACTIVE HIGHLIGHT
+   ============================================ */
+
+.hotel-navbar .nav-link:hover,
+.hotel-navbar .active .nav-link,
+.hotel-navbar .nav-link.active {
+    color: #f3ead9 !important;
+}
+
+.hotel-navbar .active .nav-link::after,
+.hotel-navbar .nav-link.active::after,
+.nav-item.active > .nav-link::after,
+.nav-item.dropdown.active > .nav-link::after {
+    background: #a9825c !important;
+}
+
+.nav-item.active > .nav-link,
+.nav-item.dropdown.active > .nav-link,
+.dropdown-item.active {
+    color: #a9825c !important;
+}
+
