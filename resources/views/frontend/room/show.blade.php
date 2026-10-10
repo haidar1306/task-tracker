@@ -173,6 +173,15 @@
         background: #b3532b;
     }
 
+    .room-status.unverified {
+        background: #eee9df;
+        color: #6d6253;
+    }
+
+    .room-status.unverified::before {
+        background: #9a8660;
+    }
+
     .room-number-pill {
         display: inline-flex;
         align-items: center;
@@ -714,73 +723,23 @@
     margin: 0;
     padding: 0;
 }
-/* =========================================
-   ROOM SHOW — NAVBAR ONLY
-   ========================================= */
 
-/* ---------- TOP / TRANSPARENT NAVBAR ---------- */
-
-body:has(.room-page) .hotel-navbar:not(.scrolled) .navbar-brand {
-    color: #25211d !important;
+.room-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #f3f0e9, #e5dfd3);
+    color: #756d61;
+    font-family: 'Jost', sans-serif;
 }
 
-body:has(.room-page) .hotel-navbar:not(.scrolled) .navbar-brand span,
-body:has(.room-page) .hotel-navbar:not(.scrolled) .navbar-brand strong {
-    color: #25211d !important;
-}
-
-body:has(.room-page) .hotel-navbar:not(.scrolled) .nav-link {
-    color: #25211d !important;
-}
-
-body:has(.room-page) .hotel-navbar:not(.scrolled) .dropdown-toggle {
-    color: #25211d !important;
-}
-
-body:has(.room-page) .hotel-navbar:not(.scrolled) i {
-    color: #25211d !important;
-}
-
-/* TOP — ACTIVE ROOMS */
-body:has(.room-page) .hotel-navbar:not(.scrolled) .nav-link.active {
-    color: #c29a3a !important;
-}
-
-body:has(.room-page) .hotel-navbar:not(.scrolled) .nav-link.active::after {
-    background: #c29a3a !important;
-}
-
-
-/* ---------- SCROLLED NAVBAR ---------- */
-
-body:has(.room-page) .hotel-navbar.scrolled .navbar-brand {
-    color: #fffdf9 !important;
-}
-
-body:has(.room-page) .hotel-navbar.scrolled .navbar-brand span,
-body:has(.room-page) .hotel-navbar.scrolled .navbar-brand strong {
-    color: #fffdf9 !important;
-}
-
-body:has(.room-page) .hotel-navbar.scrolled .nav-link {
-    color: #fffdf9 !important;
-}
-
-body:has(.room-page) .hotel-navbar.scrolled .dropdown-toggle {
-    color: #fffdf9 !important;
-}
-
-body:has(.room-page) .hotel-navbar.scrolled i {
-    color: #fffdf9 !important;
-}
-
-/* SCROLLED — ACTIVE ROOMS */
-body:has(.room-page) .hotel-navbar.scrolled .nav-link.active {
-    color: #c29a3a !important;
-}
-
-body:has(.room-page) .hotel-navbar.scrolled .nav-link.active::after {
-    background: #c29a3a !important;
+.room-photo-placeholder i {
+    color: var(--room-gold-dark);
+    font-size: 34px;
 }
 </style>
 @endpush
@@ -818,9 +777,11 @@ body:has(.room-page) .hotel-navbar.scrolled .nav-link.active::after {
 
                 <div class="room-hero-meta">
 
-                    @if($room->status)
+                    @if(!$hasStayDates && $isBookable)
+                        <span class="room-status unverified">Select dates to check availability</span>
+                    @elseif($isBookable)
                         <span class="room-status">
-                            Available
+                            Available for selected dates
                         </span>
                     @else
                         <span class="room-status unavailable">
@@ -877,30 +838,16 @@ body:has(.room-page) .hotel-navbar.scrolled .nav-link.active::after {
 
     <div class="room-image-frame">
 
-        @if($room->image)
+        @if(optional($room->roomType)->room_photo_url)
             <img
-                src="{{ Str::startsWith($room->image, ['http://', 'https://'])
-                    ? $room->image
-                    : asset('storage/' . $room->image) }}"
+                src="{{ $room->roomType->room_photo_url }}"
                 alt="{{ optional($room->roomType)->name }}"
             >
-
-        @elseif(optional($room->roomType)->image)
-
-            <img
-                src="{{ Str::startsWith($room->roomType->image, ['http://', 'https://'])
-                    ? $room->roomType->image
-                    : asset('storage/' . $room->roomType->image) }}"
-                alt="{{ optional($room->roomType)->name }}"
-            >
-
         @else
-
-            <img
-                src="{{ asset('images/default-room.jpg') }}"
-                alt="{{ optional($room->roomType)->name }}"
-            >
-
+            <div class="room-photo-placeholder" role="img" aria-label="Room photograph not available">
+                <i class="fas fa-bed" aria-hidden="true"></i>
+                <span>Room photograph not available</span>
+            </div>
         @endif
 
     </div>
@@ -1108,20 +1055,20 @@ body:has(.room-page) .hotel-navbar.scrolled .nav-link.active::after {
                     </div>
 
 
-                    @if($room->status)
+                    @if($isBookable)
 
                         <a
-                            href="{{ route('frontend.bookings.create', $room->id) }}"
+                            href="{{ route('frontend.bookings.create', array_merge(['room' => $room->id], $search)) }}"
                             class="room-book-btn-full"
                         >
                             <i class="fas fa-calendar-check"></i>
 
-                            Book This Room
+                            {{ $hasStayDates ? 'Book This Room' : 'Choose Dates' }}
 
                         </a>
 
                         <p class="booking-note">
-                            Secure your stay in just a few steps.
+                            {{ $hasStayDates ? 'Availability checked for your selected stay.' : 'Select dates to check availability for your stay.' }}
                         </p>
 
                     @else

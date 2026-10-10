@@ -961,9 +961,11 @@
 
                         <div class="date-grid">
 
-                            <input type="date" name="check_in" id="check_in" class="reservation-input" required>
+                            <input type="date" name="check_in" id="check_in" class="reservation-input"
+                                min="{{ today()->toDateString() }}" value="{{ old('check_in', $search['check_in'] ?? '') }}" required>
 
-                            <input type="date" name="check_out" id="check_out" class="reservation-input" required>
+                            <input type="date" name="check_out" id="check_out" class="reservation-input"
+                                min="{{ today()->toDateString() }}" value="{{ old('check_out', $search['check_out'] ?? '') }}" required>
 
                         </div>
 
@@ -984,7 +986,7 @@
 
                             <div class="guest-box">
 
-                                <input type="number" name="adults" id="adults" class="reservation-input" min="1" value="1"
+                                <input type="number" name="adults" id="adults" class="reservation-input" min="1" max="{{ $room->roomType->capacity }}" value="{{ old('adults', $guestCount) }}"
                                     required placeholder="Adults">
 
                                 <i class="fas fa-user"></i>
@@ -995,7 +997,7 @@
                             <div class="guest-box">
 
                                 <input type="number" name="children" id="children" class="reservation-input" min="0"
-                                    value="0" placeholder="Children">
+                                    max="{{ max(0, $room->roomType->capacity - $guestCount) }}" value="{{ old('children', 0) }}" placeholder="Children">
 
                                 <i class="fas fa-child"></i>
 

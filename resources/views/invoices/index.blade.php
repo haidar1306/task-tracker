@@ -16,7 +16,7 @@ Invoice Management
 <a href="{{ route('admin.invoices.create') }}"
 class="btn btn-primary btn-sm">
 
-<i class="fas fa-plus"></i>
+<i class="fas fa-p		s"></i>
 Create Invoice
 
 </a>

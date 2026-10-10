@@ -225,7 +225,7 @@ class PaymentController extends Controller
 
                 $invoice->booking->update([
                     'payment_status' => $paymentStatus,
-                    'status' => $paymentStatus == 'Paid'
+                    'booking_status' => $paymentStatus == 'Paid'
                         ? 'Confirmed'
                         : 'Pending',
                 ]);

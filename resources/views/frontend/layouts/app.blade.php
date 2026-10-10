@@ -140,7 +140,7 @@
     @stack('after-styles')
 </head>
 
-<body class="{{ request()->routeIs('frontend.index', 'frontend.user.dashboard', 'frontend.room.index', 'frontend.amenities.index', 'frontend.about', 'frontend.reservation.index', 'frontend.contact', 'frontend.auth.login', 'frontend.auth.register', 'frontend.services', 'frontend.gallery', 'frontend.offers', 'frontend.hotel-updates', 'frontend.services.show', 'frontend.room.show','frontend.bookings.create','frontend.user.account') ? 'home-page' : '' }}">     
+<body class="frontend-shell {{ request()->routeIs('frontend.index', 'frontend.hotel.dashboard') ? 'frontend-dark-hero' : '' }} {{ request()->routeIs('frontend.index', 'frontend.user.dashboard', 'frontend.room.index', 'frontend.amenities.index', 'frontend.about', 'frontend.reservation.index', 'frontend.contact', 'frontend.auth.login', 'frontend.auth.register', 'frontend.services', 'frontend.gallery', 'frontend.offers', 'frontend.hotel-updates', 'frontend.services.show', 'frontend.room.show','frontend.bookings.create','frontend.user.account') ? 'home-page' : '' }} {{ request()->routeIs('frontend.room.index') ? 'room-search-results' : '' }} {{ request()->routeIs('frontend.payment.create') ? 'frontend-standalone-payment' : '' }}">
          @include('frontend.layouts.navbar')
         <main class="frontend-content">
 
@@ -200,16 +200,20 @@
 
     </script>
     <script>
-        window.addEventListener('scroll', function () {
+        (function () {
             const navbar = document.querySelector('.hotel-navbar');
-            if (navbar) {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
+
+            if (!navbar) {
+                return;
             }
-        });
+
+            const updateNavbarState = function () {
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+            };
+
+            updateNavbarState();
+            window.addEventListener('scroll', updateNavbarState, { passive: true });
+        })();
     </script>
 
 </body>

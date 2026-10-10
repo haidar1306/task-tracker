@@ -13,6 +13,8 @@ use App\Models\Booking1;
 use App\Models\Guest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Razorpay\Api\Api;
 
 
@@ -20,93 +22,91 @@ class BookingsController extends Controller
 {
 
 
-    public function create(Room $room)
+    public function create(Request $request, Room $room)
     {
-        return view('frontend.bookings.create', compact('room'));
+        $search = $request->validate([
+            'check_in' => ['nullable', 'required_with:check_out', 'date_format:Y-m-d', 'after_or_equal:today'],
+            'check_out' => ['nullable', 'required_with:check_in', 'date_format:Y-m-d', 'after:check_in'],
+            'guests' => ['nullable', 'required_with:check_in,check_out', 'integer', 'min:1', 'max:20'],
+        ]);
+        $guestCount = isset($search['guests']) ? (int) $search['guests'] : 1;
+        $room->load('roomType');
+
+        $isAvailable = Room::query()
+            ->whereKey($room->id)
+            ->bookable($guestCount)
+            ->availableForStay($search['check_in'] ?? null, $search['check_out'] ?? null)
+            ->exists();
+
+        if (!$isAvailable) {
+            return redirect()
+                ->route('frontend.room.index', $search)
+                ->withFlashDanger('This room is no longer available for your selected stay.');
+        }
+
+        return view('frontend.bookings.create', compact('room', 'search', 'guestCount'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'room_id' => 'required|exists:rooms,id',
             'check_in' => 'required|date|after_or_equal:today',
             'check_out' => 'required|date|after:check_in',
-            'adults' => 'required|integer|min:1',
-            'children' => 'nullable|integer|min:0',
+            'adults' => 'required|integer|min:1|max:20',
+            'children' => 'nullable|integer|min:0|max:20',
         ]);
 
         $user = Auth::user();
+        $guestCount = (int) $data['adults'] + (int) ($data['children'] ?? 0);
 
-        // Guest find karo email se
-        $guest = Guest::where('email', $user->email)->first();
+        $booking = DB::transaction(function () use ($data, $user, $guestCount) {
+            $room = Room::with('roomType')
+                ->whereKey($data['room_id'])
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        // Agar guest nahi mila to create karo
-        if (!$guest) {
+            $isAvailable = Room::query()
+                ->whereKey($room->id)
+                ->bookable($guestCount)
+                ->availableForStay($data['check_in'], $data['check_out'])
+                ->exists();
+
+            if (!$isAvailable) {
+                throw ValidationException::withMessages([
+                    'room_id' => 'This room is no longer available for the selected dates or guest count.',
+                ]);
+            }
 
             $name = explode(' ', trim($user->name), 2);
+            $guest = Guest::firstOrCreate(
+                ['email' => $user->email],
+                [
+                    'first_name' => $name[0] ?? '',
+                    'last_name' => $name[1] ?? '',
+                    'phone' => $user->phone ?? '',
+                    'status' => true,
+                ]
+            );
 
-            $guest = Guest::create([
-                'first_name' => $name[0] ?? '',
-                'last_name' => $name[1] ?? '',
-                'email' => $user->email,
-                'phone' => $user->phone ?? '',
+            $nights = Carbon::parse($data['check_in'])->diffInDays(Carbon::parse($data['check_out']));
+
+            return Booking1::create([
+                'booking_no' => 'BK-' . uniqid(),
+                'guest_id' => $guest->id,
+                'room_id' => $room->id,
+                'check_in' => $data['check_in'],
+                'check_out' => $data['check_out'],
+                'adults' => $data['adults'],
+                'children' => $data['children'] ?? 0,
+                'total_amount' => $room->roomType->price * $nights,
+                'booking_status' => 'Pending',
+                'payment_status' => 'Pending',
+                'remarks' => null,
                 'status' => true,
             ]);
-        }
+        });
 
-        $alreadyBooked = Booking1::where('room_id', $request->room_id)
-            ->where('booking_status', '!=', 'Cancelled')
-            ->where(function ($query) use ($request) {
-
-                $query->whereBetween('check_in', [
-                    $request->check_in,
-                    $request->check_out
-                ])
-                    ->orWhereBetween('check_out', [
-                        $request->check_in,
-                        $request->check_out
-                    ])
-                    ->orWhere(function ($q) use ($request) {
-                        $q->where('check_in', '<=', $request->check_in)
-                            ->where('check_out', '>=', $request->check_out);
-                    });
-
-            })
-            ->exists();
-
-        if ($alreadyBooked) {
-            return back()
-                ->withInput()
-                ->withFlashDanger('This room is already booked for the selected dates.');
-
-        }
-
-        $room = Room::with('roomType')->findOrFail($request->room_id);
-
-        $checkIn = Carbon::parse($request->check_in);
-
-        $checkOut = Carbon::parse($request->check_out);
-
-        $nights = max(1, $checkIn->diffInDays($checkOut));
-
-        $pricePerNight = $room->roomType->price;
-
-        $totalAmount = $pricePerNight * $nights;
-
-        $booking = Booking1::create([
-            'booking_no' => 'BK-' . time(),
-            'guest_id' => $guest->id,
-            'room_id' => $request->room_id,
-            'check_in' => $request->check_in,
-            'check_out' => $request->check_out,
-            'adults' => $request->adults,
-            'children' => $request->children ?? 0,
-            'total_amount' => $totalAmount,
-            'booking_status' => 'Pending',
-            'payment_status' => 'Pending',
-            'remarks' => null,
-            'status' => true,
-        ]);
         $admins = User::where('type', User::TYPE_ADMIN)->get();
         
         foreach ($admins as $admin) {

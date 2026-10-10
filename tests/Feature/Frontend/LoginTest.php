@@ -16,7 +16,10 @@ class LoginTest extends TestCase
     /** @test */
     public function the_login_route_exists()
     {
-        $this->get('/login')->assertStatus(200);
+        $this->get('/login')
+            ->assertStatus(200)
+            ->assertDontSee('frontend-shell')
+            ->assertDontSee('hotel-navbar');
     }
 
     /** @test */

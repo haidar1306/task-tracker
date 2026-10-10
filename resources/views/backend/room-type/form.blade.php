@@ -36,7 +36,7 @@
 
     <div class="mt-3">
 
-        <img src="{{ asset('storage/'.$roomType->image) }}"
+        <img src="{{ $roomType->image_url }}"
              width="150"
              class="img-thumbnail">
 

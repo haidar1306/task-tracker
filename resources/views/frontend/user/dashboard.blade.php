@@ -162,21 +162,22 @@
 
                 <div class="col-md-3">
                     <label>Check In</label>
-                    <input type="date" name="check_in" class="form-control" min="{{ date('Y-m-d') }}">
+                    <input type="date" id="room-search-check-in" name="check_in" class="form-control"
+                        min="{{ today()->toDateString() }}" required>
                 </div>
 
                 <div class="col-md-3">
                     <label>Check Out</label>
-                    <input type="date" name="check_out" class="form-control" min="{{ date('Y-m-d') }}">
+                    <input type="date" id="room-search-check-out" name="check_out" class="form-control"
+                        min="{{ today()->toDateString() }}" required>
                 </div>
 
                 <div class="col-md-3">
                     <label>Guests</label>
-                    <select name="guests" class="form-control">
-                        <option value="1">1 Guest</option>
-                        <option value="2">2 Guests</option>
-                        <option value="3">3 Guests</option>
-                        <option value="4">4+ Guests</option>
+                    <select name="guests" class="form-control" required>
+                        @for($guestCount = 1; $guestCount <= 20; $guestCount++)
+                            <option value="{{ $guestCount }}">{{ $guestCount }} {{ $guestCount === 1 ? 'Guest' : 'Guests' }}</option>
+                        @endfor
                     </select>
                 </div>
 
@@ -194,6 +195,23 @@
     </div>
 
 </section>
+@push('after-scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkIn = document.getElementById('room-search-check-in');
+            const checkOut = document.getElementById('room-search-check-out');
+
+            if (!checkIn || !checkOut) return;
+
+            checkIn.addEventListener('change', function () {
+                checkOut.min = checkIn.value || '{{ today()->toDateString() }}';
+                if (checkOut.value && checkOut.value <= checkIn.value) {
+                    checkOut.value = '';
+                }
+            });
+        });
+    </script>
+@endpush
    <section class="featured-room-section">
 
     <div class="container">

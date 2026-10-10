@@ -1491,21 +1491,117 @@ RESPONSIVE
     }
 }
 
-.home-page .hotel-navbar {
-    position: absolute !important;
+/* Shared transparent-to-sticky navbar for every standard frontend layout. */
+.frontend-shell .hotel-navbar {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: var(--frontend-navbar-height, 84px) !important;
+    padding: 0 42px !important;
+    transform: none !important;
+    border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    transition: background 0.35s ease, box-shadow 0.35s ease;
+    transition: background-color .28s ease, box-shadow .28s ease, color .2s ease;
 }
 
-.home-page .hotel-navbar.scrolled {
-    position: fixed !important;
+.frontend-shell .hotel-navbar.scrolled {
+    height: var(--frontend-navbar-height, 84px) !important;
+    background: rgba(58, 49, 40, .97) !important;
+    box-shadow: 0 5px 20px rgba(22, 18, 14, .2) !important;
+}
+
+.frontend-shell.frontend-standalone-payment .hotel-navbar:not(.scrolled) {
     background: #4a4034 !important;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .2) !important;
 }
 
-.home-page .frontend-content {
+.frontend-shell .frontend-content {
+    padding-top: var(--frontend-navbar-height, 84px) !important;
+}
+
+.frontend-shell.home-page .frontend-content {
     padding-top: 0 !important;
+}
+
+.frontend-shell.room-search-results .frontend-content {
+    padding-top: var(--frontend-navbar-height, 84px) !important;
+}
+
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) .frontend-brand-copy .brand-title,
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) .nav-link,
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) .dropdown-toggle,
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) .text-white,
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) i,
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) .navbar-toggler {
+    color: #f3ead9 !important;
+}
+
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) .frontend-brand-copy .brand-title,
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) .nav-link,
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) .dropdown-toggle,
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) .text-white,
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) i,
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) .navbar-toggler {
+    color: #211d18 !important;
+}
+
+.frontend-shell .hotel-navbar.scrolled .frontend-brand-copy .brand-title,
+.frontend-shell .hotel-navbar.scrolled .nav-link,
+.frontend-shell .hotel-navbar.scrolled .dropdown-toggle,
+.frontend-shell .hotel-navbar.scrolled .text-white,
+.frontend-shell .hotel-navbar.scrolled i,
+.frontend-shell .hotel-navbar.scrolled .navbar-toggler {
+    color: #f3ead9 !important;
+}
+
+.frontend-shell.frontend-standalone-payment .hotel-navbar:not(.scrolled) .frontend-brand-copy .brand-title,
+.frontend-shell.frontend-standalone-payment .hotel-navbar:not(.scrolled) .nav-link,
+.frontend-shell.frontend-standalone-payment .hotel-navbar:not(.scrolled) .dropdown-toggle,
+.frontend-shell.frontend-standalone-payment .hotel-navbar:not(.scrolled) .text-white,
+.frontend-shell.frontend-standalone-payment .hotel-navbar:not(.scrolled) i,
+.frontend-shell.frontend-standalone-payment .hotel-navbar:not(.scrolled) .navbar-toggler {
+    color: #f3ead9 !important;
+}
+
+.frontend-shell .hotel-navbar .active > .nav-link,
+.frontend-shell .hotel-navbar .nav-link.active {
+    color: #c9d269 !important;
+}
+
+.frontend-shell .hotel-navbar .active > .nav-link::after,
+.frontend-shell .hotel-navbar .nav-link.active::after {
+    background: #c9d269 !important;
+}
+
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) .nav-link:hover,
+.frontend-shell:not(.frontend-dark-hero) .hotel-navbar:not(.scrolled) .nav-link:focus {
+    color: #806016 !important;
+}
+
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) .nav-link:hover,
+.frontend-shell.frontend-dark-hero .hotel-navbar:not(.scrolled) .nav-link:focus,
+.frontend-shell .hotel-navbar.scrolled .nav-link:hover,
+.frontend-shell .hotel-navbar.scrolled .nav-link:focus {
+    color: #d9bd79 !important;
+}
+
+@media (max-width: 991.98px) {
+    .frontend-shell .hotel-navbar {
+        padding: 0 18px !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .frontend-shell .hotel-navbar {
+        height: 64px !important;
+        padding: 0 18px !important;
+    }
+
+    .frontend-shell .hotel-navbar.scrolled {
+        height: 64px !important;
+    }
 }
 /* ============================================
    UNIVERSAL PAGE HERO SPACING (transparent navbar)
