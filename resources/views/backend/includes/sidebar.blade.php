@@ -207,15 +207,29 @@
          <li class="nav-item {{ request()->routeIs('services.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.coupons.index') }}">
             <i class="fas fa-ticket-alt"></i>
-            <span>COUPONS</span>
+            <span>Coupons</span>
         </a>
     </li>
+       <li class="nav-item {{ request()->routeIs('countries.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.countries.index') }}">
+            <i class="fas fa-globe"></i>
+            <span>countries</span>
+        </a>
+    </li>
+
+      <li class="nav-item {{ request()->routeIs('hotels.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.hotels.index') }}">
+            <i class="fas fa-building "></i>
+            <span>hotel</span>
+        </a>
+    </li>
+
 
 
     <hr class="sidebar-divider">
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseWebsite">
-            <i class="fas fa-globe"></i>
+            <i class="fas fa-flag"></i>
             <span>Website Management</span>
         </a>
 

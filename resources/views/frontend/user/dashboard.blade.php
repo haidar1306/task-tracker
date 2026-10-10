@@ -836,13 +836,10 @@
                         <li><a href="{{ route('frontend.user.account') }}">Profile</a></li>
 
                         <li>
-
-                            <a href="{{ route('frontend.auth.logout') }}">
-
-                                Logout
-
-                            </a>
-
+                            <form method="POST" action="{{ route('frontend.auth.logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-link p-0">Logout</button>
+                            </form>
                         </li>
 
                     </ul>

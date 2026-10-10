@@ -57,13 +57,17 @@ class UserService extends BaseService
 
             return $user;
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
 
-            dd(
-                'ERROR MESSAGE: ' . $e->getMessage(),
-                'ERROR FILE: ' . $e->getFile(),
-                'ERROR LINE: ' . $e->getLine()
+            \Log::error('User registration failed.', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            throw new GeneralException(
+                __('There was a problem creating your account. Please try again.')
             );
         }
     }
@@ -323,7 +327,7 @@ class UserService extends BaseService
      */
     protected function createUser(array $data = []): User
     {
-        return $this->model::create([
+        return User::create([
             'type' => $data['type'] ?? $this->model::TYPE_USER,
             'name' => $data['name'] ?? null,
             'email' => $data['email'] ?? null,

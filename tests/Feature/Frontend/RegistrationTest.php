@@ -80,10 +80,11 @@ class RegistrationTest extends TestCase
         $this->post('/register', [
             'name' => 'John Doe',
             'email' => 'john@example.com',
+            'phone' => '1234567890',
             'password' => 'OC4Nzu270N!QBVi%U%qX',
             'password_confirmation' => 'OC4Nzu270N!QBVi%U%qX',
             'terms' => '1',
-        ])->assertRedirect(route(homeRoute()));
+        ])->assertRedirect(route('frontend.hotel.dashboard'));
 
         $user = resolve(UserService::class)
             ->where('email', 'john@example.com')

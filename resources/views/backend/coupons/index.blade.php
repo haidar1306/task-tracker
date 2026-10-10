@@ -3,6 +3,8 @@
 @section('title', 'Coupons')
 
 @section('content')
+    @include('includes.partials.messages')
+
 <div class="container-fluid">
 
     <div class="d-flex justify-content-between align-items-center mb-4">

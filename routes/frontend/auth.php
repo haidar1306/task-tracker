@@ -20,7 +20,7 @@ use Tabuna\Breadcrumbs\Trail;
 Route::group(['as' => 'auth.'], function () {
     Route::group(['middleware' => 'auth'], function () {
         // Authentication
-        Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+        Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
         // Password expired routes
         Route::get('password/expired', [PasswordExpiredController::class, 'expired'])->name('password.expired');

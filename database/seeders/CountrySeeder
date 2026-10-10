@@ -1,0 +1,52 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Country;
+use Illuminate\Database\Seeder;
+
+class CountrySeeder extends Seeder
+{
+    public function run(): void
+    {
+        $countries = [
+            'India',
+            'United States',
+            'United Kingdom',
+            'Australia',
+            'Canada',
+            'Germany',
+            'France', 
+            'Italy',
+            'Spain',
+            'Portugal',
+            'Brazil',
+            'Mexico',
+            'Argentina',
+            'China',
+            'Japan',
+            'South Korea',
+            'Indonesia',
+            'Malaysia',
+            'Singapore',
+            'Thailand',
+            'Nepal',
+            'Bangladesh',
+            'Pakistan',
+            'Sri Lanka',
+            'New Zealand',
+            'South Africa',
+            'Egypt',
+            'Saudi Arabia',
+            'United Arab Emirates',
+            'Turkey',
+            'Russia',
+        ];
+
+        foreach ($countries as $country) {
+            Country::create([
+                'name' => $country,
+            ]);
+        }
+    }
+}

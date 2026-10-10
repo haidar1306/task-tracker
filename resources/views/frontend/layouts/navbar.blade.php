@@ -108,13 +108,12 @@
     }
 </style>
 <nav class="navbar navbar-expand-lg hotel-navbar">
-
     <div class="container">
 
         <!-- Logo -->
         <a class="navbar-brand frontend-brand" href="{{ route('frontend.index') }}">
 
-            <img class="frontend-brand-logo" src="{{ asset('backend/img/7.jfif') }}" alt="Hotel Luxura">
+            <img class="frontend-brand-logo" src="{{ asset('backend/img/10.png') }}" alt="Hotel Luxura">
 
             <span class="frontend-brand-copy">
                 <span class="brand-title">
@@ -354,15 +353,13 @@
 
 
 
-                                <a class="dropdown-item text-danger" href="{{ route('frontend.auth.logout') }}">
-
-
-                                    <i class="fas fa-sign-out-alt mr-2"></i>
-
-                                    Logout
-
-
-                                </a>
+                                <form method="POST" action="{{ route('frontend.auth.logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>
+                                        Logout
+                                    </button>
+                                </form>
 
 
 

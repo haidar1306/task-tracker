@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     @stack('before-styles')
-    <livewire:styles />
+    @livewireStyles
     @stack('after-styles')
 </head>
 
@@ -38,43 +38,36 @@
                 {{-- Page Content --}}
                 <div class="container-fluid">
 
-                    <!-- @include('includes.partials.messages') -->
-
                     @yield('content')
 
                 </div>
-                <!-- /.container-fluid -->
 
             </div>
-            <!-- End of Main Content -->
 
             {{-- Footer --}}
             @include('backend.includes.footer')
 
         </div>
-        <!-- End of Content Wrapper -->
 
     </div>
-    <!-- End of Page Wrapper -->
 
+    {{-- JavaScript --}}
     <script src="{{ asset('backend/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('backend/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('backend/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="{{ asset('backend/js/sb-admin-2.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <livewire:scripts />
+   @stack('before-scripts')
 
-    @stack('before-scripts')
+@stack('page-libraries')
 
-    {{-- Page Specific Libraries --}}
-    @stack('page-libraries')
-    
+@stack('page-scripts')
 
-    {{-- Page Specific Scripts --}}
-    @stack('page-scripts')
+@stack('scripts')
 
-    @stack('after-scripts')
+@stack('after-scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener('click', function (event) {
@@ -97,6 +90,37 @@
             });
         }, 5000);
     </script>
+    <script>
+        document.addEventListener('submit', function (e) {
+
+    if (!e.target.classList.contains('delete-state-form')) {
+        return;
+    }
+
+    e.preventDefault();
+
+    const form = e.target;
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to delete this state?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+            form.submit();
+        }
+
+    });
+
+});
+    </script>
+
+    {{-- Livewire --}}
+    @livewireScripts
 
 </body>
 

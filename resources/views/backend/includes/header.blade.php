@@ -165,10 +165,13 @@
 
                     <div class="dropdown-divider"></div>
 
-                    <a class="dropdown-item" href="{{ route('frontend.auth.logout') }}">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Logout
-                    </a>
+                    <form method="POST" action="{{ route('frontend.auth.logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </button>
+                    </form>
                 </div>
 
             </li>

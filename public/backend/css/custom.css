@@ -303,7 +303,7 @@
 
 @media (min-width: 768px) {
     #wrapper {
-        display: block;
+        display: flex;
     }
 
     #accordionSidebar {
@@ -354,9 +354,4 @@
         margin-left: 6.5rem;
     }
 }
-footer.sticky-footer {
-    background: #ffffff;
-    border-top: 1px solid #e2e7ef;
-    box-shadow: 0 -2px 8px rgba(31, 41, 55, 0.04);
-    margin-top: 24px;
-}
+

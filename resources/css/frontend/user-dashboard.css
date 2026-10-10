@@ -968,28 +968,59 @@ RESPONSIVE
     line-height: 1.1;
 }
 
+.frontend-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 46px;
+    padding-right: 11px;
+    border-right: 1px solid rgba(201, 166, 110, 0.65);
+    color: #c9a66e;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 42px;
+    font-weight: 500;
+    line-height: 1;
+}
+
 .frontend-brand-copy .brand-title {
-    color: #caa55b;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 25px;
+    color: #f0e6d4;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 23px;
     font-weight: 700;
-    letter-spacing: 2.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.frontend-brand-copy .brand-subtitle {
+    display: block;
+    margin-top: 4px;
+    color: #c9a66e;
+    font-family: "Jost", sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2.2px;
+    line-height: 1;
     text-transform: uppercase;
 }
 
 @media (max-width: 767.98px) {
     .frontend-brand-copy .brand-title {
         font-size: 19px;
+        letter-spacing: 1px;
     }
 
-}
+    .frontend-brand-mark {
+        width: 35px;
+        height: 40px;
+        padding-right: 9px;
+        font-size: 36px;
+    }
 
-.hotel-navbar .frontend-brand-logo {
-    width: 46px;
-    height: 46px;
-    border-radius: 5px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, .14);
+    .frontend-brand-copy .brand-subtitle {
+        font-size: 8px;
+        letter-spacing: 1.7px;
+    }
 }
 
 .brand-title {
@@ -1022,7 +1053,6 @@ RESPONSIVE
         width: 38px;
         height: 38px;
     }
-
     .brand-title {
         font-size: 18px;
         letter-spacing: 1px;
@@ -1049,7 +1079,6 @@ RESPONSIVE
     width: 36px;
     height: 36px;
 }
-
 .hotel-navbar.scrolled .brand-title {
     font-size: 20px;
 }

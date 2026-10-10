@@ -33,4 +33,9 @@
                     <li><a href="{{ route('frontend.reservation.index') }}">My Bookings</a></li>
                     <li><a href="#">Payments</a></li>
                     <li><a href="{{ route('frontend.user.account') }}">Profile</a></li>
-                    <li><a href="{{ route('frontend.auth.logout') }}">Logout</a></li>
+                    <li>
+                        <form method="POST" action="{{ route('frontend.auth.logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-link p-0">Logout</button>
+                        </form>
+                    </li>

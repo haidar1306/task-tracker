@@ -128,7 +128,6 @@ class BookingsController extends Controller
             'guest',
         ]);
 
-        // Sirf logged-in user ki booking show ho
         if ($booking->guest->email !== Auth::user()->email) {
             abort(403);
         }

@@ -128,7 +128,9 @@ No Invoice Found
 			of {{ $invoices->total() }} results
 		</p>
 
-		{{ $invoices->links() }}
+		 <div class="mt-3">
+                {{ $invoices->links('pagination::admin') }}
+            </div>
 	</div>
 @endif
 

@@ -2,6 +2,7 @@
 
 namespace App\Domains\Auth\Http\Controllers\Frontend\Auth;
 
+use App\Domains\Auth\Models\Role;
 use App\Domains\Auth\Models\User;
 use App\Domains\Auth\Services\UserService;
 use App\Rules\Captcha;
@@ -96,12 +97,15 @@ class RegisterController
             'active' => true,
         ])->save();
 
-        // Assign the standard role only when it is not already present.
-        if (!$user->hasRole('User')) {
-            $user->assignRole('User');
+        $userRole = Role::where('name', 'User')
+            ->where('guard_name', config('auth.defaults.guard'))
+            ->first();
+
+        if ($userRole && !$user->hasRole($userRole)) {
+            $user->assignRole($userRole);
         }
 
-       return redirect()->to(url('hotel/dashboard'));
+        return redirect()->route('frontend.hotel.dashboard');
     }
     
 }
