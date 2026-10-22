@@ -40,6 +40,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
+
         $this->routes(function () {
             Route::prefix('api')
                 ->middleware('api')
@@ -50,7 +51,15 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
 
-            // For the 'Login As' functionality from the 404labfr/laravel-impersonate package
+            // Local booking routes
+            Route::middleware(['web', 'auth', 'is_user'])
+                ->group(base_path('routes/frontend/bookings.php'));
+
+            // Local invoice routes
+            Route::middleware(['web', 'auth', 'is_user'])
+                ->group(base_path('routes/frontend/invoice.php'));
+
+            // Login As functionality
             Route::middleware('web')
                 ->group(function (Router $router) {
                     $router->impersonate();

@@ -7,6 +7,8 @@ use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
 use App\Models\Room;
 use App\Models\RoomType;
+use App\Models\BedType;
+use App\Models\Amenity;
 use App\Services\RoomService;
 
 class RoomController extends Controller
@@ -20,7 +22,9 @@ class RoomController extends Controller
 
     public function index()
     {
-        $rooms = $this->service->all(5, request('search'));
+        $rooms = $this->service->all(10, request('search'));
+
+        $rooms->load('bedType');
 
         return view('backend.rooms.index', compact('rooms'));
     }
@@ -28,11 +32,16 @@ class RoomController extends Controller
     public function create()
     {
         $roomTypes = RoomType::all();
-        $amenities = \App\Models\Amenity::where('status',1)->get();
+
+        $bedTypes = BedType::where('status', 1)
+            ->orderBy('name')
+            ->get();
+
+        $amenities = Amenity::where('status', 1)->get();
 
         return view(
             'backend.rooms.create',
-            compact('roomTypes','amenities')
+            compact('roomTypes', 'bedTypes', 'amenities')
         );
     }
 
@@ -45,18 +54,23 @@ class RoomController extends Controller
             ->withFlashSuccess('Room Created Successfully.');
     }
 
-  public function edit(Room $room)
-{
-    $roomTypes = RoomType::all();
-    $amenities = \App\Models\Amenity::where('status',1)->get();
+    public function edit(Room $room)
+    {
+        $roomTypes = RoomType::all();
 
-    $room->load('amenities');
+        $bedTypes = BedType::where('status', 1)
+            ->orderBy('name')
+            ->get();
 
-    return view(
-        'backend.rooms.edit',
-        compact('room','roomTypes','amenities')
-    );
-}
+        $amenities = Amenity::where('status', 1)->get();
+
+        $room->load('amenities');
+
+        return view(
+            'backend.rooms.edit',
+            compact('room', 'roomTypes', 'bedTypes', 'amenities')
+        );
+    }
 
     public function update(UpdateRoomRequest $request, Room $room)
     {

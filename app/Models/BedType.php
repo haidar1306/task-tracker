@@ -20,4 +20,8 @@ class BedType extends Model
     protected $casts = [
         'status' => 'boolean',
     ];
+    public function rooms()
+{
+    return $this->hasMany(\App\Models\Room::class, 'bed_type_id');
+}
 }

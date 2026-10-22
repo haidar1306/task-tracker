@@ -1,198 +1,163 @@
+@php
+    $isEdit = isset($booking);
+    $editable = !$isEdit || $booking->isEditable();
+    $lock = $editable ? '' : 'disabled';
+@endphp
+
+@unless($editable)
+    <div class="alert alert-info">
+        This booking is <strong>{{ $booking->booking_status }}</strong>. Only payment status, remarks and active flag can be
+        changed.
+    </div>
+@endunless
+
 <div class="row">
 
     <div class="col-md-6 mb-3">
-
         <label>Guest</label>
-
-        <select name="guest_id" class="form-control" required>
-
+        <select name="guest_id" class="form-control @error('guest_id') is-invalid @enderror" required {{ $lock }}>
             <option value="">Select Guest</option>
-
             @foreach($guests as $guest)
-
                 <option value="{{ $guest->id }}" {{ old('guest_id', $booking->guest_id ?? '') == $guest->id ? 'selected' : '' }}>
-
                     {{ $guest->first_name }} {{ $guest->last_name }}
-
                 </option>
-
             @endforeach
-
         </select>
-
+        @error('guest_id')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Room</label>
-
-        <select name="room_id" id="room_id" class="form-control" required>
-
+        <select name="room_id" id="room_id" class="form-control @error('room_id') is-invalid @enderror" required {{ $lock }}>
             <option value="">Select Room</option>
-
             @foreach($rooms as $room)
-
-                <option value="{{ $room->id }}"
-                    data-price="{{ $room->roomType->price ?? 0 }}"
-                    {{ old('room_id', $booking->room_id ?? '') == $room->id ? 'selected' : '' }}>
-
-                    {{ $room->room_number }}
-
+                <option value="{{ $room->id }}" data-price="{{ $room->roomType->price ?? 0 }}" {{ old('room_id', $booking->room_id ?? '') == $room->id ? 'selected' : '' }}>
+                    {{ $room->room_number }} @if($room->roomType) - {{ $room->roomType->name }} @endif
                 </option>
-
             @endforeach
-
         </select>
-
+        @error('room_id')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Check In</label>
-
-        <input type="date" name="check_in" id="check_in" class="form-control"
-            value="{{ old('check_in', isset($booking) ? $booking->check_in->format('Y-m-d') : '') }}" required>
-
+        <input type="date" name="check_in" id="check_in" class="form-control @error('check_in') is-invalid @enderror"
+            @unless($isEdit) min="{{ today()->toDateString() }}" @endunless
+            value="{{ old('check_in', $isEdit ? $booking->check_in->format('Y-m-d') : '') }}" required {{ $lock }}>
+        @error('check_in')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Check Out</label>
-
-        <input type="date" name="check_out" id="check_out" class="form-control"
-            value="{{ old('check_out', isset($booking) ? $booking->check_out->format('Y-m-d') : '') }}" required>
-
+        <input type="date" name="check_out" id="check_out" class="form-control @error('check_out') is-invalid @enderror"
+            value="{{ old('check_out', $isEdit ? $booking->check_out->format('Y-m-d') : '') }}" required {{ $lock }}>
+        @error('check_out')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Adults</label>
-
-        <input type="number" name="adults" class="form-control" value="{{ old('adults', $booking->adults ?? 1) }}">
-
+        <input type="number" name="adults" min="1" max="20" class="form-control @error('adults') is-invalid @enderror"
+            value="{{ old('adults', $booking->adults ?? 1) }}" required {{ $lock }}>
+        @error('adults')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Children</label>
-
-        <input type="number" name="children" class="form-control" value="{{ old('children', $booking->children ?? 0) }}">
-
+        <input type="number" name="children" min="0" max="20"
+            class="form-control @error('children') is-invalid @enderror"
+            value="{{ old('children', $booking->children ?? 0) }}" {{ $lock }}>
+        @error('children')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-
-        <label>Total Amount</label>
-
-        <input type="number" step="0.01" name="total_amount" id="total_amount" class="form-control"
-            value="{{ old('total_amount', $booking->total_amount ?? '') }}">
-
+        <label>Total Amount <small class="text-muted">(room price x nights, server par calculate hota
+                hai)</small></label>
+        <input type="text" id="total_preview" class="form-control" readonly
+            value="{{ $isEdit ? '₹' . number_format($booking->total_amount, 2) : '' }}">
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Booking Status</label>
-
-        <select name="booking_status" class="form-control">
-
-            <option value="Pending" {{ old('booking_status', $booking->booking_status ?? '') == 'Pending' ? 'selected' : '' }}>
-                Pending</option>
-
-            <option value="Confirmed" {{ old('booking_status', $booking->booking_status ?? '') == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
-
-            <option value="Checked In" {{ old('booking_status', $booking->booking_status ?? '') == 'Checked In' ? 'selected' : '' }}>Checked In</option>
-
-            <option value="Checked Out" {{ old('booking_status', $booking->booking_status ?? '') == 'Checked Out' ? 'selected' : '' }}>Checked Out</option>
-
-            <option value="Cancelled" {{ old('booking_status', $booking->booking_status ?? '') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-
-        </select>
-
+        @if($isEdit)
+            <div>
+                <span class="badge badge-{{ $booking->badgeClass() }}"
+                    style="font-size:14px;">{{ $booking->booking_status }}</span>
+                <small class="text-muted d-block mt-1">Status ab sirf booking page ke action buttons se badlega.</small>
+            </div>
+        @else
+            <select name="booking_status" class="form-control @error('booking_status') is-invalid @enderror">
+                <option value="Pending" {{ old('booking_status', 'Pending') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                <option value="Confirmed" {{ old('booking_status') == 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
+            </select>
+            @error('booking_status')
+            <div class="invalid-feedback">{{ $message }}</div> @enderror
+        @endif
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Payment Status</label>
-
-        <select name="payment_status" class="form-control">
-
-            <option value="Pending" {{ old('payment_status', $booking->payment_status ?? '') == 'Pending' ? 'selected' : '' }}>
-                Pending</option>
-
-            <option value="Partial" {{ old('payment_status', $booking->payment_status ?? '') == 'Partial' ? 'selected' : '' }}>
-                Partial</option>
-
-            <option value="Paid" {{ old('payment_status', $booking->payment_status ?? '') == 'Paid' ? 'selected' : '' }}>Paid
-            </option>
-
-            <option value="Refunded" {{ old('payment_status', $booking->payment_status ?? '') == 'Refunded' ? 'selected' : '' }}>Refunded</option>
-
+        <select name="payment_status" class="form-control @error('payment_status') is-invalid @enderror">
+            @foreach(\App\Models\Booking::PAYMENT_STATUSES as $pay)
+                <option value="{{ $pay }}" {{ old('payment_status', $booking->payment_status ?? 'Pending') == $pay ? 'selected' : '' }}>{{ $pay }}</option>
+            @endforeach
         </select>
-
+        @error('payment_status')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
     <div class="col-md-6 mb-3">
-
         <label>Status</label>
-
         <select name="status" class="form-control">
-
             <option value="1" {{ old('status', $booking->status ?? 1) == 1 ? 'selected' : '' }}>Active</option>
-
             <option value="0" {{ old('status', $booking->status ?? 1) == 0 ? 'selected' : '' }}>Inactive</option>
-
         </select>
-
     </div>
 
     <div class="col-md-12 mb-3">
-
         <label>Remarks</label>
-
-        <textarea name="remarks" class="form-control" rows="4">{{ old('remarks', $booking->remarks ?? '') }}</textarea>
-
+        <textarea name="remarks" class="form-control @error('remarks') is-invalid @enderror"
+            rows="4">{{ old('remarks', $booking->remarks ?? '') }}</textarea>
+        @error('remarks')
+        <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
 </div>
 
-<button class="btn btn-primary">
-
+<button type="submit" class="btn btn-primary">
     <i class="fas fa-save"></i>
-
-    {{ isset($booking) ? 'Update Booking' : 'Save Booking' }}
-
+    {{ $isEdit ? 'Update Booking' : 'Save Booking' }}
 </button>
 
-<a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">
-
-    Cancel
-
-</a>
+<a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">Cancel</a>
 
 <script>
-    function calculateTotalAmount() {
-        const roomSelect = document.getElementById('room_id');
-        const checkIn = document.getElementById('check_in').value;
-        const checkOut = document.getElementById('check_out').value;
-        const totalAmountField = document.getElementById('total_amount');
+    (function () {
+        const room = document.getElementById('room_id');
+        const inEl = document.getElementById('check_in');
+        const outEl = document.getElementById('check_out');
+        const out = document.getElementById('total_preview');
 
-        const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-        const pricePerNight = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+        if (!room || !inEl || !outEl || !out) return;
 
-        if (!checkIn || !checkOut || pricePerNight <= 0) {
-            return;
+        function preview() {
+            const opt = room.options[room.selectedIndex];
+            const price = parseFloat(opt ? opt.getAttribute('data-price') : 0) || 0;
+
+            if (!inEl.value || !outEl.value || price <= 0) return;
+
+            const nights = Math.round((new Date(outEl.value) - new Date(inEl.value)) / 86400000);
+
+            if (nights > 0) {
+                out.value = '₹' + (price * nights).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+            }
         }
 
-        const startDate = new Date(checkIn);
-        const endDate = new Date(checkOut);
-        const nights = (endDate - startDate) / (1000 * 60 * 60 * 24);
-
-        if (nights > 0) {
-            totalAmountField.value = (pricePerNight * nights).toFixed(2);
-        }
-    }
-
-    document.getElementById('room_id').addEventListener('change', calculateTotalAmount);
-    document.getElementById('check_in').addEventListener('change', calculateTotalAmount);
-    document.getElementById('check_out').addEventListener('change', calculateTotalAmount);
+        [room, inEl, outEl].forEach(function (el) { el.addEventListener('change', preview); });
+    })();
 </script>

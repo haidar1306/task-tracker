@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RoomApiController;
 use App\Http\Controllers\Api\AuthApiController;
+use App\Http\Controllers\Api\V1\RoomSearchController;
+
 
 
 Route::get('/test', function () {
@@ -22,3 +24,6 @@ Route::delete('/rooms/{room}', [RoomApiController::class, 'destroy']);
 Route::post('/register', [AuthApiController::class, 'register']);
 Route::get('/users', [AuthApiController::class, 'users']);
 Route::get('/users/{user}', [AuthApiController::class, 'show']);
+
+
+Route::get('/v1/rooms/search', RoomSearchController::class);

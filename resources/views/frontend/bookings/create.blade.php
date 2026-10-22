@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app')
+@extends('frontend.layouts.apps')
 
 @section('title', 'Create Reservation')
 
@@ -6,9 +6,9 @@
 
     <style>
         /* =========================================================
-                   LUXURA RESERVATION EXPERIENCE
-                   Completely independent booking-page design
-                ========================================================= */
+                                                                       LUXURA RESERVATION EXPERIENCE
+                                                                       Completely independent booking-page design
+                                                                    ========================================================= */
 
         .reservation-page {
             min-height: calc(100vh - 70px);
@@ -34,8 +34,8 @@
 
 
         /* =========================================================
-                   LEFT VISUAL AREA
-                ========================================================= */
+                                                                       LEFT VISUAL AREA
+                                                                    ========================================================= */
 
         .reservation-visual {
             position: relative;
@@ -202,8 +202,8 @@
 
 
         /* =========================================================
-                   RIGHT RESERVATION PANEL
-                ========================================================= */
+                                                                       RIGHT RESERVATION PANEL
+                                                                    ========================================================= */
 
         .reservation-panel {
             display: flex;
@@ -263,8 +263,8 @@
 
 
         /* =========================================================
-                   FORM
-                ========================================================= */
+                                                                       FORM
+                                                                    ========================================================= */
 
         .reservation-form {
             width: 100%;
@@ -384,8 +384,8 @@
 
 
         /* =========================================================
-                   LIVE SUMMARY
-                ========================================================= */
+                                                                       LIVE SUMMARY
+                                                                    ========================================================= */
 
         .reservation-summary {
             margin-top: 4px;
@@ -448,8 +448,8 @@
 
 
         /* =========================================================
-                   SUBMIT
-                ========================================================= */
+                                                                       SUBMIT
+                                                                    ========================================================= */
 
         .reservation-submit {
             position: relative;
@@ -518,8 +518,8 @@
 
 
         /* =========================================================
-                   FOOT NOTE
-                ========================================================= */
+                                                                       FOOT NOTE
+                                                                    ========================================================= */
 
         .reservation-footer {
             display: flex;
@@ -543,8 +543,8 @@
 
 
         /* =========================================================
-                   RESPONSIVE
-                ========================================================= */
+                                                                       RESPONSIVE
+                                                                    ========================================================= */
 
         @media (max-width: 1050px) {
 
@@ -798,8 +798,8 @@
         }
 
         /* ==========================================
-       REMOVE EXTRA TOP SPACE - RESERVATION PAGE
-       ========================================== */
+                                                           REMOVE EXTRA TOP SPACE - RESERVATION PAGE
+                                                           ========================================== */
 
         .frontend-content {
             padding-top: 0 !important;
@@ -823,6 +823,72 @@
             padding-top: 0 !important;
             margin-top: 0 !important;
         }
+
+        /* ===== RESERVATION PAGE: TOP SPACE FIX (footer rahega) ===== */
+
+        /* Layout ka top spacing hatao */
+        body:has(.reservation-page) {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        body:has(.reservation-page) .hotel-navbar,
+        body:has(.reservation-page) header {
+            display: none !important;
+        }
+
+        body:has(.reservation-page) main,
+        body:has(.reservation-page) .frontend-content,
+        body:has(.reservation-page) .page-wrapper,
+        body:has(.reservation-page) .content-wrapper {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        /* Page poori screen height cover kare, footer neeche normal flow mein */
+        .reservation-page {
+            position: relative !important;
+            margin: 0 !important;
+            min-height: 100vh !important;
+            padding: 0 38px 50px !important;
+            background: #e9e7e2 !important;
+
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .reservation-shell {
+            flex: 1 0 auto;
+        }
+
+        @media (max-width: 1050px) {
+            .reservation-page {
+                padding: 0 25px 25px !important;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .reservation-page {
+                padding: 0 !important;
+            }
+        }
+
+        .reservation-field {
+            margin-bottom: 25px !important;
+        }
+
+        .date-grid>div {
+            min-width: 0;
+        }
+
+        .field-error {
+            display: block;
+            margin-top: 6px;
+            color: #c0392b;
+            font-family: 'Jost', sans-serif;
+            font-size: 11px;
+            line-height: 1.4;
+        }
     </style>
 
 @endpush
@@ -836,7 +902,8 @@
             <a href="{{ route('frontend.index') }}" class="minimal-auth-brand">
                 <i class="fa fa-hotel"></i> Hotel Luxura
             </a>
-            <a href="{{ route('frontend.room.show', $room->id) }}" class="minimal-auth-close" aria-label="Close">
+            <a href="{{ route('frontend.room.show', ['room' => $room->id]) }}" class="minimal-auth-close"
+                aria-label="Close">
                 <i class="fa fa-times"></i>
             </a>
         </div>
@@ -942,15 +1009,17 @@
                 </div>
 
 
-                <form class="reservation-form" action="{{ route('frontend.bookings.store') }}" method="POST">
+                <form id="bookingForm" class="reservation-form" action="{{ route('bookings.store') }}" method="POST">
 
                     @csrf
+                    <input type="hidden" name="idempotency_key" value="{{ $idempotencyKey }}">
 
                     <input type="hidden" name="room_id" value="{{ $room->id }}">
-
+                    @error('room_id')
+                        <div class="field-error" style="margin-bottom:15px;">{{ $message }}</div>
+                    @enderror
 
                     {{-- Dates --}}
-
                     <div class="reservation-field">
 
                         <label for="check_in">
@@ -958,22 +1027,40 @@
                             <span>Required</span>
                         </label>
 
-
                         <div class="date-grid">
 
-                            <input type="date" name="check_in" id="check_in" class="reservation-input"
-                                min="{{ today()->toDateString() }}" value="{{ old('check_in', $search['check_in'] ?? '') }}" required>
+                            <div>
+                                <input type="date" name="check_in" id="check_in"
+                                    class="reservation-input @error('check_in') is-invalid @enderror"
+                                    min="{{ today()->toDateString() }}"
+                                    value="{{ old('check_in', $search['check_in'] ?? '') }}" required>
 
-                            <input type="date" name="check_out" id="check_out" class="reservation-input"
-                                min="{{ today()->toDateString() }}" value="{{ old('check_out', $search['check_out'] ?? '') }}" required>
+                                @error('check_in')
+                                    <span class="field-error">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <input type="date" name="check_out" id="check_out"
+                                    class="reservation-input @error('check_out') is-invalid @enderror"
+                                    min="{{ old('check_in', $search['check_in'] ?? today()->toDateString()) }}"
+                                    value="{{ old('check_out', $search['check_out'] ?? '') }}" required>
+
+                                @error('check_out')
+                                    <span class="field-error">{{ $message }}</span>
+                                @enderror
+                            </div>
 
                         </div>
+                        <div style="margin-top:16px;">
+                            <div data-lx-calendar data-check-in="#check_in" data-check-out="#check_out"
+                                data-booked-url="{{ route('rooms.booked-dates', $room) }}"></div>
+                        </div>
 
-                    </div>
+                    </div>{{-- /dates field --}}
 
 
                     {{-- Guests --}}
-
                     <div class="reservation-field">
 
                         <label>
@@ -981,97 +1068,68 @@
                             <span>Who is staying?</span>
                         </label>
 
-
                         <div class="guest-grid">
 
                             <div class="guest-box">
-
-                                <input type="number" name="adults" id="adults" class="reservation-input" min="1" max="{{ $room->roomType->capacity }}" value="{{ old('adults', $guestCount) }}"
-                                    required placeholder="Adults">
-
+                                <input type="number" name="adults" id="adults" class="reservation-input" min="1"
+                                    max="{{ $room->roomType->capacity }}" value="{{ old('adults', $guestCount) }}" required
+                                    placeholder="Adults">
                                 <i class="fas fa-user"></i>
-
                             </div>
 
-
                             <div class="guest-box">
-
                                 <input type="number" name="children" id="children" class="reservation-input" min="0"
-                                    max="{{ max(0, $room->roomType->capacity - $guestCount) }}" value="{{ old('children', 0) }}" placeholder="Children">
-
+                                    max="{{ $room->roomType->capacity }}" value="{{ old('children', 0) }}"
+                                    placeholder="Children">
                                 <i class="fas fa-child"></i>
-
                             </div>
 
                         </div>
+
+                        @error('adults')
+                            <span class="field-error">{{ $message }}</span>
+                        @enderror
+                        @error('children')
+                            <span class="field-error">{{ $message }}</span>
+                        @enderror
 
                     </div>
 
 
                     {{-- Summary --}}
-
                     <div class="reservation-summary">
 
                         <div class="summary-head">
-
-                            <span>
-                                Stay estimate
-                            </span>
-
-                            <span>
-                                Room {{ $room->room_number }}
-                            </span>
-
+                            <span>Stay estimate</span>
+                            <span>Room {{ $room->room_number }}</span>
                         </div>
 
-
                         <div class="summary-calculation">
-
                             <div class="summary-nights">
-
                                 <strong id="summary-nights">—</strong>
-
-                                <span>
-                                    night(s)
-                                </span>
-
+                                <span>night(s)</span>
                             </div>
 
-
-                            <div class="summary-total" id="summary-total">
-                                ₹0.00
-                            </div>
-
+                            <div class="summary-total" id="summary-total">₹0.00</div>
                         </div>
 
                     </div>
 
 
                     {{-- Submit --}}
-
                     <button type="submit" class="reservation-submit">
-
                         <i class="fas fa-arrow-right"></i>
-
-                        <span>
-                            Confirm Reservation
-                        </span>
-
+                        <span>Confirm Reservation</span>
                     </button>
-                    <a href="{{ route('frontend.room.index') }}" class="reservation-back">
+
+                    <a href="{{ route('frontend.room.index', $search ?? []) }}" class="reservation-back">
                         <i class="fas fa-arrow-left"></i>
                         Back to Rooms
                     </a>
 
-
                     <div class="reservation-footer">
-
                         <i class="fas fa-lock"></i>
-
-                        <span>
-                            Secure reservation · Your details remain private
-                        </span>
-
+                        <span>Secure reservation · Your details remain private</span>
                     </div>
 
                 </form>
@@ -1085,166 +1143,112 @@
 @endsection
 
 
-
 @push('after-scripts')
-
+    <script src="{{ asset('js/luxura-calendar.js') }}"></script>
     <script>
+        (function () {
 
-        const reservationPrice =
-                    {{ $room->roomType->price }};
+            const reservationPrice = {{ (float) $room->roomType->price }};
 
-        const arrival =
-            document.getElementById('check_in');
+            const form = document.getElementById('bookingForm');
+            const arrival = document.getElementById('check_in');
+            const departure = document.getElementById('check_out');
+            const nightsOut = document.getElementById('summary-nights');
+            const totalOut = document.getElementById('summary-total');
 
-        const departure =
-            document.getElementById('check_out');
+            if (!form || !arrival || !departure) return;
 
-        const nightsOutput =
-            document.getElementById('summary-nights');
+            const toYmd = (d) =>
+                d.getFullYear() + '-' +
+                String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                String(d.getDate()).padStart(2, '0');
 
-        const totalOutput =
-            document.getElementById('summary-total');
+            const today = toYmd(new Date());
 
+            arrival.min = today;
+            departure.min = today;
 
-        /* =========================================================
-           TODAY
-        ========================================================= */
+            /* ---------- Stay estimate ---------- */
+            function calculateReservation() {
+                if (!arrival.value || !departure.value) {
+                    nightsOut.textContent = '—';
+                    totalOut.textContent = '₹0.00';
+                    return;
+                }
 
-        const now = new Date();
+                const start = new Date(arrival.value + 'T00:00:00');
+                const end = new Date(departure.value + 'T00:00:00');
+                const nights = Math.round((end - start) / 86400000);
 
-        const today =
-            now.getFullYear() +
-            '-' +
-            String(now.getMonth() + 1).padStart(2, '0') +
-            '-' +
-            String(now.getDate()).padStart(2, '0');
-
-
-        arrival.min = today;
-        departure.min = today;
-
-
-        /* =========================================================
-           CALCULATE STAY
-        ========================================================= */
-
-        function calculateReservation() {
-
-            if (!arrival.value || !departure.value) {
-
-                nightsOutput.textContent = '—';
-                totalOutput.textContent = '₹0.00';
-
-                return;
-            }
-
-
-            const start =
-                new Date(arrival.value + 'T00:00:00');
-
-            const end =
-                new Date(departure.value + 'T00:00:00');
-
-
-            const difference =
-                end.getTime() - start.getTime();
-
-
-            const nights =
-                Math.round(
-                    difference / (1000 * 60 * 60 * 24)
-                );
-
-
-            if (nights > 0) {
-
-                nightsOutput.textContent = nights;
-
-
-                const total =
-                    nights * reservationPrice;
-
-
-                totalOutput.textContent =
-                    '₹' +
-                    total.toLocaleString('en-IN', {
+                if (nights > 0) {
+                    nightsOut.textContent = nights;
+                    totalOut.textContent = '₹' + (nights * reservationPrice).toLocaleString('en-IN', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     });
-
-            } else {
-
-                nightsOutput.textContent = '—';
-                totalOutput.textContent = '₹0.00';
-
+                } else {
+                    nightsOut.textContent = '—';
+                    totalOut.textContent = '₹0.00';
+                }
             }
 
-        }
+            arrival.addEventListener('change', function () {
+                if (!this.value) {
+                    departure.min = today;
+                    calculateReservation();
+                    return;
+                }
 
+                const next = new Date(this.value + 'T00:00:00');
+                next.setDate(next.getDate() + 1);
+                departure.min = toYmd(next);
 
-        /* =========================================================
-           ARRIVAL
-        ========================================================= */
-
-        arrival.addEventListener('change', function () {
-
-            if (!this.value) {
-
-                departure.min = today;
+                if (departure.value && departure.value <= this.value) {
+                    departure.value = '';
+                }
 
                 calculateReservation();
+            });
 
-                return;
-            }
-
-
-            const next =
-                new Date(this.value + 'T00:00:00');
-
-
-            next.setDate(next.getDate() + 1);
-
-
-            const nextDate =
-                next.getFullYear() +
-                '-' +
-                String(next.getMonth() + 1).padStart(2, '0') +
-                '-' +
-                String(next.getDate()).padStart(2, '0');
-
-
-            departure.min = nextDate;
-
-
-            if (
-                departure.value &&
-                departure.value <= this.value
-            ) {
-                departure.value = '';
-            }
-
+            departure.addEventListener('change', calculateReservation);
 
             calculateReservation();
 
-        });
+            /* ---------- Double-submit protection ---------- */
+            const getBtn = () => form.querySelector('button[type="submit"]');
+            let submitted = false;
 
+            form.addEventListener('submit', function (e) {
+                if (e.defaultPrevented) return;   // validation ne roka ho to lock mat karo
 
-        /* =========================================================
-           DEPARTURE
-        ========================================================= */
+                if (submitted) {
+                    e.preventDefault();
+                    return;
+                }
+                submitted = true;
 
-        departure.addEventListener(
-            'change',
-            calculateReservation
-        );
+                const btn = getBtn();
+                if (btn) {
+                    // setTimeout: submit event ke andar disable karne se kuch browsers me submit ruk jata hai
+                    setTimeout(function () {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Processing...</span>';
+                    }, 0);
+                }
+            });
 
+            // Back button se wapas aane par form dobara usable ho
+            window.addEventListener('pageshow', function (e) {
+                if (e.persisted) {
+                    submitted = false;
+                    const btn = getBtn();
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-arrow-right"></i> <span>Confirm Reservation</span>';
+                    }
+                }
+            });
 
-        /* =========================================================
-           INITIAL
-        ========================================================= */
-
-        calculateReservation();
-
+        })();
     </script>
-
 @endpush

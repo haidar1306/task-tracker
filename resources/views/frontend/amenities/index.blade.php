@@ -1,671 +1,639 @@
 @extends('frontend.layouts.app')
 
+{{-- Hero image ke upar navbar transparent rahega (overlay mode, default). Navbar code touch nahi hua. --}}
+
 @section('title', 'Hotel Amenities')
+
+@push('after-styles')
+    <style>
+        /* =========================================================
+           AMENITIES PAGE  (sab classes `am-` prefix, koi clash nahi)
+           ========================================================= */
+
+        .am-page {
+            --am-ink: #2b2621;
+            --am-text: #4a4237;
+            --am-muted: #8a7f6f;
+            --am-line: #e9e0d0;
+            --am-bg: #faf7f1;
+            --am-card: #ffffff;
+            --am-gold: #b08d4a;
+            --am-gold-dark: #94742f;
+            --am-gold-soft: rgba(176, 141, 74, .12);
+
+            background: var(--am-bg);
+            color: var(--am-text);
+            font-family: 'Jost', 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .am-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .am-page h1,
+        .am-page h2,
+        .am-page h3 {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: var(--am-ink);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            html:has(.am-page) {
+                scroll-behavior: smooth;
+            }
+        }
+
+        /* ---------------------------------------------------------
+           BUTTONS
+        --------------------------------------------------------- */
+        .am-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 48px;
+            padding: 0 28px;
+            border: 1px solid var(--am-gold);
+            border-radius: 10px;
+            background: var(--am-gold);
+            color: #fff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s ease, border-color .2s ease, color .2s ease;
+        }
+
+        .am-btn:hover,
+        .am-btn:focus {
+            background: var(--am-gold-dark);
+            border-color: var(--am-gold-dark);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .am-btn-light {
+            background: transparent;
+            border-color: rgba(243, 234, 217, .55);
+            color: #f3ead9;
+        }
+
+        .am-btn-light:hover,
+        .am-btn-light:focus {
+            background: #f3ead9;
+            border-color: #f3ead9;
+            color: var(--am-ink);
+        }
+
+        /* ---------------------------------------------------------
+           HERO  (navbar ke peeche tak failta hai)
+        --------------------------------------------------------- */
+        .am-hero {
+            position: relative;
+            isolation: isolate;
+            display: flex;
+            align-items: flex-end;
+            min-height: 72vh;
+            /* top padding = fixed navbar pill ke neeche jagah */
+            padding: 160px 0 110px;
+            background: #2b2621;
+            color: #f3ead9;
+        }
+
+        .am-hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            background: url('{{ asset("frontend/images/images (7).jfif") }}') center / cover no-repeat;
+        }
+
+        /* upar dark taaki transparent navbar ka text saaf dikhe */
+        .am-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background:
+                linear-gradient(180deg, rgba(25, 21, 18, .72) 0%, rgba(25, 21, 18, .35) 35%, rgba(25, 21, 18, .82) 100%),
+                linear-gradient(90deg, rgba(25, 21, 18, .55) 0%, transparent 65%);
+        }
+
+        .am-hero-inner {
+            max-width: 640px;
+        }
+
+        .am-hero-kicker {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(217, 189, 121, .6);
+            color: #d9bd79;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        .am-hero h1 {
+            margin: 0 0 18px;
+            color: #fffdf8;
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 600;
+            line-height: 1.05;
+            letter-spacing: -.5px;
+        }
+
+        .am-hero p {
+            max-width: 520px;
+            margin: 0 0 28px;
+            color: #e6dccb;
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        .am-hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        /* ---------------------------------------------------------
+           QUICK NAV  (hero ke neeche overlap, anchor links)
+        --------------------------------------------------------- */
+        .am-quick {
+            position: relative;
+            z-index: 3;
+            margin-top: -52px;
+        }
+
+        .am-quick-bar {
+            display: flex;
+            gap: 6px;
+            padding: 12px;
+            overflow-x: auto;
+            background: var(--am-card);
+            border: 1px solid var(--am-line);
+            border-radius: 18px;
+            box-shadow: 0 22px 50px rgba(43, 38, 33, .16);
+            scrollbar-width: none;
+        }
+
+        .am-quick-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .am-chip {
+            flex: 1 0 104px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 8px;
+            border-radius: 12px;
+            color: var(--am-text);
+            font-size: 13.5px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .am-chip i {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--am-gold-soft);
+            color: var(--am-gold-dark);
+            font-size: 16px;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .am-chip:hover,
+        .am-chip:focus {
+            background: var(--am-bg);
+            color: var(--am-ink);
+            text-decoration: none;
+        }
+
+        .am-chip:hover i,
+        .am-chip:focus i {
+            background: var(--am-gold);
+            color: #fff;
+        }
+
+        /* ---------------------------------------------------------
+           INTRO
+        --------------------------------------------------------- */
+        .am-intro {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 48px;
+            align-items: end;
+            padding: 96px 0 72px;
+        }
+
+        .am-intro h2 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            font-weight: 600;
+            line-height: 1.15;
+        }
+
+        .am-intro p {
+            margin: 0;
+            max-width: 460px;
+            color: var(--am-muted);
+            font-size: 16px;
+            line-height: 1.9;
+        }
+
+        /* ---------------------------------------------------------
+           AMENITY ROWS  (image + overlapping card, alternate)
+        --------------------------------------------------------- */
+        .am-list {
+            padding-bottom: 40px;
+        }
+
+        .am-row {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            align-items: center;
+            margin-bottom: 104px;
+            scroll-margin-top: 120px;
+        }
+
+        .am-media {
+            grid-column: 1 / span 7;
+            grid-row: 1;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 16 / 11;
+            border-radius: 18px;
+            background: #eadfca;
+        }
+
+        .am-media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .8s ease;
+        }
+
+        .am-row:hover .am-media img {
+            transform: scale(1.04);
+        }
+
+        .am-card {
+            grid-column: 7 / span 6;
+            grid-row: 1;
+            position: relative;
+            z-index: 2;
+            padding: 44px 44px 40px;
+            background: var(--am-card);
+            border: 1px solid var(--am-line);
+            border-radius: 16px;
+            box-shadow: 0 26px 60px rgba(43, 38, 33, .12);
+        }
+
+        .am-row.is-flip .am-media {
+            grid-column: 6 / span 7;
+        }
+
+        .am-row.is-flip .am-card {
+            grid-column: 1 / span 6;
+        }
+
+        .am-num {
+            position: absolute;
+            top: 14px;
+            right: 26px;
+            color: rgba(176, 141, 74, .2);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 84px;
+            font-weight: 700;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .am-icon {
+            display: grid;
+            place-items: center;
+            width: 56px;
+            height: 56px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            background: var(--am-gold-soft);
+            color: var(--am-gold-dark);
+            font-size: 20px;
+        }
+
+        .am-tag {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 5px 12px;
+            border: 1px solid #dccfb6;
+            border-radius: 999px;
+            color: #6b5427;
+            font-size: 12.5px;
+            font-weight: 500;
+        }
+
+        .am-card h3 {
+            margin: 0 0 14px;
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 1.15;
+        }
+
+        .am-card p {
+            margin: 0;
+            max-width: 440px;
+            color: var(--am-muted);
+            font-size: 15.5px;
+            line-height: 1.85;
+        }
+
+        /* ---------------------------------------------------------
+           CTA
+        --------------------------------------------------------- */
+        /* ---------------------------------------------------------
+       CTA
+    --------------------------------------------------------- */
+        .am-cta {
+            padding: 10px 0 110px;
+        }
+
+        .am-cta-card {
+            position: relative;
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 72px 40px 64px;
+            background: linear-gradient(180deg, #ffffff 0%, #f7f0e2 100%);
+            border: 1px solid var(--am-line);
+            border-radius: 24px;
+            box-shadow: 0 26px 60px rgba(43, 38, 33, .08);
+            text-align: center;
+        }
+
+        /* upar chhoti gold line */
+        .am-cta-card::before {
+            content: "";
+            display: block;
+            width: 48px;
+            height: 2px;
+            margin: 0 auto 28px;
+            background: var(--am-gold);
+        }
+
+        .am-cta-card p {
+            max-width: 640px;
+            margin: 0 auto 34px;
+            color: var(--am-ink);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .am-cta-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .am-btn-outline {
+            background: transparent;
+            border-color: #d5c7ad;
+            color: var(--am-ink);
+        }
+
+        .am-btn-outline:hover,
+        .am-btn-outline:focus {
+            background: var(--am-ink);
+            border-color: var(--am-ink);
+            color: #fff;
+        }
+
+        /* ---------------------------------------------------------
+           RESPONSIVE
+        --------------------------------------------------------- */
+        @media (max-width: 991.98px) {
+            .am-hero {
+                min-height: 64vh;
+                padding: 140px 0 100px;
+            }
+
+            .am-intro {
+                grid-template-columns: 1fr;
+                gap: 18px;
+                padding: 80px 0 56px;
+            }
+
+            .am-row {
+                display: block;
+                margin-bottom: 72px;
+            }
+
+            .am-media {
+                aspect-ratio: 16 / 10;
+            }
+
+            .am-card,
+            .am-row.is-flip .am-card {
+                margin: -56px 18px 0;
+                padding: 32px 26px 30px;
+            }
+
+            .am-num {
+                font-size: 64px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .am-container {
+                padding: 0 16px;
+            }
+
+            .am-hero {
+                min-height: 60vh;
+                padding: 120px 0 90px;
+            }
+
+            .am-hero p {
+                font-size: 15px;
+            }
+
+            .am-card,
+            .am-row.is-flip .am-card {
+                margin: -44px 10px 0;
+                padding: 28px 22px 26px;
+            }
+
+            .am-card h3 {
+                font-size: 26px;
+            }
+
+            .am-card p {
+                font-size: 14.5px;
+            }
+
+            .am-cta {
+                padding: 0 0 80px;
+            }
+
+            .am-cta-card {
+                padding: 48px 22px 44px;
+                border-radius: 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .am-media img {
+                transition: none;
+            }
+
+            .am-row:hover .am-media img {
+                transform: none;
+            }
+        }
+    </style>
+@endpush
 
 @section('content')
 
-<style>
-    /* =========================================================
-       HOTEL LUXURA — AMENITIES PAGE
-       ========================================================= */
-
-    :root {
-        --lux-dark: #25211d;
-        --lux-brown: #4a4034;
-        --lux-brown-light: #6b5a48;
-        --lux-gold: #a9825c;
-        --lux-gold-soft: #c6a477;
-        --lux-cream: #f7f3ec;
-        --lux-white: #fffdf9;
-        --lux-muted: #82776a;
-        --lux-border: #e8e0d4;
-    }
-
-    /* =========================================================
-       PAGE
-       ========================================================= */
-
-    .amenities-page {
-        background: var(--lux-white);
-        color: var(--lux-dark);
-    }
-
-    /* =========================================================
-       HERO
-       ========================================================= */
-
-    .amenities-hero {
-        position: relative;
-        min-height: 62vh;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-
-        background:
-            linear-gradient(
-                180deg,
-                rgba(25, 21, 18, .38) 0%,
-                rgba(25, 21, 18, .72) 100%
-            ),
-            url('{{ asset("frontend/images/images (7).jfif") }}')
-            center center / cover no-repeat;
-    }
-
-    .amenities-hero::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            90deg,
-            rgba(20, 17, 14, .28),
-            transparent 50%,
-            rgba(20, 17, 14, .22)
-        );
-        pointer-events: none;
-    }
-
-    .amenities-hero-inner {
-        position: relative;
-        z-index: 2;
-        max-width: 850px;
-        padding: 80px 20px 60px;
-    }
-
-    .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-
-        padding: 9px 20px;
-
-        border: 1px solid rgba(231, 211, 180, .65);
-        color: #f3e8d8;
-
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 2.5px;
-        text-transform: uppercase;
-
-        background: rgba(37, 33, 29, .22);
-        backdrop-filter: blur(5px);
-    }
-
-    .hero-badge::before,
-    .hero-badge::after {
-        content: "✦";
-        color: var(--lux-gold-soft);
-        font-size: 10px;
-    }
-
-    .amenities-hero h1 {
-        margin: 25px 0 18px;
-
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: clamp(3rem, 6vw, 5.2rem);
-        font-weight: 600;
-        line-height: 1.05;
-
-        color: #fffdf8;
-        letter-spacing: -1px;
-    }
-
-    .amenities-hero p {
-        max-width: 650px;
-        margin: 0 auto;
-
-        color: #e9dfd1;
-        font-size: 17px;
-        line-height: 1.8;
-        font-weight: 400;
-    }
-
-    /* =========================================================
-       INTRO
-       ========================================================= */
-
-    .amenities-intro {
-        padding: 95px 20px 75px;
-        text-align: center;
-    }
-
-    .section-title {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-
-        color: var(--lux-gold);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-    }
-
-    .section-title::before,
-    .section-title::after {
-        content: "";
-        width: 24px;
-        height: 1px;
-        background: var(--lux-gold);
-    }
-
-    .section-heading {
-        margin: 16px 0 14px;
-
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: clamp(2rem, 4vw, 3.1rem);
-        font-weight: 600;
-        line-height: 1.2;
-
-        color: var(--lux-dark);
-    }
-
-    .section-sub {
-        max-width: 650px;
-        margin: 0 auto;
-
-        color: var(--lux-muted);
-        font-size: 15px;
-        line-height: 1.9;
-    }
-
-    /* =========================================================
-       AMENITIES LIST
-       ========================================================= */
-
-    .amenities-list {
-        padding-bottom: 90px;
-    }
-
-    .amenity-zigzag-row {
-        position: relative;
-        margin-bottom: 90px;
-    }
-
-    /* =========================================================
-       IMAGE
-       ========================================================= */
-
-    .amenity-zigzag-image {
-        position: relative;
-        overflow: hidden;
-        background: #eee7dc;
-    }
-
-    .amenity-zigzag-image::after {
-        content: "";
-        position: absolute;
-        inset: 16px;
-
-        border: 1px solid rgba(255, 255, 255, .45);
-
-        pointer-events: none;
-        transition: .4s ease;
-    }
-
-    .amenity-zigzag-image img {
-        width: 100%;
-        height: 390px;
-
-        display: block;
-        object-fit: cover;
-
-        transition:
-            transform .7s ease,
-            filter .5s ease;
-    }
-
-    .amenity-zigzag-row:hover .amenity-zigzag-image img {
-        transform: scale(1.035);
-        filter: brightness(.94);
-    }
-
-    /* =========================================================
-       CONTENT
-       ========================================================= */
-
-    .amenity-zigzag-content {
-        padding: 20px 55px;
-    }
-
-    .amenity-zigzag-row:nth-child(even) .amenity-zigzag-content {
-        padding-left: 55px;
-    }
-
-    .amenity-zigzag-icon {
-        width: 58px;
-        height: 58px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        margin-bottom: 20px;
-
-        border: 1px solid var(--lux-gold);
-        border-radius: 50%;
-
-        color: var(--lux-gold);
-        background: #fffdf9;
-
-        font-size: 20px;
-
-        box-shadow: 0 8px 25px rgba(55, 44, 33, .06);
-    }
-
-    .amenity-badge-tag {
-        display: inline-block;
-
-        margin-bottom: 14px;
-        padding: 6px 13px;
-
-        background: #f1e8dc;
-        color: var(--lux-brown-light);
-
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1.4px;
-        text-transform: uppercase;
-    }
-
-    .amenity-zigzag-content h3 {
-        position: relative;
-
-        margin: 0 0 17px;
-
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: 31px;
-        font-weight: 600;
-
-        color: var(--lux-dark);
-    }
-
-    .amenity-zigzag-content h3::after {
-        content: "";
-
-        display: block;
-
-        width: 38px;
-        height: 2px;
-
-        margin-top: 12px;
-
-        background: var(--lux-gold);
-    }
-
-    .amenity-zigzag-content p {
-        max-width: 500px;
-        margin: 0;
-
-        color: var(--lux-muted);
-        font-size: 15px;
-        line-height: 1.9;
-    }
-
-    /* =========================================================
-       NUMBER
-       ========================================================= */
-
-    .amenity-number {
-        margin-top: 25px;
-
-        color: #b7aa9b;
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: 13px;
-        letter-spacing: 2px;
-    }
-
-    /* =========================================================
-       BOTTOM CTA
-       ========================================================= */
-
-    .amenities-cta {
-        position: relative;
-
-        margin-top: 10px;
-        padding: 85px 20px;
-
-        background:
-            linear-gradient(
-                rgba(37, 33, 29, .92),
-                rgba(37, 33, 29, .92)
-            ),
-            url('{{ asset("frontend/images/images (7).jfif") }}')
-            center / cover no-repeat;
-
-        text-align: center;
-    }
-
-    .amenities-cta small {
-        display: block;
-
-        margin-bottom: 14px;
-
-        color: var(--lux-gold-soft);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-    }
-
-    .amenities-cta h2 {
-        margin-bottom: 15px;
-
-        color: #fffdf9;
-
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: clamp(2rem, 4vw, 3.2rem);
-        font-weight: 600;
-    }
-
-    .amenities-cta p {
-        max-width: 600px;
-        margin: 0 auto 28px;
-
-        color: #d7cbbd;
-        line-height: 1.8;
-        font-size: 15px;
-    }
-
-    .amenities-cta-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        padding: 12px 28px;
-
-        border: 1px solid var(--lux-gold-soft);
-
-        color: #f6ead9;
-        background: transparent;
-
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 1.8px;
-        text-transform: uppercase;
-        text-decoration: none;
-
-        transition: .3s ease;
-    }
-
-    .amenities-cta-btn:hover {
-        background: var(--lux-gold);
-        border-color: var(--lux-gold);
-        color: #fff;
-        text-decoration: none;
-    }
-
-    /* =========================================================
-       RESPONSIVE
-       ========================================================= */
-
-    @media (max-width: 991.98px) {
-
-        .amenities-hero {
-            min-height: 55vh;
-        }
-
-        .amenity-zigzag-content,
-        .amenity-zigzag-row:nth-child(even) .amenity-zigzag-content {
-            padding: 30px 15px;
-        }
-
-        .amenity-zigzag-image img {
-            height: 320px;
-        }
-
-        .amenity-zigzag-row {
-            margin-bottom: 65px;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-
-        .amenities-hero {
-            min-height: 52vh;
-        }
-
-        .amenities-hero-inner {
-            padding: 70px 18px 45px;
-        }
-
-        .amenities-hero h1 {
-            font-size: 2.8rem;
-        }
-
-        .amenities-hero p {
-            font-size: 14px;
-        }
-
-        .amenities-intro {
-            padding: 70px 18px 55px;
-        }
-
-        .amenity-zigzag-row {
-            margin-bottom: 55px;
-        }
-
-        .amenity-zigzag-image img {
-            height: 250px;
-        }
-
-        .amenity-zigzag-image::after {
-            inset: 10px;
-        }
-
-        .amenity-zigzag-content,
-        .amenity-zigzag-row:nth-child(even) .amenity-zigzag-content {
-            padding: 25px 5px 5px;
-        }
-
-        .amenity-zigzag-content h3 {
-            font-size: 26px;
-        }
-
-        .amenity-zigzag-content p {
-            font-size: 14px;
-        }
-
-        .amenities-cta {
-            padding: 65px 20px;
-        }
-    }
-</style>
-
-<div class="amenities-page">
-
-    {{-- ================= HERO ================= --}}
-    <section class="amenities-hero">
-
-        <div class="amenities-hero-inner text-center">
-
-            <span class="hero-badge">
-                Luxury Experience
-            </span>
-
-            <h1>
-                Hotel Amenities
-            </h1>
-
-            <p>
-                Thoughtfully designed facilities and services
-                created to make every moment of your stay comfortable,
-                relaxing and memorable.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    {{-- ================= INTRO ================= --}}
-    <section class="amenities-intro">
-
-        <span class="section-title">
-            Premium Facilities
-        </span>
-
-        <h2 class="section-heading">
-            Designed For Your Comfort
-        </h2>
-
-        <p class="section-sub">
-            From wellness and dining to effortless everyday conveniences,
-            discover everything Hotel Luxura has prepared for your stay.
-        </p>
-
-    </section>
-
-
-    {{-- ================= AMENITIES ================= --}}
-    <section class="amenities-list">
-
-        <div class="container">
-
-            @php
-                $amenities = [
-                    [
-                        'wifi',
-                        'Free WiFi',
-                        'Complimentary',
-                        'Stay connected with high-speed complimentary WiFi available throughout the hotel, from your room to every common area.',
-                        'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=900'
-                    ],
-                    [
-                        'swimming-pool',
-                        'Swimming Pool',
-                        'Premium',
-                        'Unwind at our outdoor infinity pool, surrounded by loungers and scenic views. Open through the day for a refreshing escape.',
-                        'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=900'
-                    ],
-                    [
-                        'dumbbell',
-                        'Fitness Gym',
-                        '24/7',
-                        'Stay on track with modern, fully equipped gym facilities available around the clock for every guest.',
-                        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=900'
-                    ],
-                    [
-                        'utensils',
-                        'Restaurant',
-                        'Fine Dining',
-                        'Savour multi-cuisine fine dining crafted by our expert chefs, from local delicacies to international favourites.',
-                        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900'
-                    ],
-                    [
-                        'spa',
-                        'Luxury Spa',
-                        'Wellness',
-                        'Rejuvenate your senses with our professional spa treatments, designed to melt away stress and restore balance.',
-                        'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=900'
-                    ],
-                    [
-                        'car',
-                        'Free Parking',
-                        'Secure',
-                        'Enjoy the convenience of secure, complimentary parking available for every guest throughout their stay.',
-                        'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=900'
-                    ],
-                    [
-                        'concierge-bell',
-                        'Room Service',
-                        '24/7',
-                        'Order from our curated menu anytime with attentive, round-the-clock in-room dining service.',
-                        'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=900'
-                    ],
-                    [
-                        'cocktail',
-                        'Bar Lounge',
-                        'Premium',
-                        'End your day with handcrafted cocktails and premium drinks in an intimate lounge setting, perfect for relaxed evenings.',
-                        'https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900'
-                    ],
-                ];
-            @endphp
-
-
-            @foreach($amenities as $index => $item)
-
-                <div class="row align-items-center amenity-zigzag-row {{ $index % 2 == 1 ? 'flex-row-reverse' : '' }}">
-
-                    {{-- IMAGE --}}
-                    <div class="col-lg-6">
-
-                        <div class="amenity-zigzag-image">
-
-                            <img
-                                src="{{ $item[4] }}"
-                                alt="{{ $item[1] }}"
-                                loading="lazy"
-                            >
-
-                        </div>
-
+    <div class="am-page">
+
+        {{-- ================= HERO ================= --}}
+        <section class="am-hero">
+            <div class="am-hero-bg"></div>
+
+            <div class="am-container">
+                <div class="am-hero-inner">
+                    <span class="am-hero-kicker">Luxury experience</span>
+
+                    <h1>Hotel Amenities</h1>
+
+                    <p>
+                        Thoughtfully designed facilities and services, created to make every
+                        moment of your stay comfortable, relaxing and memorable.
+                    </p>
+
+                    <div class="am-hero-actions">
+                        <a href="{{ route('frontend.room.index') }}" class="am-btn">Explore rooms</a>
+                       @if ($amenities->isNotEmpty())
+    <a href="#am-{{ \Illuminate\Support\Str::slug($amenities->first()->name) }}"
+        class="am-btn am-btn-light">
+        See facilities
+    </a>
+@endif
                     </div>
-
-
-                    {{-- CONTENT --}}
-                    <div class="col-lg-6">
-
-                        <div class="amenity-zigzag-content">
-
-                            <div class="amenity-zigzag-icon">
-                                <i class="fas fa-{{ $item[0] }}"></i>
-                            </div>
-
-                            <span class="amenity-badge-tag">
-                                {{ $item[2] }}
-                            </span>
-
-                            <h3>
-                                {{ $item[1] }}
-                            </h3>
-
-                            <p>
-                                {{ $item[3] }}
-                            </p>
-
-                            <div class="amenity-number">
-                                0{{ $index + 1 }}
-                            </div>
-
-                        </div>
-
-                    </div>
-
                 </div>
+            </div>
+        </section>
 
+      {{-- ================= QUICK NAV ================= --}}
+<div class="am-quick">
+    <div class="am-container">
+        <nav class="am-quick-bar" aria-label="Jump to a facility">
+            @foreach ($amenities as $item)
+                <a class="am-chip"
+                    href="#am-{{ \Illuminate\Support\Str::slug($item->name) }}">
+
+                    <i class="fas fa-{{ $item->icon ?: 'concierge-bell' }}"
+                        aria-hidden="true"></i>
+
+                    {{ $item->name }}
+                </a>
             @endforeach
-
-        </div>
-
-    </section>
-
-
-    {{-- ================= CTA ================= --}}
-    <section class="amenities-cta">
-
-        <small>
-            Hotel Luxura
-        </small>
-
-        <h2>
-            Everything You Need, Beautifully Delivered
-        </h2>
-
-        <p>
-            Settle in, slow down and enjoy a stay designed around
-            comfort, convenience and memorable experiences.
-        </p>
-
-        <a href="{{ route('frontend.reservation.index') }}" class="amenities-cta-btn">
-            Plan Your Stay
-        </a>
-
-    </section>
-
+        </nav>
+    </div>
 </div>
 
+        <div class="am-container">
+
+            {{-- ================= INTRO ================= --}}
+            <section class="am-intro">
+                <h2>Designed for your comfort</h2>
+                <p>
+                    From wellness and dining to effortless everyday conveniences,
+                    discover everything Hotel Luxura has prepared for your stay.
+                </p>
+            </section>
+
+            {{-- ================= AMENITIES ================= --}}
+          {{-- ================= AMENITIES ================= --}}
+<section class="am-list">
+    @forelse ($amenities as $index => $item)
+        <article
+            class="am-row {{ $index % 2 === 1 ? 'is-flip' : '' }}"
+            id="am-{{ \Illuminate\Support\Str::slug($item->name) }}">
+
+            <div class="am-media">
+                @if ($item->image)
+                    <img src="{{ $item->image }}"
+                        alt="{{ $item->name }}"
+                        loading="lazy">
+                @else
+                    <div style="height: 100%; display: grid; place-items: center;">
+                        <i class="fas fa-{{ $item->icon ?: 'concierge-bell' }}"
+                            style="font-size: 48px; color: #94742f;"
+                            aria-hidden="true"></i>
+                    </div>
+                @endif
+            </div>
+
+            <div class="am-card">
+                <span class="am-num" aria-hidden="true">
+                    {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                </span>
+
+                <div class="am-icon">
+                    <i class="fas fa-{{ $item->icon ?: 'concierge-bell' }}"
+                        aria-hidden="true"></i>
+                </div>
+
+                @if ($item->tag)
+                    <span class="am-tag">{{ $item->tag }}</span>
+                @endif
+
+                <h3>{{ $item->name }}</h3>
+
+                <p>{{ $item->description }}</p>
+            </div>
+        </article>
+    @empty
+        <div class="text-center py-5">
+            <h3>No amenities available</h3>
+            <p>Please check back later to explore our hotel facilities.</p>
+        </div>
+    @endforelse
+</section>
+
+        {{-- ================= CTA ================= --}}
+        <section class="am-cta">
+            <div class="am-container">
+                <div class="am-cta-card">
+                    <p>
+                        Settle in, slow down and enjoy a stay designed around
+                        comfort, convenience and memorable experiences.
+                    </p>
+
+                    <div class="am-cta-actions">
+                        <a href="{{ route('frontend.room.index') }}" class="am-btn">Explore rooms</a>
+                        <a href="{{ route('frontend.contact') }}" class="am-btn am-btn-outline">Contact us</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
 @endsection

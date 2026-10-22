@@ -41,17 +41,20 @@ class Coupon extends Model
 
     public function invalidReason(): ?string
     {
-        $now = Carbon::now();
+        $now = Carbon::now('Asia/Kolkata');
 
         if (! $this->status) {
             return 'This coupon is inactive.';
         }
 
-        if ($this->starts_at && $now->lt($this->starts_at)) {
+        $startsAt = $this->scheduledTime('starts_at');
+        $expiresAt = $this->scheduledTime('expires_at');
+
+        if ($startsAt && $now->lt($startsAt)) {
             return 'This coupon is not active yet.';
         }
 
-        if ($this->expires_at && $now->gt($this->expires_at)) {
+        if ($expiresAt && $now->gt($expiresAt)) {
             return 'This coupon has expired.';
         }
 
@@ -60,5 +63,12 @@ class Coupon extends Model
         }
 
         return null;
+    }
+
+    private function scheduledTime(string $attribute): ?Carbon
+    {
+        $value = $this->getRawOriginal($attribute);
+
+        return $value ? Carbon::parse($value, 'Asia/Kolkata') : null;
     }
 }

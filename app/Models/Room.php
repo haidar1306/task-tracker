@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Room extends Model
@@ -17,11 +17,11 @@ class Room extends Model
         'room_type_id',
         'floor',
         'status',
+        'bed_type_id',
     ];
 
     protected $casts = [
         'floor' => 'integer',
-        // 'status' => 'boolean',
     ];
 
     public function roomType()
@@ -38,11 +38,15 @@ class Room extends Model
     {
         return $this->hasMany(Booking1::class, 'room_id');
     }
+    public function bedType()
+    {
+        return $this->belongsTo(\App\Models\BedType::class, 'bed_type_id');
+    }
 
     public function scopeBookable(Builder $query, ?int $guests = null): Builder
     {
         return $query
-            ->where('status', 'available')
+            ->where('status', '!=', 'maintenance')
             ->whereHas('roomType', function (Builder $roomTypes) use ($guests) {
                 $roomTypes->where('status', true);
 
@@ -52,6 +56,10 @@ class Room extends Model
             });
     }
 
+    /**
+     * Rooms jinki koi active booking given dates se overlap nahi karti.
+     * Overlap: existing.check_in < new.check_out AND existing.check_out > new.check_in
+     */
     public function scopeAvailableForStay(
         Builder $query,
         ?string $checkIn,
@@ -68,8 +76,10 @@ class Room extends Model
             }
 
             $bookings
-                ->where('status', true)
-                ->whereIn('booking_status', ['Pending', 'Confirmed', 'Checked In'])
+                ->where(function (Builder $q) {
+                    $q->whereNull('booking_status')
+                        ->orWhereNotIn('booking_status', Booking1::INACTIVE_STATUSES);
+                })
                 ->whereDate('check_in', '<', $checkOut)
                 ->whereDate('check_out', '>', $checkIn);
         });

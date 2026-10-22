@@ -133,6 +133,32 @@
         background: #8a6844;
         color: #fff;
     }
+    .contact-alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.contact-alert i {
+    font-size: 18px;
+}
+
+.contact-alert-success {
+    background: #eef7ee;
+    border: 1px solid #b9dcb9;
+    color: #2e6b34;
+}
+
+.contact-alert-danger {
+    background: #fdecea;
+    border: 1px solid #f3b9b4;
+    color: #b3261e;
+}
 </style>
 
 <section class="contact-page-wrap">
@@ -177,50 +203,76 @@
                 </div>
             </div>
 
-            <div class="contact-form-wrap">
-                <h3>Send us a message</h3>
-                <form action="{{ route('frontend.frontend.inquiry.store') }}" method="POST">
-                    @csrf
+           <div class="contact-form-wrap">
+    <h3>Send us a message</h3>
+    @if (session('flash_success'))
+    <div class="contact-alert contact-alert-success" role="alert">
+        <i class="fas fa-check-circle"></i>
+        <span>{{ session('flash_success') }}</span>
+    </div>
+@endif
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <input type="text"
-                                   name="name"
-                                   class="form-control"
-                                   placeholder="Your Name"
-                                   required>
-                        </div>
+@if (session('flash_danger'))
+    <div class="contact-alert contact-alert-danger" role="alert">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ session('flash_danger') }}</span>
+    </div>
+@endif
 
-                        <div class="col-md-6 mb-3">
-                            <input type="email"
-                                   name="email"
-                                   class="form-control"
-                                   placeholder="Your Email"
-                                   required>
-                        </div>
-                    </div>
+    @guest
+        <div class="alert alert-warning" style="border-radius:8px;">
+            Please <a href="{{ route('frontend.frontend.auth.login') }}"><strong>log in</strong></a>
+            to send us a message.
+        </div>
+    @endguest
 
-                    <div class="mb-3">
-                        <input type="text"
-                               name="subject"
-                               class="form-control"
-                               placeholder="Subject"
-                               required>
-                    </div>
+    <form action="{{ route('frontend.frontend.inquiry.store') }}" method="POST">
+        @csrf
 
-                    <div class="mb-3">
-                        <textarea name="message"
-                                  class="form-control"
-                                  rows="5"
-                                  placeholder="Your Message"
-                                  required></textarea>
-                    </div>
+        <fieldset @guest disabled @endguest style="border:0;padding:0;margin:0;">
 
-                    <button type="submit" class="btn btn-gold">
-                        Send Message
-                    </button>
-                </form>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <input type="text" name="name"
+                           class="form-control @error('name') is-invalid @enderror"
+                           placeholder="Your Name"
+                           value="{{ old('name', auth()->user()->name ?? '') }}" required>
+                    @error('name') <span class="text-danger small">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <input type="email" name="email"
+                           class="form-control @error('email') is-invalid @enderror"
+                           placeholder="Your Email"
+                           value="{{ old('email', auth()->user()->email ?? '') }}"
+                           @auth readonly @endauth required>
+                    @error('email') <span class="text-danger small">{{ $message }}</span> @enderror
+                </div>
             </div>
+
+            <div class="mb-3">
+                <input type="text" name="subject"
+                       class="form-control @error('subject') is-invalid @enderror"
+                       placeholder="Subject" value="{{ old('subject') }}" required>
+                @error('subject') <span class="text-danger small">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="mb-3">
+                <textarea name="message" rows="5"
+                          class="form-control @error('message') is-invalid @enderror"
+                          placeholder="Your Message" required>{{ old('message') }}</textarea>
+                @error('message') <span class="text-danger small">{{ $message }}</span> @enderror
+            </div>
+
+        </fieldset>
+
+        @auth
+            <button type="submit" class="btn btn-gold">Send Message</button>
+        @else
+            <a href="{{ route('frontend.auth.login') }}" class="btn btn-gold">Login to Send</a>
+        @endauth
+    </form>
+</div>
         </div>
     </section>
 

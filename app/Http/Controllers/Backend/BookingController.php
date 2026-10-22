@@ -3,53 +3,41 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-// use App\Models\User;
-use App\Domains\Auth\Models\User;
-use App\Notifications\BookingNotification;
-use App\Models\Guest;
-use App\Services\ActivityLogService;
-use App\Models\Booking;
-use App\Models\Invoice;
-use App\Models\Room;
-use App\Services\BookingService;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
+use App\Models\Booking;
+use App\Models\Guest;
+use App\Models\Room;
+use App\Services\ActivityLogService;
+use App\Services\BookingService;
+use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
-    /**
-     * @var BookingService
-     */
     protected $service;
-
-    /**
-     * Constructor
-     */
     protected $activityLog;
 
-    public function __construct(
-        BookingService $service,
-        ActivityLogService $activityLog
-    ) {
+    public function __construct(BookingService $service, ActivityLogService $activityLog)
+    {
         $this->service = $service;
         $this->activityLog = $activityLog;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    /* ---------------- Lists ---------------- */
+
     public function index(Request $request)
     {
-        $bookings = $this->service->all(5, $request->search);
+        $bookings = $this->service->all(10, $request->search);
 
         return view('backend.bookings.index', compact('bookings'));
     }
 
     public function checkInIndex(Request $request)
     {
-        $bookings = $this->service->all(5, $request->search, 'Confirmed');
+        $bookings = $this->service->all(10, $request->search, Booking::STATUS_CONFIRMED);
         $bookingPageTitle = 'Check In';
 
         return view('backend.bookings.index', compact('bookings', 'bookingPageTitle'));
@@ -57,32 +45,25 @@ class BookingController extends Controller
 
     public function checkOutIndex(Request $request)
     {
-        $bookings = $this->service->all(5, $request->search, 'Checked In');
+        $bookings = $this->service->all(10, $request->search, Booking::STATUS_CHECKED_IN);
         $bookingPageTitle = 'Check Out';
 
         return view('backend.bookings.index', compact('bookings', 'bookingPageTitle'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    /* ---------------- Create / Edit ---------------- */
+
     public function create()
     {
-        $guests = Guest::all();
-        $rooms = Room::all();
-
-        return view(
-            'backend.bookings.create',
-            compact('guests', 'rooms')
-        );
+        return view('backend.bookings.create', [
+            'guests' => Guest::orderBy('first_name')->get(),
+            'rooms' => $this->selectableRooms(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource.
-     */
-    public function store(StoreBookingRequest $request)
+    public function store(StoreBookingRequest $request): RedirectResponse
     {
-        $booking = $this->service->store($request->validated());
+        $booking = $this->service->createByAdmin($request->validated());
 
         $this->activityLog->log(
             'Booking',
@@ -92,30 +73,22 @@ class BookingController extends Controller
 
         return redirect()
             ->route('admin.bookings.index')
-            ->with('success', 'Booking created successfully.');
+            ->withFlashSuccess('Booking created successfully.');
     }
+
     public function edit(Booking $booking)
     {
-        $guests = Guest::all();
-        $rooms = Room::all();
-
-        return view(
-            'backend.bookings.edit',
-            compact('booking', 'guests', 'rooms')
-        );
+        return view('backend.bookings.edit', [
+            'booking' => $booking,
+            'guests' => Guest::orderBy('first_name')->get(),
+            'rooms' => $this->selectableRooms((int) $booking->room_id),
+        ]);
     }
 
-    /**
-     * Update the specified resource.
-     */
-    public function update(
-        UpdateBookingRequest $request,
-        Booking $booking
-    ) {
-        $this->service->update(
-            $booking,
-            $request->validated()
-        );
+    public function update(UpdateBookingRequest $request, Booking $booking): RedirectResponse
+    {
+        $this->service->update($booking, $request->validated());
+
         $this->activityLog->log(
             'Booking',
             'Updated',
@@ -124,166 +97,126 @@ class BookingController extends Controller
 
         return redirect()
             ->route('admin.bookings.index')
-            ->withFlashSuccess('Bookings Updated Successfully.');
+            ->withFlashSuccess('Booking updated successfully.');
     }
 
-    /**
-     * Remove the specified resource.
-     */
-    public function destroy(Booking $booking)
+    public function show(Booking $booking)
     {
+        $booking->load(['guest', 'room.roomType', 'invoice']);
+
+        return view('backend.bookings.show', compact('booking'));
+    }
+
+    public function destroy(Booking $booking): RedirectResponse
+    {
+        try {
+            $this->service->delete($booking);
+        } catch (ValidationException $e) {
+            return redirect()->back()->withFlashDanger($e->validator->errors()->first());
+        }
+
         $this->activityLog->log(
             'Booking',
             'Deleted',
             'Booking #' . $booking->id . ' deleted by ' . auth()->user()->name
         );
 
-        $this->service->delete($booking);
-
-        return redirect()
-            ->route('admin.bookings.index')
-            ->with('success', 'Booking deleted successfully.');
+        return redirect()->route('admin.bookings.index')->withFlashSuccess('Booking deleted successfully.');
     }
 
-    /**
-     * Show booking details.
-     */
-    public function show(Booking $booking)
+    /* ---------------- Status actions (sirf POST) ---------------- */
+
+    public function confirm(Booking $booking): RedirectResponse
     {
-        $booking->load([
-            'guest',
-            'room.roomType',
-        ]);
-
-        return view(
-            'backend.bookings.show',
-            compact('booking')
-        );
-    }
-
-    /**
-     * Confirm booking.
-     */
-    public function confirm($id)
-    {
-        $booking = Booking::findOrFail($id);
-
-        $booking->update([
-            'booking_status' => 'Confirmed',
-        ]);
-
-        $this->activityLog->log(
-            'Booking',
+        return $this->act(
+            $booking,
             'Confirmed',
-            'Booking #' . $booking->id . ' confirmed by ' . auth()->user()->name
+            'Booking confirmed successfully.',
+            fn() => $this->service->confirm($booking)
         );
-
-        return redirect()
-            ->back()
-            ->with('success', 'Booking confirmed successfully.');
     }
 
-    /**
-     * Cancel booking.
-     */
-    public function cancel($id)
+    public function reject(Booking $booking): RedirectResponse
     {
-        $booking = Booking::findOrFail($id);
+        return $this->act(
+            $booking,
+            'Rejected',
+            'Booking rejected.',
+            fn() => $this->service->reject($booking)
+        );
+    }
 
-        $booking->update([
-            'booking_status' => 'Cancelled',
-        ]);
-        $this->activityLog->log(
-            'Booking',
+    public function cancel(Booking $booking): RedirectResponse
+    {
+        return $this->act(
+            $booking,
             'Cancelled',
-            'Booking #' . $booking->id . ' cancelled by ' . auth()->user()->name
+            'Booking cancelled.',
+            fn() => $this->service->cancel($booking)
         );
-
-        return redirect()
-            ->back()
-            ->with('error', 'Booking cancelled.');
     }
 
-    /**
-     * Check in guest.
-     */
-    public function checkIn($id)
+    public function noShow(Booking $booking): RedirectResponse
     {
-        $booking = Booking::with('room')->findOrFail($id);
+        return $this->act(
+            $booking,
+            'No Show',
+            'Booking marked as no-show.',
+            fn() => $this->service->markNoShow($booking)
+        );
+    }
 
-        if ($booking->booking_status !== 'Confirmed') {
-            return redirect()->back()->with('error', 'Only confirmed bookings can be checked in.');
-        }
-
-        if (!$booking->room || $booking->room->status !== 'available') {
-            return redirect()->back()->with('error', 'The assigned room is not available.');
-        }
-
-        DB::transaction(function () use ($booking) {
-            $booking->update(['booking_status' => 'Checked In']);
-            $booking->room->update(['status' => 'occupied']);
-        });
-        $this->activityLog->log(
-            'Booking',
+    public function checkIn(Booking $booking): RedirectResponse
+    {
+        return $this->act(
+            $booking,
             'Checked In',
-            'Guest checked in for Booking #' . $booking->id
+            'Guest checked in successfully.',
+            fn() => $this->service->checkIn($booking)
         );
-
-        return redirect()
-            ->back()
-            ->with('success', 'Guest checked in successfully.');
     }
 
-    /**
-     * Check out guest and automatically create invoice.
-     */
-    public function checkOut($id)
+    public function checkOut(Booking $booking): RedirectResponse
     {
-        $booking = Booking::with('room')->findOrFail($id);
+        return $this->act(
+            $booking,
+            'Checked Out',
+            'Guest checked out and invoice created successfully.',
+            fn() => $this->service->checkOut($booking)
+        );
+    }
 
-        if ($booking->booking_status !== 'Checked In') {
-            return redirect()->back()->with('error', 'Only checked-in bookings can be checked out.');
+    /* ---------------- Helpers ---------------- */
+
+    private function act(Booking $booking, string $label, string $success, Closure $callback): RedirectResponse
+    {
+        try {
+            $callback();
+        } catch (ValidationException $e) {
+            return redirect()->back()->withFlashDanger($e->validator->errors()->first());
         }
 
-        DB::transaction(function () use ($booking) {
-            $booking->update(['booking_status' => 'Checked Out']);
-            if ($booking->room) {
-                $booking->room->update(['status' => 'available']);
-            }
-
-            Invoice::firstOrCreate(
-                ['booking_id' => $booking->id],
-                [
-                    'invoice_no' => 'INV-' . time(),
-                    'room_charge' => $booking->total_amount,
-                    'extra_charge' => 0,
-                    'tax' => 0,
-                    'discount' => 0,
-                    'total_amount' => $booking->total_amount,
-                    'payment_method' => null,
-                    'payment_status' => 'Pending',
-                    'paid_amount' => 0,
-                    'remarks' => null,
-                    'status' => true,
-                ]
-            );
-        });
         $this->activityLog->log(
             'Booking',
-            'Checked Out',
-            'Guest checked out for Booking #' . $booking->id
+            $label,
+            'Booking #' . $booking->id . ' ' . strtolower($label) . ' by ' . auth()->user()->name
         );
 
-        $this->activityLog->log(
-            'Invoice',
-            'Generated',
-            'Invoice generated for Booking #' . $booking->id
-        );
+        return redirect()->back()->withFlashSuccess($success);
+    }
 
-        return redirect()
-            ->back()
-            ->withFlashSuccess(
-                'Guest checked out and invoice created successfully.'
-            );
+    /** Maintenance wale rooms dropdown me nahi (edit me current room rehta hai). */
+    private function selectableRooms(?int $includeRoomId = null)
+    {
+        return Room::with('roomType')
+            ->where(function ($q) use ($includeRoomId) {
+                $q->where('status', '!=', 'maintenance');
+
+                if ($includeRoomId) {
+                    $q->orWhere('id', $includeRoomId);
+                }
+            })
+            ->orderBy('room_number')
+            ->get();
     }
 }

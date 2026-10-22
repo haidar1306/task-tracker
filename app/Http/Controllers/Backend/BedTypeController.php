@@ -19,7 +19,7 @@ class BedTypeController extends Controller
 
     public function index()
     {
-        $bedTypes = $this->service->all(1, request('search'));
+        $bedTypes = $this->service->all(5, request('search'));
 
         return view('backend.bed-types.index', compact('bedTypes'));
     }

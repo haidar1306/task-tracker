@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app')
+@extends('frontend.layouts.apps')
 
 @section('title', $room->roomType->name . ' | Room Details')
 
@@ -124,6 +124,24 @@
         max-width: 760px;
     }
 
+    /* Room status colours (used by the animated dot in the room number chip) */
+
+    .room-type-available {
+        background: #22a447;
+    }
+
+    .room-type-occupied {
+        background: #f59e0b;
+    }
+
+    .room-type-maintenance {
+        background: #dc2626;
+    }
+
+    .room-type-unknown {
+        background: #918678;
+    }
+
     .room-hero-description {
         max-width: 650px;
         font-family: 'Jost', sans-serif;
@@ -141,14 +159,17 @@
         flex-wrap: wrap;
     }
 
+    /* Booking availability badge */
+
     .room-status {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 9px 15px;
+        padding: 10px 15px;
         border-radius: 30px;
-        background: #eaf4e8;
-        color: #477044;
+        background: #eee9df;
+        color: #6d6253;
+        border: 1px solid #ddd3c2;
         font-family: 'Jost', sans-serif;
         font-size: 11px;
         font-weight: 600;
@@ -156,44 +177,82 @@
         text-transform: uppercase;
     }
 
-    .room-status::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        background: #5e9957;
-        border-radius: 50%;
-    }
-
-    .room-status.unavailable {
-        background: #f5e4dd;
-        color: #a34e32;
-    }
-
-    .room-status.unavailable::before {
-        background: #b3532b;
-    }
-
-    .room-status.unverified {
-        background: #eee9df;
-        color: #6d6253;
-    }
-
-    .room-status.unverified::before {
-        background: #9a8660;
-    }
-
     .room-number-pill {
         display: inline-flex;
         align-items: center;
+        gap: 8px;
         padding: 9px 15px;
         border: 1px solid var(--room-border);
         border-radius: 30px;
         font-family: 'Jost', sans-serif;
         font-size: 11px;
+        font-weight: 600;
         color: var(--room-text);
         text-transform: uppercase;
         letter-spacing: 1px;
         background: rgba(255,255,255,.55);
+    }
+
+    /* =========================================
+       ANIMATED DOT (inside chips)
+    ========================================= */
+
+    .chip-dot {
+        position: relative;
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        min-width: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    /* Expanding pulse ring */
+    .chip-dot::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: inherit;
+        animation: chipDotPulse 1.9s cubic-bezier(.4, 0, .6, 1) infinite;
+    }
+
+    /* Soft glow per status */
+    .chip-dot.room-type-available   { box-shadow: 0 0 7px rgba(34,164,71,.65); }
+    .chip-dot.room-type-occupied    { box-shadow: 0 0 7px rgba(245,158,11,.65); }
+    .chip-dot.room-type-maintenance { box-shadow: 0 0 7px rgba(220,38,38,.55); }
+    .chip-dot.room-type-unknown     { box-shadow: 0 0 7px rgba(145,134,120,.45); }
+
+    .chip-dot-orange {
+        background: #f59e0b;
+        box-shadow: 0 0 7px rgba(245,158,11,.65);
+    }
+
+    @keyframes chipDotPulse {
+        0%   { transform: scale(1);   opacity: .7; }
+        75%  { transform: scale(3.2); opacity: 0; }
+        100% { transform: scale(3.2); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .chip-dot::after {
+            animation: none;
+            opacity: 0;
+        }
+    }
+
+    /* Alert icon for availability chip */
+    .chip-alert-icon {
+        font-size: 12px;
+        color: #d97706;
+        flex-shrink: 0;
+    }
+
+    .room-status-orange,
+    .room-status-alert {
+        background: #fdf3e2;
+        border-color: #f1d9ab;
+        color: #8a5a0b;
     }
 
     /* Hero side visual */
@@ -268,6 +327,57 @@
         letter-spacing: 2px;
         text-transform: uppercase;
         color: var(--room-gold-dark);
+    }
+
+    /* =========================================
+       FULL WIDTH ROOM IMAGE
+    ========================================= */
+
+    .room-image-section {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .room-image-frame {
+        width: 100%;
+        height: 600px;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        background: var(--room-cream);
+    }
+
+    .room-image-frame img {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        object-fit: cover;
+        object-position: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .room-photo-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: linear-gradient(135deg, #f3f0e9, #e5dfd3);
+        color: #756d61;
+        font-family: 'Jost', sans-serif;
+    }
+
+    .room-photo-placeholder i {
+        color: var(--room-gold-dark);
+        font-size: 34px;
     }
 
     /* =========================================
@@ -405,7 +515,7 @@
 
     .room-amenity-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0;
         border-top: 1px solid var(--room-border);
         border-left: 1px solid var(--room-border);
@@ -427,8 +537,9 @@
 
     .room-amenity-item i {
         color: var(--room-gold);
-        font-size: 13px;
-        width: 20px;
+        font-size: 15px;
+        width: 22px;
+        min-width: 22px;
         text-align: center;
     }
 
@@ -549,6 +660,31 @@
         color: var(--room-muted);
     }
 
+    .reservation-back {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 15px;
+        color: #777;
+        text-decoration: none;
+        font-family: 'Jost', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        transition: .25s ease;
+    }
+
+    .reservation-back i {
+        font-size: 9px;
+    }
+
+    .reservation-back:hover {
+        color: #191919;
+        transform: translateX(-3px);
+    }
+
     /* =========================================
        EXPERIENCE STRIP
     ========================================= */
@@ -649,6 +785,10 @@
             line-height: 1.8;
         }
 
+        .room-image-frame {
+            height: 340px;
+        }
+
         .room-facts-inner {
             grid-template-columns: 1fr 1fr;
         }
@@ -691,66 +831,148 @@
             font-size: 30px;
         }
     }
-    /* =========================================
-   FULL WIDTH ROOM IMAGE
-========================================= */
-
-.room-image-section {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-.room-image-frame {
-    width: 100%;
-    height: 600px;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    border: none;
-    box-shadow: none;
-    background: var(--room-cream);
-}
-
-.room-image-frame img {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-    max-width: none !important;
-    object-fit: cover;
-    object-position: center;
-    margin: 0;
-    padding: 0;
-}
-
-.room-photo-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: linear-gradient(135deg, #f3f0e9, #e5dfd3);
-    color: #756d61;
-    font-family: 'Jost', sans-serif;
-}
-
-.room-photo-placeholder i {
-    color: var(--room-gold-dark);
-    font-size: 34px;
-}
 </style>
 @endpush
 
 
 @section('content')
 
+@php
+    /*
+    |--------------------------------------------------------------------------
+    | Room status
+    |--------------------------------------------------------------------------
+    | Expected database values: available, occupied, maintenance.
+    | Supports common capitalization and surrounding spaces.
+    */
+
+    $roomStatus = strtolower(trim((string) ($room->status ?? '')));
+
+    $roomStatusClass = match ($roomStatus) {
+        'available' => 'room-type-available',
+        'occupied' => 'room-type-occupied',
+        'maintenance' => 'room-type-maintenance',
+        default => 'room-type-unknown',
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Amenity icons
+    |--------------------------------------------------------------------------
+    */
+
+    $getAmenityIcon = function ($name) {
+        $name = strtolower(trim((string) $name));
+
+        $amenityIcons = [
+            'wi-fi'             => 'fas fa-wifi',
+            'wifi'              => 'fas fa-wifi',
+            'wireless internet' => 'fas fa-wifi',
+            'internet'          => 'fas fa-globe',
+
+            'swimming pool'     => 'fas fa-swimmer',
+            'pool'              => 'fas fa-swimmer',
+
+            'parking'           => 'fas fa-parking',
+            'free parking'      => 'fas fa-parking',
+            'car parking'       => 'fas fa-car',
+
+            'tv'                => 'fas fa-tv',
+            'television'        => 'fas fa-tv',
+            'smart tv'          => 'fas fa-tv',
+
+            'ac'                => 'fas fa-snowflake',
+            'a/c'               => 'fas fa-snowflake',
+            'air conditioning'  => 'fas fa-snowflake',
+            'air conditioner'   => 'fas fa-snowflake',
+
+            'restaurant'        => 'fas fa-utensils',
+            'food'              => 'fas fa-utensils',
+            'breakfast'         => 'fas fa-utensils',
+            'dining'            => 'fas fa-utensils',
+            'room service'      => 'fas fa-concierge-bell',
+            'bar'               => 'fas fa-glass-martini-alt',
+            'bar lounge'        => 'fas fa-glass-martini-alt',
+            'minibar'           => 'fas fa-glass-martini-alt',
+
+            'coffee'            => 'fas fa-coffee',
+            'coffee maker'      => 'fas fa-coffee',
+            'tea'               => 'fas fa-mug-hot',
+
+            'gym'               => 'fas fa-dumbbell',
+            'fitness center'    => 'fas fa-dumbbell',
+            'fitness centre'    => 'fas fa-dumbbell',
+
+            'spa'               => 'fas fa-spa',
+            'massage'           => 'fas fa-spa',
+            'laundry'           => 'fas fa-tshirt',
+            'washing machine'   => 'fas fa-tshirt',
+
+            'security'          => 'fas fa-shield-alt',
+            'cctv'              => 'fas fa-video',
+            'fire safety'       => 'fas fa-fire-extinguisher',
+            'smoke detector'    => 'fas fa-fire-extinguisher',
+
+            'balcony'           => 'fas fa-door-open',
+            'terrace'           => 'fas fa-sun',
+            'view'              => 'fas fa-mountain',
+            'sea view'          => 'fas fa-water',
+            'garden view'       => 'fas fa-leaf',
+
+            'bathroom'          => 'fas fa-bath',
+            'bathtub'           => 'fas fa-bath',
+            'bath'              => 'fas fa-bath',
+            'shower'            => 'fas fa-shower',
+            'hot water'         => 'fas fa-shower',
+
+            'telephone'         => 'fas fa-phone',
+            'phone'             => 'fas fa-phone',
+            'desk'              => 'fas fa-laptop',
+            'work desk'         => 'fas fa-laptop',
+
+            'bed'               => 'fas fa-bed',
+            'extra bed'         => 'fas fa-bed',
+            'wardrobe'          => 'fas fa-door-closed',
+            'closet'            => 'fas fa-door-closed',
+
+            'elevator'          => 'fas fa-building',
+            'lift'              => 'fas fa-building',
+            'wheelchair access' => 'fas fa-wheelchair',
+            'accessible room'   => 'fas fa-wheelchair',
+
+            'hair dryer'        => 'fas fa-wind',
+            'iron'              => 'fas fa-tshirt',
+            'refrigerator'      => 'fas fa-snowflake',
+            'mini fridge'       => 'fas fa-snowflake',
+
+            'complimentary toiletries' => 'fas fa-pump-soap',
+            'toiletries'        => 'fas fa-pump-soap',
+            'safe'              => 'fas fa-lock',
+            'in-room safe'      => 'fas fa-lock',
+            'newspaper'         => 'fas fa-newspaper',
+            'pets allowed'      => 'fas fa-paw',
+            'pet friendly'      => 'fas fa-paw',
+        ];
+
+        if (isset($amenityIcons[$name])) {
+            return $amenityIcons[$name];
+        }
+
+        // Match longer names such as "Free Wi-Fi" or "Indoor Swimming Pool".
+        foreach ($amenityIcons as $keyword => $icon) {
+            if (strlen($keyword) >= 4 && str_contains($name, $keyword)) {
+                return $icon;
+            }
+        }
+
+        return 'fas fa-check';
+    };
+@endphp
+
 <div class="room-page">
 
     {{-- =========================================
-         MODERN ROOM HERO — NO IMAGE
+         MODERN ROOM HERO
     ========================================== --}}
 
     <section class="room-hero-modern">
@@ -768,37 +990,56 @@
                 </div>
 
                 <h1 class="room-hero-title">
-                    {{ $room->roomType->name }}
+                    {{ optional($room->roomType)->name ?? 'Room Details' }}
                 </h1>
 
                 <p class="room-hero-description">
-                    {{ $room->roomType->description ?? 'A thoughtfully designed room offering comfort, elegance and a memorable stay experience.' }}
+                    {{ optional($room->roomType)->description ?? 'A thoughtfully designed room offering comfort, elegance and a memorable stay experience.' }}
                 </p>
 
                 <div class="room-hero-meta">
 
-                    @if(!$hasStayDates && $isBookable)
-                        <span class="room-status unverified">Select dates to check availability</span>
-                    @elseif($isBookable)
-                        <span class="room-status">
+                    {{-- Availability chip: orange dot (dates selected) / alert icon (no dates or unavailable) --}}
+                    @if($hasStayDates && $isBookable)
+                        <span class="room-status room-status-orange">
+                            <span class="chip-dot chip-dot-orange" aria-hidden="true"></span>
                             Available for selected dates
                         </span>
+                    @elseif(!$hasStayDates && $isBookable)
+                        <span class="room-status room-status-alert">
+                            <i class="fas fa-exclamation-triangle chip-alert-icon" aria-hidden="true"></i>
+                            Select dates to check availability
+                        </span>
                     @else
-                        <span class="room-status unavailable">
-                            Not Available
+                        <span class="room-status room-status-alert">
+                            <i class="fas fa-exclamation-triangle chip-alert-icon" aria-hidden="true"></i>
+                            Not available for selected dates
                         </span>
                     @endif
 
+                    {{-- Room number chip: animated dot (admin room status colour) --}}
                     <span class="room-number-pill">
+                        <span
+                            class="chip-dot {{ $roomStatusClass }}"
+                            title="{{ ucfirst($roomStatus ?: 'Status unknown') }}"
+                            aria-label="Room status: {{ ucfirst($roomStatus ?: 'Unknown') }}"
+                        ></span>
                         Room {{ $room->room_number }}
                     </span>
+
+                    {{-- Bed type --}}
+                    @if($room->bedType)
+                        <span class="room-number-pill">
+                            <i class="fas fa-bed" aria-hidden="true"></i>
+                            {{ $room->bedType->name }}
+                        </span>
+                    @endif
 
                 </div>
 
             </div>
 
-
-            {{-- Decorative hero element instead of image --}}
+            {{-- Decorative hero element --}}
 
             <div class="room-hero-side">
 
@@ -808,13 +1049,9 @@
 
                         <small>Room</small>
 
-                        <strong>
-                            {{ $room->room_number }}
-                        </strong>
+                        <strong>{{ $room->room_number }}</strong>
 
-                        <span>
-                            Your private space
-                        </span>
+                        <span>Your private space</span>
 
                     </div>
 
@@ -828,31 +1065,42 @@
 
 
     {{-- =========================================
+         ACTUAL ROOM IMAGE
+    ========================================== --}}
+
+    <section class="room-image-section">
+
+        <div class="room-image-frame">
+
+            @if(optional($room->roomType)->room_photo_url)
+
+                <img
+                    src="{{ $room->roomType->room_photo_url }}"
+                    alt="{{ optional($room->roomType)->name }} room"
+                    loading="eager"
+                >
+
+            @else
+
+                <div
+                    class="room-photo-placeholder"
+                    role="img"
+                    aria-label="Room photograph not available"
+                >
+                    <i class="fas fa-bed" aria-hidden="true"></i>
+                    <span>Room photograph not available</span>
+                </div>
+
+            @endif
+
+        </div>
+
+    </section>
+
+
+    {{-- =========================================
          QUICK ROOM FACTS
     ========================================== --}}
-    {{-- =========================================
-     ACTUAL ROOM IMAGE
-========================================= --}}
-
-<section class="room-image-section">
-
-    <div class="room-image-frame">
-
-        @if(optional($room->roomType)->room_photo_url)
-            <img
-                src="{{ $room->roomType->room_photo_url }}"
-                alt="{{ optional($room->roomType)->name }}"
-            >
-        @else
-            <div class="room-photo-placeholder" role="img" aria-label="Room photograph not available">
-                <i class="fas fa-bed" aria-hidden="true"></i>
-                <span>Room photograph not available</span>
-            </div>
-        @endif
-
-    </div>
-
-</section>
 
     <section class="room-facts-bar">
 
@@ -861,62 +1109,53 @@
             <div class="room-fact">
 
                 <div class="room-fact-icon">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-user" aria-hidden="true"></i>
                 </div>
 
                 <div>
                     <small>Capacity</small>
                     <strong>
-                        {{ $room->roomType->capacity }} Guests
+                        {{ optional($room->roomType)->capacity ?? 'N/A' }} Guests
                     </strong>
                 </div>
 
             </div>
 
-
             <div class="room-fact">
 
                 <div class="room-fact-icon">
-                    <i class="fas fa-building"></i>
+                    <i class="fas fa-building" aria-hidden="true"></i>
                 </div>
 
                 <div>
                     <small>Location</small>
-                    <strong>
-                        Floor {{ $room->floor ?? 'N/A' }}
-                    </strong>
+                    <strong>Floor {{ $room->floor ?? 'N/A' }}</strong>
                 </div>
 
             </div>
 
-
             <div class="room-fact">
 
                 <div class="room-fact-icon">
-                    <i class="fas fa-door-open"></i>
+                    <i class="fas fa-door-open" aria-hidden="true"></i>
                 </div>
 
                 <div>
                     <small>Room</small>
-                    <strong>
-                        #{{ $room->room_number }}
-                    </strong>
+                    <strong>#{{ $room->room_number }}</strong>
                 </div>
 
             </div>
 
-
             <div class="room-fact">
 
                 <div class="room-fact-icon">
-                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-moon" aria-hidden="true"></i>
                 </div>
 
                 <div>
                     <small>Stay</small>
-                    <strong>
-                        Per Night
-                    </strong>
+                    <strong>Per Night</strong>
                 </div>
 
             </div>
@@ -927,7 +1166,7 @@
 
 
     {{-- =========================================
-         MAIN INFORMATION
+         MAIN ROOM INFORMATION
     ========================================== --}}
 
     <main class="room-detail-wrap">
@@ -948,11 +1187,13 @@
                 </h2>
 
                 <p class="room-detail-desc">
-                    {{ $room->roomType->description ?? 'A thoughtfully designed room offering comfort, elegance and a memorable stay experience.' }}
+                    {{ optional($room->roomType)->description ?? 'A thoughtfully designed room offering comfort, elegance and a memorable stay experience.' }}
                 </p>
 
 
-                {{-- AMENITIES --}}
+                {{-- =========================================
+                     ROOM AMENITIES WITH MATCHING ICONS
+                ========================================== --}}
 
                 @if($room->amenities->count())
 
@@ -970,13 +1211,18 @@
 
                             @foreach($room->amenities as $amenity)
 
+                                @php
+                                    $amenityIcon = $getAmenityIcon($amenity->name);
+                                @endphp
+
                                 <div class="room-amenity-item">
 
-                                    <i class="fas fa-check"></i>
+                                    <i
+                                        class="{{ $amenityIcon }}"
+                                        aria-hidden="true"
+                                    ></i>
 
-                                    <span>
-                                        {{ $amenity->name }}
-                                    </span>
+                                    <span>{{ $amenity->name }}</span>
 
                                 </div>
 
@@ -986,12 +1232,32 @@
 
                     </section>
 
+                @else
+
+                    <section class="room-amenities-section">
+
+                        <span class="room-section-label">
+                            Everything You Need
+                        </span>
+
+                        <h3 class="room-amenities-heading">
+                            Room Amenities
+                        </h3>
+
+                        <p class="room-detail-desc" style="margin-bottom: 0;">
+                            Amenity information is not available for this room.
+                        </p>
+
+                    </section>
+
                 @endif
 
             </div>
 
 
-            {{-- RIGHT BOOKING CARD --}}
+            {{-- =========================================
+                 RIGHT BOOKING CARD
+            ========================================== --}}
 
             <aside>
 
@@ -1007,11 +1273,9 @@
 
                             <div class="room-booking-price">
 
-                                ₹{{ number_format($room->roomType->price, 0) }}
+                                ₹{{ number_format((float) optional($room->roomType)->price, 0) }}
 
-                                <small>
-                                    / night
-                                </small>
+                                <small>/ night</small>
 
                             </div>
 
@@ -1019,66 +1283,82 @@
 
                     </div>
 
-
                     <div class="booking-divider"></div>
-
 
                     <div class="booking-info-row">
                         <span>Room Type</span>
                         <span>
-                            {{ $room->roomType->name }}
+                            {{ optional($room->roomType)->name ?? 'N/A' }}
                         </span>
                     </div>
-
 
                     <div class="booking-info-row">
                         <span>Guests</span>
                         <span>
-                            {{ $room->roomType->capacity }}
+                            {{ optional($room->roomType)->capacity ?? 'N/A' }}
                         </span>
                     </div>
-
 
                     <div class="booking-info-row">
                         <span>Floor</span>
-                        <span>
-                            {{ $room->floor ?? 'N/A' }}
-                        </span>
+                        <span>{{ $room->floor ?? 'N/A' }}</span>
                     </div>
-
 
                     <div class="booking-info-row">
                         <span>Room Number</span>
-                        <span>
-                            {{ $room->room_number }}
-                        </span>
+                        <span>{{ $room->room_number }}</span>
                     </div>
 
+                    @if($room->bedType)
+                        <div class="booking-info-row">
+                            <span>Bed Type</span>
+                            <span>{{ $room->bedType->name }}</span>
+                        </div>
+                    @endif
 
                     @if($isBookable)
 
                         <a
-                            href="{{ route('frontend.bookings.create', array_merge(['room' => $room->id], $search)) }}"
+                            href="{{ route('bookings.create', array_merge(['room' => $room->id], $search ?? [])) }}"
                             class="room-book-btn-full"
                         >
-                            <i class="fas fa-calendar-check"></i>
+                            <i class="fas fa-calendar-check" aria-hidden="true"></i>
 
                             {{ $hasStayDates ? 'Book This Room' : 'Choose Dates' }}
+                        </a>
 
+                        <a
+                            href="{{ route('frontend.room.index', $search ?? []) }}"
+                            class="reservation-back"
+                        >
+                            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                            Back to Rooms
                         </a>
 
                         <p class="booking-note">
-                            {{ $hasStayDates ? 'Availability checked for your selected stay.' : 'Select dates to check availability for your stay.' }}
+                            {{ $hasStayDates
+                                ? 'Availability checked for your selected stay.'
+                                : 'Select dates to check availability for your stay.' }}
                         </p>
 
                     @else
 
                         <button
+                            type="button"
                             class="room-book-btn-full is-disabled"
                             disabled
                         >
+                            <i class="fas fa-ban" aria-hidden="true"></i>
                             Not Available
                         </button>
+
+                        <a
+                            href="{{ route('frontend.room.index', $search ?? []) }}"
+                            class="reservation-back"
+                        >
+                            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                            Back to Rooms
+                        </a>
 
                     @endif
 

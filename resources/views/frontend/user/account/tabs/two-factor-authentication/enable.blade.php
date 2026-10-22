@@ -1,4 +1,5 @@
 @extends('frontend.layouts.app')
+@section('navbar_mode', 'solid')
 
 @section('title', __('Enable Two Factor Authentication'))
 

@@ -32,18 +32,19 @@ class StoreRoomRequest extends FormRequest
             'status' => [
                 'required',
                 Rule::in(['available', 'occupied', 'maintenance']),
-                 ],
+            ],
 
-                'amenities' => [
-                    'nullable',
-                    'array',
-                    // 'exists:amenities,id',
-                ],
+            'amenities' => [
+                'nullable',
+                'array',
+                // 'exists:amenities,id',
+            ],
 
-                'amenities.*' => [
-                    'exists:amenities,id',
-                ],
-           
+            'amenities.*' => [
+                'exists:amenities,id',
+            ],
+            'bed_type_id' => ['required', 'exists:bed_types,id'],
+
         ];
     }
 }

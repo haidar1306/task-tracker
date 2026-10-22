@@ -138,19 +138,23 @@
     </style>
 
     @stack('after-styles')
+    <link href="{{ asset('css/frontendd/navbar.css') }}" rel="stylesheet">
 </head>
 
-<body class="frontend-shell {{ request()->routeIs('frontend.index', 'frontend.hotel.dashboard') ? 'frontend-dark-hero' : '' }} {{ request()->routeIs('frontend.index', 'frontend.user.dashboard', 'frontend.room.index', 'frontend.amenities.index', 'frontend.about', 'frontend.reservation.index', 'frontend.contact', 'frontend.auth.login', 'frontend.auth.register', 'frontend.services', 'frontend.gallery', 'frontend.offers', 'frontend.hotel-updates', 'frontend.services.show', 'frontend.room.show','frontend.bookings.create','frontend.user.account') ? 'home-page' : '' }} {{ request()->routeIs('frontend.room.index') ? 'room-search-results' : '' }} {{ request()->routeIs('frontend.payment.create') ? 'frontend-standalone-payment' : '' }}">
-         @include('frontend.layouts.navbar')
-        <main class="frontend-content">
+@php $navMode = trim($__env->yieldContent('navbar_mode')) ?: 'overlay'; @endphp
 
-            @include('includes.partials.messages')
-            @include('frontend.components.alerts')
-            @yield('content')
-        </main>
+<body class="frontend-shell lx-{{ $navMode }} {{ request()->routeIs('frontend.index', 'frontend.hotel.dashboard') ? 'frontend-dark-hero' : '' }} {{ request()->routeIs('frontend.index', 'frontend.user.dashboard', 'frontend.room.index', 'frontend.amenities.index', 'frontend.about', 'frontend.reservation.index', 'frontend.contact', 'frontend.auth.login', 'frontend.auth.register', 'frontend.services', 'frontend.gallery', 'frontend.offers', 'frontend.hotel-updates', 'frontend.services.show', 'frontend.room.show','frontend.bookings.create','frontend.user.account') ? 'home-page' : '' }} {{ request()->routeIs('frontend.room.index') ? 'room-search-results' : '' }} {{ request()->routeIs('frontend.payment.create') ? 'frontend-standalone-payment' : '' }}">
 
-        @include('frontend.layouts.footer')
-    </div>
+    @include('frontend.layouts.navbar')
+
+    <main class="frontend-content">
+
+        @include('includes.partials.messages')
+        @include('frontend.components.alerts')
+        @yield('content')
+    </main>
+
+    @include('frontend.layouts.footer')
 
     @stack('before-scripts')
 
@@ -201,18 +205,17 @@
     </script>
     <script>
         (function () {
-            const navbar = document.querySelector('.hotel-navbar');
-
-            if (!navbar) {
-                return;
+            var nav = document.getElementById('lxNav');
+            if (!nav) return;
+            var solid = nav.dataset.mode === 'solid';
+            function update() { nav.classList.toggle('is-pill', solid || window.scrollY > 40); }
+            update();
+            window.addEventListener('scroll', update, { passive: true });
+            if (window.jQuery) {
+                jQuery('#navbarNav')
+                    .on('show.bs.collapse', function () { nav.classList.add('menu-open'); })
+                    .on('hidden.bs.collapse', function () { nav.classList.remove('menu-open'); });
             }
-
-            const updateNavbarState = function () {
-                navbar.classList.toggle('scrolled', window.scrollY > 50);
-            };
-
-            updateNavbarState();
-            window.addEventListener('scroll', updateNavbarState, { passive: true });
         })();
     </script>
 

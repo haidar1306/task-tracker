@@ -42,6 +42,13 @@ class GuestController extends Controller
     public function edit(Guest $guest)
     {
         return view('backend.guests.edit', compact('guest'));
+
+    }
+    public function show($id)
+    {
+        $guest = Guest::findOrFail($id);
+
+        return view('backend.guests.show', compact('guest'));
     }
 
     public function update(UpdateGuestRequest $request, Guest $guest)
@@ -50,7 +57,7 @@ class GuestController extends Controller
 
         return redirect()
             ->route('admin.guests.index')
-           ->withFlashSuccess('Room Updated Successfully.');
+            ->withFlashSuccess('Guest Updated Successfully.');
     }
 
     public function destroy(Guest $guest)

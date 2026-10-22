@@ -16,6 +16,9 @@ class Invoice extends Model
         'extra_charge',
         'tax',
         'discount',
+        'coupon_id',
+        'coupon_discount',
+        'coupon_redeemed_at',
         'total_amount',
         'payment_method',
         'payment_status',
@@ -35,6 +38,11 @@ class Invoice extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
     }
 
 }

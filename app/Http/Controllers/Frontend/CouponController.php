@@ -4,77 +4,114 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CouponController extends Controller
 {
     public function apply(Request $request)
     {
-        $request->validate([
-            'coupon_code' => 'required|string',
+        $validated = $request->validate([
+            'coupon_code' => 'required|string|max:50',
             'invoice_id' => 'required|exists:invoices,id',
         ]);
 
-        $coupon = Coupon::where('code', strtoupper(trim($request->coupon_code)))->first();
+        $invoice = Invoice::with('booking.guest')->findOrFail($validated['invoice_id']);
 
-        if (!$coupon) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid coupon code.',
-            ], 422);
-        }
+        abort_unless(
+            $invoice->booking &&
+            $invoice->booking->guest &&
+            $invoice->booking->guest->email === $request->user()->email,
+            403
+        );
 
-        if ($reason = $coupon->invalidReason()) {
-            return response()->json([
-                'status' => false,
-                'message' => $reason,
-            ], 422);
-        }
+        $result = DB::transaction(function () use ($validated, $invoice) {
+            $lockedInvoice = Invoice::query()->lockForUpdate()->findOrFail($invoice->id);
+            $coupon = Coupon::query()
+                ->where('code', strtoupper(trim($validated['coupon_code'])))
+                ->lockForUpdate()
+                ->first();
 
-        $invoice = \App\Models\Invoice::findOrFail($request->invoice_id);
-
-        $remaining = $invoice->total_amount - $invoice->paid_amount;
-
-        if ($coupon->minimum_amount > $remaining) {
-            return response()->json([
-                'status' => false,
-                'message' => 'This coupon requires a minimum payment of ₹' . number_format($coupon->minimum_amount, 2) . '.',
-            ], 422);
-        }
-
-        // Calculate discount
-        if ($coupon->discount_type === 'percentage') {
-
-            $discount = ($remaining * $coupon->discount_value) / 100;
-
-            // Maximum discount limit
-            if ($coupon->maximum_discount !== null) {
-                $discount = min($discount, $coupon->maximum_discount);
+            if (!$coupon) {
+                return ['status' => false, 'message' => 'Invalid coupon code.'];
             }
 
-        } else {
+            if ($reason = $coupon->invalidReason()) {
+                return ['status' => false, 'message' => $reason];
+            }
 
-            // Fixed discount
-            $discount = $coupon->discount_value;
-        }
+            if ($lockedInvoice->payment_status === 'Paid') {
+                return ['status' => false, 'message' => 'This invoice has already been paid.'];
+            }
 
-        // Discount cannot be greater than remaining amount
-        $discount = min($discount, $remaining);
+            $baseDiscount = max(
+                0,
+                (float) $lockedInvoice->discount - (float) $lockedInvoice->coupon_discount
+            );
+            $eligibleAmount = max(
+                0,
+                (float) $lockedInvoice->total_amount - $baseDiscount - (float) $lockedInvoice->paid_amount
+            );
 
-        $finalAmount = $remaining - $discount;
+            if ($eligibleAmount <= 0) {
+                return ['status' => false, 'message' => 'There is no remaining balance for this coupon.'];
+            }
 
-        // Save discount to invoice so remaining/payment calculations stay correct
-        $invoice->update([
-            'discount' => round($discount, 2),
-        ]);
+            if ((float) $coupon->minimum_amount > $eligibleAmount) {
+                return [
+                    'status' => false,
+                    'message' => 'This coupon requires a minimum payment of ₹' . number_format($coupon->minimum_amount, 2) . '.',
+                ];
+            }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Coupon applied successfully.',
+            if ($coupon->discount_type === 'percentage') {
+                $couponDiscount = $eligibleAmount * ((float) $coupon->discount_value / 100);
 
-            'discount' => round($discount, 2),
+                if ($coupon->maximum_discount !== null) {
+                    $couponDiscount = min($couponDiscount, (float) $coupon->maximum_discount);
+                }
+            } else {
+                $couponDiscount = (float) $coupon->discount_value;
+            }
 
-            'final_amount' => round($finalAmount, 2),
-        ]);
+            $couponDiscount = round(min(max($couponDiscount, 0), $eligibleAmount), 2);
+            $effectiveDiscount = round($baseDiscount + $couponDiscount, 2);
+            $finalAmount = max(0, round(
+                (float) $lockedInvoice->total_amount - $effectiveDiscount - (float) $lockedInvoice->paid_amount,
+                2
+            ));
+
+            $lockedInvoice->update([
+                'coupon_id' => $coupon->id,
+                'coupon_discount' => $couponDiscount,
+                'discount' => $effectiveDiscount,
+            ]);
+
+            $fullyDiscounted = $finalAmount <= 0;
+
+            if ($fullyDiscounted) {
+                $lockedInvoice->update([
+                    'payment_status' => 'Paid',
+                    'coupon_redeemed_at' => now(),
+                ]);
+                $coupon->increment('used_count');
+                $lockedInvoice->booking->update([
+                    'payment_status' => 'Paid',
+                    'booking_status' => 'Confirmed',
+                ]);
+            }
+
+            return [
+                'status' => true,
+                'message' => 'Coupon applied successfully.',
+                'discount' => $couponDiscount,
+                'final_amount' => $finalAmount,
+                'fully_discounted' => $fullyDiscounted,
+                'redirect' => $fullyDiscounted ? route('frontend.invoice.show', $lockedInvoice->id) : null,
+            ];
+        });
+
+        return response()->json($result);
     }
 }

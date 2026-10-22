@@ -22,15 +22,16 @@ class InquiryReplyNotification extends Notification
         return ['database'];
     }
 
-   public function toArray($notifiable)
-{
-    return [
-        'title' => 'Inquiry Reply',
-        'message' => 'Your inquiry has been replied by the hotel.',
-        'inquiry_id' => $this->inquiry->id,
-        'type' => 'inquiry_reply',
-        'audience' => 'user',
-        'url' => route('frontend.frontend.inquiries.show', $this->inquiry->id),
-    ];
-}
+    public function toArray($notifiable)
+    {
+        return [
+            'title' => 'Inquiry Reply',
+            'message' => 'Your inquiry has been replied by the hotel.',
+            'inquiry_id' => $this->inquiry->id,
+            'type' => 'inquiry_reply',
+            'audience' => 'user',
+            // CHANGED: ab list page khulega aur drawer me ye inquiry apne aap open hogi
+            'url' => route('frontend.frontend.inquiries.index', ['inquiry' => $this->inquiry->id]),
+        ];
+    }
 }

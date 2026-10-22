@@ -48,7 +48,8 @@ class VerifyEmail extends Notification
     protected function verificationUrl($notifiable)
     {
         return URL::temporarySignedRoute(
-            'frontend.auth.verification.verify',
+            // route:list me asli naam doubled hai
+            'frontend.auth.frontend.auth.verification.verify',
             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
             [
                 'id' => $notifiable->getKey(),

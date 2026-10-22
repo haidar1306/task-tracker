@@ -35,6 +35,7 @@ class UpdateRoomRequest extends FormRequest
             ],
             'amenities' => 'nullable|array',
             'amenities.*' => 'exists:amenities,id',
+            'bed_type_id' => ['required', 'exists:bed_types,id'],
         ];
     }
 }

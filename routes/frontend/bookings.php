@@ -1,31 +1,17 @@
 <?php
-
 use App\Http\Controllers\Frontend\BookingsController;
 
-Route::group(['middleware' => ['auth', 'is_user']], function () {
-    
-//booking route...
 
-    Route::prefix('bookings')
-        ->name('bookings.')
-        ->group(function () {
-
-            // Create Booking
-            Route::get('/create/{room}', [BookingsController::class, 'create'])
-                ->name('create');
-
-            // Store Booking
-            Route::post('/store', [BookingsController::class, 'store'])
-                ->name('store');
-
-            // Show Booking
-            Route::get('/{booking}', [BookingsController::class, 'show'])
-                ->name('show');
-
-            // Cancel Booking
-            Route::post('/{booking}/cancel', [BookingsController::class, 'cancel'])
-                ->name('cancel');
-
-        });
-
+Route::middleware(['auth', 'is_user'])->group(function () {
+    Route::get('bookings/create/{room}', [BookingsController::class, 'create'])->name('bookings.create');
+    Route::post('bookings', [BookingsController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('bookings.store');
+    Route::get('bookings/{booking}', [BookingsController::class, 'show'])->name('bookings.show');
+    Route::get('bookings', [BookingsController::class, 'index'])->name('bookings.index');
+    Route::post('bookings/{booking}/cancel', [BookingsController::class, 'cancel'])->name('bookings.cancel');
 });
+
+// Calendar ke liye (public, sirf dates deta hai)
+Route::get('rooms/{room}/booked-dates', [BookingsController::class, 'bookedDates'])
+    ->name('rooms.booked-dates');

@@ -137,5 +137,81 @@
         </div>
 
     </div>
+<!--     
+{{-- Dubai / External Razorpay Payments --}}
+<div class="card mt-4">
+    <div class="card-header">
+        <h4 class="mb-0">Dubai / External Payments</h4>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Booking Reference</th>
+                        <th>Hotel</th>
+                        <th>Payment Date</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Razorpay Payment ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($externalPayments as $externalPayment)
+                        <tr>
+                            <td>{{ $externalPayment->id }}</td>
+
+                            <td>
+                                {{ $externalPayment->booking_reference ?: 'DB-' . $externalPayment->id }}
+                            </td>
+
+                            <td>
+                                {{ $externalPayment->hotel_name }}
+                            </td>
+
+                            <td>
+                                {{ $externalPayment->paid_at
+                                    ? $externalPayment->paid_at->format('d-m-Y h:i A')
+                                    : '—' }}
+                            </td>
+
+                            <td>
+                                {{ $externalPayment->currency }}
+                                {{ number_format((float) $externalPayment->total_price, 2) }}
+                            </td>
+
+                            <td>
+                                {{ $externalPayment->payment_method ?: 'Razorpay' }}
+                            </td>
+
+                            <td>
+                                <small>
+                                    {{ $externalPayment->razorpay_payment_id }}
+                                </small>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-success">Paid</span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                No verified Dubai payments found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{ $externalPayments->links() }}
+    </div>
+</div> -->
+
 
 @endsection

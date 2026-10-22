@@ -7,6 +7,7 @@ use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Booking;
 use App\Models\Invoice;
+use App\Models\ExternalBooking;
 use App\Models\Payment;
 use App\Services\PaymentService;
 
@@ -19,12 +20,22 @@ class PaymentController extends Controller
         $this->service = $service;
     }
 
-    public function index()
-    {
-        $payments = $this->service->all(5);
+   public function index()
+{
+    // Existing local payments — keep as they are.
+    $payments = $this->service->all(10, request('search'));
 
-        return view('backend.payments.index', compact('payments'));
-    }
+    // Verified Dubai payments — separate from local invoices.
+    $externalPayments = ExternalBooking::where('payment_status', 'paid')
+        ->whereNotNull('razorpay_payment_id')
+        ->latest('paid_at')
+        ->paginate(10, ['*'], 'dubai_page');
+
+    return view('backend.payments.index', compact(
+        'payments',
+        'externalPayments'
+    ));
+}
 
     public function create()
     {
@@ -81,7 +92,7 @@ class PaymentController extends Controller
 
         return redirect()
             ->route('admin.payments.index')
-            ->with('success', 'Payment created successfully.');
+            ->withflashSuccess('Payment created successfully.');
     }
     public function edit(Payment $payment)
     {

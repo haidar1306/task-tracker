@@ -1,4 +1,6 @@
 @extends('frontend.layouts.app')
+@section('navbar_mode', 'solid')
+
 
 @section('title', 'Secure Payment')
 
@@ -370,6 +372,12 @@
                             $('#couponDiscount').text('₹' + Number(res.discount).toFixed(2));
                             $('#couponFinalAmount').text('₹' + Number(res.final_amount).toFixed(2));
                             $('#couponSummary').show();
+
+                            if (res.fully_discounted && res.redirect) {
+                                window.location.href = res.redirect;
+                                return;
+                            }
+
                             $('#payment_amount').val(Number(res.final_amount).toFixed(2));
                             $('#payment_amount').attr('max', Number(res.final_amount).toFixed(2));
                         } else {
@@ -378,7 +386,9 @@
                         }
                     },
                     error: function (xhr) {
-                        const errorMessage = xhr.responseJSON?.message ?? 'Unable to apply coupon.';
+                        const errorMessage = xhr.status === 429
+                            ? 'Too many attempts. Please wait a minute before trying another coupon.'
+                            : (xhr.responseJSON?.message ?? 'Unable to apply coupon.');
                         message.removeClass('text-success').addClass('text-danger').text(errorMessage);
                         $('#couponSummary').hide();
                     },

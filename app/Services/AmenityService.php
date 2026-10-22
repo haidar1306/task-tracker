@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 class AmenityService
 {
     /**
-     * Get all amenities.
+     * Get all amenities with optional search and pagination.
      */
     public function all($perPage = false, $search = null)
     {
@@ -16,9 +16,13 @@ class AmenityService
 
         if (filled($search)) {
             $query->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('description', 'like', '%'.$search.'%');
-            })->orderByRaw('CASE WHEN name LIKE ? THEN 0 ELSE 1 END', [$search.'%']);
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhere('tag', 'like', '%' . $search . '%');
+            })->orderByRaw(
+                'CASE WHEN name LIKE ? THEN 0 ELSE 1 END',
+                [$search . '%']
+            );
         }
 
         $query->latest();
@@ -36,13 +40,14 @@ class AmenityService
     public function store(array $data): Amenity
     {
         return DB::transaction(function () use ($data) {
-
             return Amenity::create([
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
+                'image' => $data['image'] ?? null,
+                'icon' => $data['icon'] ?? null,
+                'tag' => $data['tag'] ?? null,
                 'status' => $data['status'],
             ]);
-
         });
     }
 
@@ -51,17 +56,18 @@ class AmenityService
      */
     public function update(Amenity $amenity, array $data): Amenity
     {
-        DB::transaction(function () use ($amenity, $data) {
-
+        return DB::transaction(function () use ($amenity, $data) {
             $amenity->update([
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
+                'image' => $data['image'] ?? null,
+                'icon' => $data['icon'] ?? null,
+                'tag' => $data['tag'] ?? null,
                 'status' => $data['status'],
             ]);
 
+            return $amenity->refresh();
         });
-
-        return $amenity;
     }
 
     /**
@@ -70,9 +76,7 @@ class AmenityService
     public function delete(Amenity $amenity)
     {
         return DB::transaction(function () use ($amenity) {
-
             return $amenity->delete();
-
         });
     }
 }

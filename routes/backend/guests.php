@@ -22,6 +22,8 @@ Route::group([
                 ->push('Create Guest', route('admin.guests.create'));
         });
 
+    Route::get('/{guest}/show', [GuestController::class, 'show'])
+        ->name('show');
     Route::post('/', [GuestController::class, 'store'])->name('store');
 
     Route::get('/{guest}/edit', [GuestController::class, 'edit'])
@@ -32,8 +34,8 @@ Route::group([
         });
 
     Route::put('/{guest}', [GuestController::class, 'update'])->name('update');
-        
-    Route::delete('/{guest}', [GuestController::class, 'destroy']) ->name('destroy');
-       
+
+    Route::delete('/{guest}', [GuestController::class, 'destroy'])->name('destroy');
+
 
 });

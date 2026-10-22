@@ -40,6 +40,28 @@
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
+<div class="form-group">
+    <label for="bed_type_id">Bed Type</label>
+
+    <select name="bed_type_id"
+            id="bed_type_id"
+            class="form-control @error('bed_type_id') is-invalid @enderror">
+
+        <option value="">Select Bed Type</option>
+
+        @foreach ($bedTypes as $bedType)
+            <option value="{{ $bedType->id }}"
+                {{ old('bed_type_id', $room->bed_type_id ?? '') == $bedType->id ? 'selected' : '' }}>
+                {{ $bedType->name }}
+            </option>
+        @endforeach
+
+    </select>
+
+    @error('bed_type_id')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
 
 
 <div class="form-group">

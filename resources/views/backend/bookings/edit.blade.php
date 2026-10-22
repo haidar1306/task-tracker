@@ -23,7 +23,15 @@
             <form action="{{ route('admin.bookings.update', $booking->id) }}" method="POST">
 
                 @csrf
+               
                 @method('PUT')
+                 @if ($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach ($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
+                    </div>
+                @endif
 
                 @include('backend.bookings.form')
 

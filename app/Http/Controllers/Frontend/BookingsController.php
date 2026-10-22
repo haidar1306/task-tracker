@@ -2,162 +2,192 @@
 
 namespace App\Http\Controllers\Frontend;
 
-// use App\Models\User;
-
-use app\Domains\Auth\Models\User;
-use App\Notifications\BookingNotification;
+use App\Domains\Auth\Models\User;
 use App\Http\Controllers\Controller;
-use App\Models\Room;
-use Carbon\Carbon;
+use App\Models\Booking;
 use App\Models\Booking1;
 use App\Models\Guest;
+use App\Models\Room;
+use App\Notifications\BookingNotification;
+use App\Services\BookingService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Razorpay\Api\Api;
-
 
 class BookingsController extends Controller
 {
+    protected $service;
+    protected $activityLog;
 
+    public function __construct(BookingService $service,ActivityLogService $activityLog)
+    {
+        $this->service = $service;
+        $this->activityLog = $activityLog;
+    }
 
+    /** My bookings. */
+    public function index()
+    {
+        $user = Auth::user();
+        $guest = Guest::where('user_id', $user->id)->first()
+            ?? Guest::where('email', $user->email)->first();
+
+        $bookings = Booking::with('room.roomType')
+            ->where('guest_id', $guest->id ?? 0)
+            ->latest()
+            ->paginate(10);
+
+        return view('frontend.bookings.index', compact('bookings'));
+    }
+
+    /** Booking form. */
     public function create(Request $request, Room $room)
     {
         $search = $request->validate([
             'check_in' => ['nullable', 'required_with:check_out', 'date_format:Y-m-d', 'after_or_equal:today'],
             'check_out' => ['nullable', 'required_with:check_in', 'date_format:Y-m-d', 'after:check_in'],
             'guests' => ['nullable', 'required_with:check_in,check_out', 'integer', 'min:1', 'max:20'],
-        ]);
-        $guestCount = isset($search['guests']) ? (int) $search['guests'] : 1;
+        ], $this->dateMessages());
+
+        $guestCount = (int) ($search['guests'] ?? 1);
+
         $room->load('roomType');
 
-        $isAvailable = Room::query()
-            ->whereKey($room->id)
-            ->bookable($guestCount)
-            ->availableForStay($search['check_in'] ?? null, $search['check_out'] ?? null)
-            ->exists();
-
-        if (!$isAvailable) {
+        if (!$this->service->canBook($room, $guestCount, $search['check_in'] ?? null, $search['check_out'] ?? null)) {
             return redirect()
                 ->route('frontend.room.index', $search)
-                ->withFlashDanger('This room is no longer available for your selected stay.');
+                ->withErrors(['check_in' => 'this room is not avilable for selected dates.'])
+                ->withInput();
         }
 
-        return view('frontend.bookings.create', compact('room', 'search', 'guestCount'));
+        // Har form load par naya token: double click / retry ek hi booking banata hai.
+        $idempotencyKey = (string) Str::uuid();
+
+        return view('frontend.bookings.create', compact('room', 'search', 'guestCount', 'idempotencyKey'));
     }
 
-    public function store(Request $request)
+    /** Booked date ranges (calendar). */
+    public function bookedDates(Room $room): JsonResponse
+    {
+        $ranges = Booking::query()
+            ->where('room_id', $room->id)
+            ->whereNotIn('booking_status', Booking::INACTIVE_STATUSES)
+            ->whereDate('check_out', '>', now()->toDateString())
+            ->get(['check_in', 'check_out'])
+            ->map(fn(Booking $booking) => [
+                'from' => $booking->check_in->toDateString(),
+                // Check-out din free hai, isliye ek din pehle tak block.
+                'to' => $booking->check_out->copy()->subDay()->toDateString(),
+            ])
+            ->values();
+
+        return response()->json($ranges);
+    }
+
+    /** Save booking. */
+    public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'room_id' => 'required|exists:rooms,id',
-            'check_in' => 'required|date|after_or_equal:today',
-            'check_out' => 'required|date|after:check_in',
-            'adults' => 'required|integer|min:1|max:20',
-            'children' => 'nullable|integer|min:0|max:20',
-        ]);
+            'room_id' => ['required', 'integer', 'exists:rooms,id'],
+            'check_in' => ['required', 'date_format:Y-m-d', 'after_or_equal:today'],
+            'check_out' => ['required', 'date_format:Y-m-d', 'after:check_in'],
+            'adults' => ['required', 'integer', 'min:1', 'max:20'],
+            'children' => ['nullable', 'integer', 'min:0', 'max:20'],
+            'idempotency_key' => ['nullable', 'string', 'max:64'],
+        ], $this->dateMessages());
 
         $user = Auth::user();
-        $guestCount = (int) $data['adults'] + (int) ($data['children'] ?? 0);
 
-        $booking = DB::transaction(function () use ($data, $user, $guestCount) {
-            $room = Room::with('roomType')
-                ->whereKey($data['room_id'])
-                ->lockForUpdate()
-                ->firstOrFail();
+        abort_unless($user, 401);
 
-            $isAvailable = Room::query()
-                ->whereKey($room->id)
-                ->bookable($guestCount)
-                ->availableForStay($data['check_in'], $data['check_out'])
-                ->exists();
+        [$booking, $created] = $this->service->createForUser($user, $data);
 
-            if (!$isAvailable) {
-                throw ValidationException::withMessages([
-                    'room_id' => 'This room is no longer available for the selected dates or guest count.',
-                ]);
-            }
-
-            $name = explode(' ', trim($user->name), 2);
-            $guest = Guest::firstOrCreate(
-                ['email' => $user->email],
-                [
-                    'first_name' => $name[0] ?? '',
-                    'last_name' => $name[1] ?? '',
-                    'phone' => $user->phone ?? '',
-                    'status' => true,
-                ]
+        if ($created) {
+            app(ActivityLogService::class)->log(
+                'Booking',
+                'Created',
+                'Booking #' . $booking->id . ' created by ' . $user->name
             );
 
-            $nights = Carbon::parse($data['check_in'])->diffInDays(Carbon::parse($data['check_out']));
-
-            return Booking1::create([
-                'booking_no' => 'BK-' . uniqid(),
-                'guest_id' => $guest->id,
-                'room_id' => $room->id,
-                'check_in' => $data['check_in'],
-                'check_out' => $data['check_out'],
-                'adults' => $data['adults'],
-                'children' => $data['children'] ?? 0,
-                'total_amount' => $room->roomType->price * $nights,
-                'booking_status' => 'Pending',
-                'payment_status' => 'Pending',
-                'remarks' => null,
-                'status' => true,
-            ]);
-        });
-
-        $admins = User::where('type', User::TYPE_ADMIN)->get();
-        
-        foreach ($admins as $admin) {
-            $admin->notify(
-                new BookingNotification($booking)
-            );
+            $this->notifyAdmins($booking);
         }
-
 
         return redirect()
-            ->route('frontend.room.index')
-            ->withFlashSuccess('Booking submitted successfully.');
-    }
-
-    public function show(Booking1 $booking)
-    {
-        $booking->load([
-            'room.roomType',
-            'guest',
-        ]);
-
-        if ($booking->guest->email !== Auth::user()->email) {
-            abort(403);
-        }
-
-        return view(
-            'frontend.bookings.show',
-            compact('booking')
-        );
-    }
-
-    public function cancel(Booking1 $booking)
-    {
-        $booking->load('guest');
-
-        if ($booking->guest->email !== Auth::user()->email) {
-            abort(403);
-        }
-
-        if (!in_array($booking->booking_status, ['Pending', 'Confirmed'])) {
-            return back()->withFlashDanger(
-                'This booking cannot be cancelled.'
+            ->route('bookings.show', $booking)
+            ->withFlashSuccess(
+                'Booking successful! Your reservation has been submitted and is awaiting admin confirmation.'
             );
+    }
+    public function show(Booking $booking)
+    {
+        $booking->load(['room.roomType', 'guest', 'invoice']);
+
+        $this->authorizeOwner($booking);
+
+        return view('frontend.bookings.show', compact('booking'));
+    }
+
+    public function cancel(Booking $booking): RedirectResponse
+    {
+        $booking->load(['guest', 'invoice']);
+
+        $this->authorizeOwner($booking);
+
+        if (!$booking->isCancellableByGuest()) {
+            return back()->withFlashDanger('Only unpaid reservations that have not checked in can be cancelled.');
         }
 
-        $booking->update([
-            'booking_status' => 'Cancelled',
-        ]);
+        try {
+            $this->service->cancel($booking);
+        } catch (ValidationException $e) {
+            return back()->withFlashDanger($e->validator->errors()->first());
+        }
 
-        return back()->withFlashSuccess(
-            'Booking cancelled successfully.'
-        );
+        return back()->withFlashSuccess('Booking cancelled successfully.');
+    }
+
+    /* ---------------- Helpers ---------------- */
+
+    private function authorizeOwner(Booking $booking): void
+    {
+        $user = Auth::user();
+
+        $owns = $user
+            && $booking->guest
+            && (
+                (int) $booking->guest->user_id === (int) $user->id
+                || strcasecmp((string) $booking->guest->email, (string) $user->email) === 0
+            );
+
+        abort_unless($owns, 403);
+    }
+
+    private function notifyAdmins(Booking $booking): void
+    {
+        try {
+            // Notification Booking1 expect kar sakta hai; Booking1 Booking ka child hai, dono chalte hain.
+            $payload = Booking1::findOrFail($booking->id);
+
+            User::where('type', User::TYPE_ADMIN)->get()
+                ->each(fn(User $admin) => $admin->notify(new BookingNotification($payload)));
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
+    private function dateMessages(): array
+    {
+        return [
+            'check_in.after_or_equal' => 'check in date can not be in the past.',
+            'check_in.required_with' => 'Please select a check-in date.',
+            'check_in.required' => 'please select a check-in date.',
+            'check_out.after' => 'Check-out must be after check-in.',
+            'check_out.required_with' => 'Please select a check-out date.',
+            'check_out.required' => 'Please select a check-out date.',
+        ];
     }
 }

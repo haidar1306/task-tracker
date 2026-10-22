@@ -1,4 +1,6 @@
 @extends('frontend.layouts.app')
+@section('navbar_mode', 'solid')
+
 
 @section('content')
     @php
@@ -35,7 +37,7 @@
                 </div>
 
                 <div class="payment-popup-actions">
-                    <a href="{{ route('frontend.invoice.show', $invoice->id) }}" class="btn btn-primary btn-continue">View
+                    <a href="{{ route('invoice.show', $invoice->id) }}" class="btn btn-primary btn-continue">View
                         Invoice</a>
                     <a href="{{ route('frontend.index') }}" class="btn btn-secondary btn-home">Go Home</a>
                 </div>
